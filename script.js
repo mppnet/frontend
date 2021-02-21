@@ -1578,9 +1578,9 @@ Rect.prototype.contains = function(x, y) {
 
     var gPianoMutes = gLocalStorageExists ? (localStorage.pianoMutes ? localStorage.pianoMutes : "").split(',').filter(v => v) : "";
 	var gChatMutes = gLocalStorageExists ? (localStorage.pianoMutes ? localStorage.pianoMutes : "").split(',').filter(v => v) : "";
-	var gShowIdsInChat = gLocalStorageExists ? localStorage.showIdsInChat == "true" : "false";
-	var gNoChatColors = gLocalStorageExists ? localStorage.noChatColors == "true" : "false";
-	var gNoBackgroundColor = gLocalStorageExists ? localStorage.noBackgroundColor == "true" : "false";
+	var gShowIdsInChat = gLocalStorageExists ? localStorage.showIdsInChat == "true" : false;
+	var gNoChatColors = gLocalStorageExists ? localStorage.noChatColors == "true" : false;
+	var gNoBackgroundColor = gLocalStorageExists ? localStorage.noBackgroundColor == "true" : false;
 
 
 
