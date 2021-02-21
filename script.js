@@ -10,6 +10,8 @@ $(function() {
 	var gMidiVolumeTest = (window.location.hash && window.location.hash.match(/^(?:#.+)*#midivolumetest(?:#.+)*$/i));
 
 	var gMidiOutTest;
+	
+	var gLocalStorageExists = typeof(localStorage) == undefined && localStorage !== null;
 
 	if (!Array.prototype.indexOf) {
 		Array.prototype.indexOf = function(elt /*, from*/) {
@@ -876,7 +878,11 @@ Rect.prototype.contains = function(x, y) {
 	    this.notification;
 	    this.packs = [];
 	    this.piano = piano;
-	    this.soundSelection = localStorage.soundSelection ? localStorage.soundSelection : "MPP Classic";
+	    if (gLocalStorageExists) {
+	    	this.soundSelection = localStorage.soundSelection ? localStorage.soundSelection : "MPP Classic";
+	    } else {
+		this.soundSelection = "MPP Classic";
+	    }
 	    this.addPack({name: "MPP Classic", keys: Object.keys(this.piano.keys), ext: ".mp3", url: "/sounds/mppclassic/"});
 	}
 
@@ -984,7 +990,7 @@ Rect.prototype.contains = function(x, y) {
 	            });
 	        })();
 	    }
-	    if(localStorage) localStorage.soundSelection = pack.name;
+	    if(gLocalStorageExists) localStorage.soundSelection = pack.name;
 	    this.soundSelection = pack.name;
 	};
 
@@ -1184,9 +1190,9 @@ Rect.prototype.contains = function(x, y) {
 
     var wssport = 8443;
     if (window.location.hostname == "mppclone.com") {
-        var gClient = new Client("wss://" + window.location.hostname + ":" + wssport, localStorage.password);
+        var gClient = new Client("wss://" + window.location.hostname + ":" + wssport, gLocalStorageExists ? localStorage.password : "");
     } else {
-        var gClient = new Client("ws://" + window.location.hostname + ":" + wssport, localStorage.password);
+        var gClient = new Client("ws://" + window.location.hostname + ":" + wssport, gLocalStorageExists ? localStorage.password : "");
     }
 	gClient.setChannel(channel_id);
 	gClient.start();
@@ -1570,11 +1576,11 @@ Rect.prototype.contains = function(x, y) {
 
 
 
-    var gPianoMutes = (localStorage.pianoMutes ? localStorage.pianoMutes : "").split(',').filter(v => v);
-	var gChatMutes = (localStorage.pianoMutes ? localStorage.pianoMutes : "").split(',').filter(v => v);
-	var gShowIdsInChat = localStorage.showIdsInChat == "true";
-	var gNoChatColors = localStorage.noChatColors == "true";
-	var gNoBackgroundColor = localStorage.noBackgroundColor == "true";
+    var gPianoMutes = gLocalStorageExists ? (localStorage.pianoMutes ? localStorage.pianoMutes : "").split(',').filter(v => v) : "";
+	var gChatMutes = gLocalStorageExists ? (localStorage.pianoMutes ? localStorage.pianoMutes : "").split(',').filter(v => v) : "";
+	var gShowIdsInChat = gLocalStorageExists ? localStorage.showIdsInChat == "true" : "false";
+	var gNoChatColors = gLocalStorageExists ? localStorage.noChatColors == "true" : "false";
+	var gNoBackgroundColor = gLocalStorageExists ? localStorage.noBackgroundColor == "true" : "false";
 
 
 
@@ -1662,7 +1668,7 @@ Rect.prototype.contains = function(x, y) {
 	volume_slider.addEventListener("input", function(evt) {
 		var v = +volume_slider.value;
 		gPiano.audio.setVolume(v);
-		if (window.localStorage) localStorage.volume = v;
+		if (gLocalStorageExists) {if (window.localStorage) localStorage.volume = v};
 		$("#volume-label").text("Volume: " + Math.floor(v * 100) + "%");
 	});
 
@@ -1746,7 +1752,7 @@ Rect.prototype.contains = function(x, y) {
 			if(++gKeyboardSeq == 3) {
 				gKnowsYouCanUseKeyboard = true;
 				if(window.gKnowsYouCanUseKeyboardTimeout) clearTimeout(gKnowsYouCanUseKeyboardTimeout);
-				if(localStorage) localStorage.knowsYouCanUseKeyboard = true;
+				if (gLocalStorageExists) {if(localStorage) localStorage.knowsYouCanUseKeyboard = true};
 				if(window.gKnowsYouCanUseKeyboardNotification) gKnowsYouCanUseKeyboardNotification.close();
 			}
 
@@ -1943,7 +1949,7 @@ Rect.prototype.contains = function(x, y) {
 				$('<div class="menu-item">Mute Notes</div>').appendTo(menu)
 				.on("mousedown touchstart", function(evt) {
 					gPianoMutes.push(part._id);
-					if(localStorage) localStorage.pianoMutes = gPianoMutes.join(',');
+					if (gLocalStorageExists) {if(localStorage) localStorage.pianoMutes = gPianoMutes.join(',')};
 					$(part.nameDiv).addClass("muted-notes");
 				});
 			} else {
@@ -1952,7 +1958,7 @@ Rect.prototype.contains = function(x, y) {
 					var i;
 					while((i = gPianoMutes.indexOf(part._id)) != -1)
 						gPianoMutes.splice(i, 1);
-					if(localStorage) localStorage.pianoMutes = gPianoMutes.join(',');
+					if (gLocalStorageExists) {if(localStorage) localStorage.pianoMutes = gPianoMutes.join(',')};
 					$(part.nameDiv).removeClass("muted-notes");
 				});
 			}
@@ -1960,7 +1966,7 @@ Rect.prototype.contains = function(x, y) {
 				$('<div class="menu-item">Mute Chat</div>').appendTo(menu)
 				.on("mousedown touchstart", function(evt) {
 					gChatMutes.push(part._id);
-					if(localStorage) localStorage.chatMutes = gChatMutes.join(',');
+					if (gLocalStorageExists) {if(localStorage) localStorage.chatMutes = gChatMutes.join(',')};
 					$(part.nameDiv).addClass("muted-chat");
 				});
 			} else {
@@ -1969,7 +1975,7 @@ Rect.prototype.contains = function(x, y) {
 					var i;
 					while((i = gChatMutes.indexOf(part._id)) != -1)
 						gChatMutes.splice(i, 1);
-					if(localStorage) localStorage.chatMutes = gChatMutes.join(',');
+					if (gLocalStorageExists) {if(localStorage) localStorage.chatMutes = gChatMutes.join(',')};
 					$(part.nameDiv).removeClass("muted-chat");
 				});
 			}
@@ -1977,9 +1983,9 @@ Rect.prototype.contains = function(x, y) {
 				$('<div class="menu-item">Mute Completely</div>').appendTo(menu)
 				.on("mousedown touchstart", function(evt) {
 					gPianoMutes.push(part._id);
-					if(localStorage) localStorage.pianoMutes = gPianoMutes.join(',');
+					if (gLocalStorageExists) {if(localStorage) localStorage.pianoMutes = gPianoMutes.join(',')};
 					gChatMutes.push(part._id);
-					if(localStorage) localStorage.chatMutes = gChatMutes.join(',');
+					if (gLocalStorageExists) {if(localStorage) localStorage.chatMutes = gChatMutes.join(',')};
 					$(part.nameDiv).addClass("muted-notes");
 					$(part.nameDiv).addClass("muted-chat");
 				});
@@ -1992,8 +1998,8 @@ Rect.prototype.contains = function(x, y) {
 						gPianoMutes.splice(i, 1);
 					while((i = gChatMutes.indexOf(part._id)) != -1)
 						gChatMutes.splice(i, 1);
-					if(localStorage) localStorage.pianoMutes = gPianoMutes.join(',');
-					if(localStorage) localStorage.chatMutes = gChatMutes.join(',');
+					if (gLocalStorageExists) {if(localStorage) localStorage.pianoMutes = gPianoMutes.join(',')};
+					if (gLocalStorageExists) {if(localStorage) localStorage.chatMutes = gChatMutes.join(',')};
 					$(part.nameDiv).removeClass("muted-notes");
 					$(part.nameDiv).removeClass("muted-chat");
 				});
@@ -2163,7 +2169,7 @@ Rect.prototype.contains = function(x, y) {
 
 	var gKeyboardSeq = 0;
 	var gKnowsYouCanUseKeyboard = false;
-	if(localStorage && localStorage.knowsYouCanUseKeyboard) gKnowsYouCanUseKeyboard = true;
+	if (gLocalStorageExists) {if(localStorage && localStorage.knowsYouCanUseKeyboard) gKnowsYouCanUseKeyboard = true} else {gKnowsYouCanUseKeyboard = false};
 	if(!gKnowsYouCanUseKeyboard) {
 		window.gKnowsYouCanUseKeyboardTimeout = setTimeout(function() {
 			window.gKnowsYouCanUseKeyboardNotification = new Notification({title: "Did you know!?!",
@@ -2173,21 +2179,24 @@ Rect.prototype.contains = function(x, y) {
 
 
 
+	if (gLocalStorageExists) {
+		if(window.localStorage) {
 
-	if(window.localStorage) {
+			if(localStorage.volume) {
+				volume_slider.value = localStorage.volume;
+				gPiano.audio.setVolume(localStorage.volume);
+				$("#volume-label").text("Volume: " + Math.floor(gPiano.audio.volume * 100) + "%");
+			}
+			else localStorage.volume = gPiano.audio.volume;
 
-		if(localStorage.volume) {
-			volume_slider.value = localStorage.volume;
-			gPiano.audio.setVolume(localStorage.volume);
-			$("#volume-label").text("Volume: " + Math.floor(gPiano.audio.volume * 100) + "%");
+			window.gHasBeenHereBefore = (localStorage.gHasBeenHereBefore || false);
+			if(gHasBeenHereBefore) {
+			}
+			localStorage.gHasBeenHereBefore = true;
+
 		}
-		else localStorage.volume = gPiano.audio.volume;
-
-		window.gHasBeenHereBefore = (localStorage.gHasBeenHereBefore || false);
-		if(gHasBeenHereBefore) {
-		}
-		localStorage.gHasBeenHereBefore = true;
-		
+	} else {
+		window.gHasBeenHereBefore = false;
 	}
 	
 	
@@ -3293,7 +3302,7 @@ Rect.prototype.contains = function(x, y) {
 			    }
 			    setting.onclick = function() {
 			    	setting.classList.toggle("enabled");
-			    	localStorage.showIdsInChat = setting.classList.contains("enabled");
+			    	if (gLocalStorageExists) {localStorage.showIdsInChat = setting.classList.contains("enabled")};
 			    	gShowIdsInChat = setting.classList.contains("enabled");
 			    };
 				html.appendChild(setting);
@@ -3309,7 +3318,7 @@ Rect.prototype.contains = function(x, y) {
 			    }
 			    setting.onclick = function() {
 			    	setting.classList.toggle("enabled");
-			    	localStorage.noChatColors = setting.classList.contains("enabled");
+			    	if (gLocalStorageExists) {localStorage.noChatColors = setting.classList.contains("enabled")};
 			    	gNoChatColors = setting.classList.contains("enabled");
 			    };
 				html.appendChild(setting);
@@ -3325,7 +3334,7 @@ Rect.prototype.contains = function(x, y) {
 			    }
 			    setting.onclick = function() {
 			    	setting.classList.toggle("enabled");
-			    	localStorage.noBackgroundColor = setting.classList.contains("enabled");
+			    	if (gLocalStorageExists) {localStorage.noBackgroundColor = setting.classList.contains("enabled")};
 			    	gNoBackgroundColor = setting.classList.contains("enabled");
                     if (gClient.channel.settings.color && !gNoBackgroundColor) {
                     	setBackgroundColor(gClient.channel.settings.color, gClient.channel.settings.color2);
