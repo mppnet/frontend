@@ -1189,7 +1189,7 @@ Rect.prototype.contains = function(x, y) {
 	if(channel_id == "") channel_id = "lobby";
 
     var wssport = 8443;
-    if (window.location.hostname == "mppclone.com") {
+    if (window.location.hostname == "mppclone.com" || window.location.hostname == "www.mppclone.com") {
         var gClient = new Client("wss://" + window.location.hostname + ":" + wssport, gLocalStorageExists ? localStorage.password : "");
     } else {
         var gClient = new Client("ws://" + window.location.hostname + ":" + wssport, gLocalStorageExists ? localStorage.password : "");
