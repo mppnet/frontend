@@ -1,18 +1,20 @@
+ 
+ 
 * {
     image-rendering: pixelated
 }
-
+ 
 * {
     margin: 0
 }
-
+ 
 * {
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none
 }
-
+ 
 body,html {
     width: 100%;
     height: 100%;
@@ -21,11 +23,11 @@ body,html {
     color: #fff;
     text-shadow: #444 1px 1px
 }
-
+ 
 body {
     position: absolute
 }
-
+ 
 body {
     background: #3b5054;
     background: -moz-radial-gradient(center,ellipse cover,#ecfafd 0,#c5d5d8 100%);
@@ -36,30 +38,30 @@ body {
     background: radial-gradient(ellipse at center,#ecfafd 0,#c5d5d8 100%);
     -webkit-transition: background 1s linear
 }
-
+ 
 a {
     cursor: pointer;
     color: #f46;
     transition: color .25s
 }
-
+ 
 a:hover {
     color: #e05;
     transition: color .25s
 }
-
+ 
 .link {
     text-decoration: underline;
     cursor: pointer;
     color: #fe0
 }
-
+ 
 table {
     border: 0;
     padding: 0;
     margin: 0
 }
-
+ 
 #names {
     position: fixed;
     top: 4px;
@@ -67,21 +69,21 @@ table {
     font-size: 12px;
     width: 95%
 }
-
+ 
 #names .name {
     float: left;
     position: relative;
     padding: 4px;
     margin: 2px;
-    border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
     min-width: 50px;
     text-align: center;
     cursor: pointer;
     line-height: 15px
 }
-
+ 
 #names .name.me:after {
     content: "Me";
     position: absolute;
@@ -89,23 +91,23 @@ table {
     right: 50%;
     font-size: 10px
 }
-
+ 
 #names .name.owner:before {
     content: url(/crown.png);
     position: absolute;
     top: -8px;
     left: 4px
 }
-
+ 
 #names .name.play {
     transform: translateY(-4px);
     -webkit-transform: translateY(-4px)
 }
-
+ 
 #names .name.muted-notes {
     color: #f88
 }
-
+ 
 #names .name.muted-notes:after {
     content: "MUTE";
     position: absolute;
@@ -113,11 +115,11 @@ table {
     right: 50%;
     font-size: 8px
 }
-
+ 
 #names .name.muted-chat {
     color: #f88
 }
-
+ 
 #names .name.muted-chat:after {
     content: "MUTE";
     position: absolute;
@@ -125,7 +127,106 @@ table {
     right: 50%;
     font-size: 8px
 }
-
+ 
+input[type="range"] {
+        -webkit-appearance:     none;   /* Remove Safari default */
+        outline: none;
+        width: 210px;
+        height: 5px;
+        border-radius: 1px;
+        position: relative;
+ 
+ 
+        background-image: -webkit-gradient( linear, left top, right top,
+                color-stop( 0,          hsla(254, 100%, 25%, 0.8) ),
+                color-stop( .08,        hsla(254, 100%, 13%, 0.8) ),
+                color-stop( .5,         hsl(200,80%,0%) ),
+                color-stop( .92,        hsl(200,80%,15%) ),
+                color-stop( 1,          hsl(200,80%,45%) )
+        );
+ 
+        -webkit-background-clip: padding-box;
+        border: 0;
+        border-bottom: 2px solid rgba(0,0,0,0.1);
+        cursor: ew-resize;
+}
+ 
+input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance:     none;   /* Remove Safari default */
+        position: relative;
+        z-index:                1;
+ 
+        width: 10px;
+        height: 20px;
+        border-radius: 1px / 2px ;
+ 
+        background-image: -webkit-gradient( linear, left top, right top,
+                color-stop( 0,          hsl(0,0%,15%) ),
+                color-stop( .16,        hsl(0,0%,22%) ),
+                color-stop( .18,        hsl(0,0%,30%) ),
+                color-stop( .2,         hsl(0,0%,26%) ),
+ 
+ 
+ 
+                color-stop( .8,         hsl(0,0%,26%) ),
+                color-stop( .82,        hsl(0,0%,30%) ),
+                color-stop( .84,        hsl(0,0%,22%) ),
+                color-stop( 1,          hsl(0,0%,15%) )
+        );
+ 
+        -webkit-box-shadow:
+ 
+                inset hsla(0,0%,100%,.15) 0 1px 0px,
+ 
+                hsl(0,0%,17%) 0 2px 0px,
+                hsl(0,0%,15%) 0 4px 0px,
+                hsl(0,0%,13%) 0 6px 0px,
+ 
+                rgba(0,0,0,.5) 0 8px 5px;
+ 
+        -webkit-transform: translateY(-3px);
+        -webkit-box-reflect:    below 0px -webkit-gradient(linear, left top, left bottom,
+                                                        from(transparent), color-stop(0.6, transparent), to( rgba(255,255,255,0.15) ));
+}
+ 
+input[type="range"]:hover {
+ 
+        background-image: -webkit-gradient( linear, left top, right top,
+                color-stop( 0,          hsla(284, 100%, 25%, 0.8) ),
+                color-stop( .08,        hsla(284, 100%, 13%, 0.8) ),
+                color-stop( .5,         hsl(200,80%,0%) ),
+                color-stop( .92,        hsl(200,80%,15%) ),
+                color-stop( 1,          hsl(200,80%,45%) )
+        );
+ 
+        -webkit-box-shadow: inset #000 1px 1px 1px, inset #000 -1px -1px 1px;
+ 
+}
+ 
+ 
+ 
+#piano {opacity:0.9;-webkit-box-reflect: below -60px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(80%, transparent), to(white)); width: 95%; height: 20%; margin: auto; position: relative; overflow: hidden; padding-left: 1%; }
+#piano .key { float: left; width: 1.8%; height: 90%; border: 1px solid black; background: #fff;
+        margin-left: -0.5%; margin-bottom: 100%;
+        box-shadow: 1px 2px 5px #000; -webkit-box-shadow: 1px 2px 5px #000; -moz-box-shadow: 1px 2px 5px #000;
+        border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px;
+        transition: background 4s ease-out; -webkit-transition: background 4s ease-out; -moz-transition: background 4s ease-out;
+        -o-transition: background 4s ease-out; padding: 0px;
+        overflow: hidden; }
+#piano .key.c, #piano .key.f { margin-left: 0; }
+#piano .key.sharp { width: 1.2%; height: 50%; background: #000; margin-left: -0.9%;
+        position: relative; }
+ 
+#piano .key.loading { background: #888; }
+ 
+#piano .key.play { transform: translateY(1%); -webkit-transform: translateY(1%); -webkit-box-shadow: 0px 1px 2px #000; }
+ 
+.ease-out { transition: left 0.1s ease-out; -webkit-transition: left 0.1s ease-out; -moz-transition: left 0.1s ease-out;
+        -o-transition: left 0.1s ease-out; }
+.ease-in { transition: left 0.1s ease-in; -webkit-transition: left 0.1s ease-in; -moz-transition: left 0.1s ease-in;
+        -o-transition: left 0.1s ease-in; }
+.slide-left { left: -100%; }
+.slide-right { left: 100%; }
 #piano {
     width: 95%;
     height: 20%;
@@ -134,7 +235,7 @@ table {
     overflow: hidden;
     padding-left: 1%
 }
-
+ 
 #piano .key {
     float: left;
     width: 1.8%;
@@ -146,7 +247,7 @@ table {
     box-shadow: 1px 2px 5px #000;
     -webkit-box-shadow: 1px 2px 5px #000;
     -moz-box-shadow: 1px 2px 5px #000;
-    border-radius: 2px;
+    border-radius: 10px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     transition: background 4s ease-out;
@@ -156,11 +257,11 @@ table {
     padding: 0;
     overflow: hidden
 }
-
+ 
 #piano .key.c,#piano .key.f {
     margin-left: 0
 }
-
+ 
 #piano .key.sharp {
     width: 1.2%;
     height: 50%;
@@ -168,39 +269,39 @@ table {
     margin-left: -.9%;
     position: relative
 }
-
+ 
 #piano .key.loading {
     background: #888
 }
-
+ 
 #piano .key.play {
-    transform: translateY(1%);
-    -webkit-transform: translateY(1%);
-    -webkit-box-shadow: 0 1px 2px #000
+    transform: translateY(3%);
+    -webkit-transform: translateY(3%);
+    -webkit-box-shadow: 0 10px 20px #000
 }
-
+ 
 .ease-out {
     transition: left .1s ease-out;
     -webkit-transition: left .1s ease-out;
     -moz-transition: left .1s ease-out;
     -o-transition: left .1s ease-out
 }
-
+ 
 .ease-in {
     transition: left .1s ease-in;
     -webkit-transition: left .1s ease-in;
     -moz-transition: left .1s ease-in;
     -o-transition: left .1s ease-in
 }
-
+ 
 .slide-left {
     left: -100%
 }
-
+ 
 .slide-right {
     left: 100%
 }
-
+ 
 .cursor {
     width: 18px;
     height: 24px;
@@ -212,7 +313,7 @@ table {
     left: 200%;
     top: 100%
 }
-
+ 
 .cursor .name {
     display: inline;
     position: relative;
@@ -228,22 +329,22 @@ table {
     padding: 1px;
     font-size: 10px
 }
-
+ 
 .cursor.owner .name:after {
     content: url(/crown.png);
     position: relative;
     top: -8px;
     left: 0
 }
-
+ 
 .cursor .name {
     display: inline-block
 }
-
+ 
 .cursor {
     transition: top .1s,left .1s
 }
-
+ 
 .participant-menu {
     display: none;
     position: fixed;
@@ -254,12 +355,12 @@ table {
     margin: 0;
     border-radius: 2px
 }
-
+ 
 .participant-menu:last-child .menu-item:hover {
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit
 }
-
+ 
 .participant-menu .info {
     height: 40px;
     text-align: center;
@@ -271,27 +372,27 @@ table {
     transition: opacity .2s ease-out;
     user-select: text
 }
-
+ 
 .participant-menu .info:hover {
     opacity: 1;
     transition: opacity .2s ease-out
 }
-
+ 
 .participant-menu .menu-item {
     cursor: pointer;
     margin: 0;
     padding: 15px 5px;
     border-top: 1px solid rgba(255,255,255,.3)
 }
-
+ 
 .participant-menu .menu-item:hover {
     background: rgba(255,255,255,.4)
 }
-
+ 
 .participant-menu .menu-item.clicked {
     background: rgba(255,255,255,.5)
 }
-
+ 
 #crown {
     position: absolute;
     width: 16px;
@@ -300,12 +401,12 @@ table {
     cursor: pointer;
     font-size: 10px
 }
-
+ 
 #crown span {
     margin-left: 16px;
     margin-top: 2px
 }
-
+ 
 #room-notice {
     position: fixed;
     top: 20%;
@@ -316,11 +417,11 @@ table {
     pointer-events: none;
     display: none
 }
-
+ 
 #room-notice p {
     margin: 1em
 }
-
+ 
 #bottom {
     position: fixed;
     bottom: 0;
@@ -330,11 +431,11 @@ table {
     background: #9a9;
     margin-bottom: 3px
 }
-
+ 
 #room,#room * {
     cursor: pointer
 }
-
+ 
 #room {
     position: absolute;
     left: 0;
@@ -348,38 +449,38 @@ table {
     margin: 4px 24px;
     font-size: 12px
 }
-
+ 
 #room .info {
     white-space: nowrap;
     line-height: 12px;
     overflow: hidden;
     height: 20px
 }
-
+ 
 #room .info.lobby {
     color: #efb
 }
-
+ 
 #room .info.not-visible {
     color: #8cf
 }
-
+ 
 #room .info.banned {
     color: #f88
 }
-
+ 
 #room .info.crownsolo:after {
     content: url('/crownsolo.png');
     position: relative; top: 2px;
     margin-left: 4px;
 }
-
+ 
 #room .info.no-chat:after {
     content: url('/no-chat.png');
     position: relative; top: 2px;
     margin-left: 4px;
 }
-
+ 
 #room .expand {
     width: 24px;
     height: 100%;
@@ -388,7 +489,7 @@ table {
     top: 0;
     background: #777 url(/arrow.png) no-repeat center 0
 }
-
+ 
 #room .more {
     display: none;
     position: absolute;
@@ -401,26 +502,26 @@ table {
     border: 1px solid #ccc;
     max-height: 600px
 }
-
+ 
 #room .more>div {
     margin: 0;
     padding: 3px 6px 0 6px;
     width: 100%;
     height: 20px
 }
-
+ 
 #room .more .info:hover {
     background: #666
 }
-
+ 
 #room .more .new {
     background: #111
 }
-
+ 
 #room .more .new:hover {
     background: #333
 }
-
+ 
 .ugly-button {
     height: 12px;
     font-size: 12px;
@@ -436,52 +537,52 @@ table {
     overflow: hidden;
     white-space: nowrap
 }
-
+ 
 .ugly-button:hover {
     background: #222
 }
-
+ 
 .ugly-button.stuck {
     background: rgba(204,187,170,.35)
 }
-
+ 
 #new-room-btn {
     position: absolute;
     left: 300px;
     top: 4px
 }
-
+ 
 #play-alone-btn {
     position: absolute;
     left: 420px;
     top: 4px
 }
-
+ 
 #sound-btn {
     position: absolute;
     left: 540px;
     top: 4px
 }
-
+ 
 #room-settings-btn {
     position: absolute;
     left: 660px;
     top: 4px;
     display: none
 }
-
+ 
 #midi-btn {
     position: absolute;
     left: 300px;
     top: 32px
 }
-
+ 
 #record-btn {
     position: absolute;
     left: 420px;
     top: 32px
 }
-
+ 
 #synth-btn {
     position: absolute;
     left: 540px;
@@ -507,7 +608,7 @@ table {
     left: 780px;
     top: 4px
 }
-
+ 
 #tooltip {
     position: absolute;
     pointer-events: none;
@@ -515,15 +616,15 @@ table {
     color: #fff;
     font-size: 10px
 }
-
+ 
 .knob {
     cursor: pointer
 }
-
+ 
 .switched-on {
     background: #ff8
 }
-
+ 
 #status {
     position: absolute;
     left: 0;
@@ -536,11 +637,11 @@ table {
     line-height: 20px;
     pointer-events: none
 }
-
+ 
 #status .number {
     font-size: 35px
 }
-
+ 
 #volume {
     position: absolute;
     right: 20px;
@@ -549,15 +650,15 @@ table {
     height: 40px;
     margin: 10px
 }
-
+ 
 #volume-slider {
     width: 100%;
     height: 100%;
-    background: url(volume2.png) no-repeat;
+    background: url(https://puu.sh/Hvi3d/3fb2374e47.png) no-repeat;
     background-position: 50% 50%;
     -webkit-appearance: none
 }
-
+ 
 #volume-label {
     position: absolute;
     right: 30px;
@@ -565,7 +666,7 @@ table {
     font-size: 10px;
     color: #ccc
 }
-
+ 
 #banner {
     width: 468px;
     height: 60px;
@@ -575,11 +676,11 @@ table {
     font-size: 18px;
     display: none
 }
-
+ 
 #banner a {
     color: #fd0
 }
-
+ 
 #quota {
     width: 100%;
     height: 3px;
@@ -588,24 +689,24 @@ table {
     left: 0;
     background: #f80
 }
-
+ 
 #quota .value {
     width: 100%;
     height: 100%;
     display: block;
     background: #fd0
 }
-
+ 
 .relative {
     position: relative;
     width: 100%;
     height: 100%
 }
-
+ 
 .notification {
     position: absolute
 }
-
+ 
 .notification-body {
     background: #222;
     border-color: #555;
@@ -619,7 +720,7 @@ table {
     border-radius: 6px;
     box-shadow: 2px 2px 5px rgba(0,0,0,.25)
 }
-
+ 
 .notification-body:after {
     content: "";
     position: absolute;
@@ -631,7 +732,7 @@ table {
     border-left: 6px solid transparent;
     border-right: 6px solid transparent
 }
-
+ 
 .title {
     border-bottom: 1px solid #f50;
     font-size: 16px;
@@ -639,7 +740,7 @@ table {
     padding-bottom: 5px;
     margin-bottom: 8px
 }
-
+ 
 .notification .x {
     position: absolute;
     right: 4px;
@@ -649,21 +750,21 @@ table {
     color: #d55;
     text-shadow: none
 }
-
+ 
 .notification .x:hover {
     color: #f66
 }
-
+ 
 .notification.classic .notification-body {
     width: 400px;
     background: #222;
     border-color: #555
 }
-
+ 
 .notification.short .title {
     display: none
 }
-
+ 
 .notification h1 {
     font-size: 14px;
     font-weight: 700;
@@ -671,7 +772,7 @@ table {
     padding-bottom: 8px;
     text-decoration: underline
 }
-
+ 
 .notification .connection {
     padding: 8px;
     margin: 8px;
@@ -680,33 +781,33 @@ table {
     cursor: pointer;
     font-family: monospace
 }
-
+ 
 .notification .connection.enabled {
     background: #dfd
 }
-
+ 
 .notification .connection:after {
     content: "OFF";
     font-size: 10px;
     color: #a44;
     float: right
 }
-
+ 
 .notification .connection.enabled:after {
     content: "ON";
     font-size: 10px;
     color: #4a4;
     float: right
 }
-
+ 
 .notification .connection:hover {
     font-weight: 700
 }
-
+ 
 .notification ul {
     list-style-type: upper-roman
 }
-
+ 
 .notification .setting {
     margin: 1px;
     padding: 4px;
@@ -720,7 +821,7 @@ table {
     background: #2b562b;
     font-weight: bolder
 }
-
+ 
 .notification .pack {
     margin: 1px;
     padding: 4px;
@@ -730,31 +831,31 @@ table {
     cursor: pointer;
     font-family: monospace
 }
-
+ 
 .notification .pack.enabled {
     background: #2b562b;
     cursor: not-allowed;
     font-weight: bolder
 }
-
+ 
 .notification .pack:after {
     content: "";
     font-size: 10px;
     color: #a44;
     float: right
 }
-
+ 
 .notification .pack.enabled:after {
     content: "Selected";
     font-size: 10px;
     color: #fff;
     float: right
 }
-
+ 
 .notification .pack:hover {
     font-weight: 700
 }
-
+ 
 #modal {
     width: 100%;
     height: 100%;
@@ -763,7 +864,7 @@ table {
     top: 0;
     display: none
 }
-
+ 
 #modal .bg {
     width: 100%;
     height: 100%;
@@ -773,14 +874,14 @@ table {
     left: 0;
     top: 0
 }
-
+ 
 #modal,#modal * {
     user-select: text;
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text
 }
-
+ 
 .dialog {
     background: #222;
     width: 400px;
@@ -800,22 +901,22 @@ table {
     -webkit-box-shadow: 0 0 8px #000;
     -moz-box-shadow: 0 0 8px #000
 }
-
+ 
 .dialog p {
     margin: 10px;
     font-size: 20px
 }
-
+ 
 .dialog input.text {
     font-size: 20px;
     height: 20px;
     width: 75%
 }
-
+ 
 .dialog input.checkbox {
     margin: 0 5px
 }
-
+ 
 .dialog .submit {
     background: #fe4;
     border: none;
@@ -837,7 +938,7 @@ table {
     bottom: -10px;
     right: -10px
 }
-
+ 
 .dialog .submit:hover {
     background: #ff8;
     transition: all .25s;
@@ -845,17 +946,17 @@ table {
     -moz-transition: all .25s;
     -o-transition: all .25s
 }
-
+ 
 #room-settings {
     height: 400px;
     margin-top: -200px
 }
-
+ 
 #chat {
     display: none;
     opacity: 1
 }
-
+ 
 #chat {
     position: fixed;
     bottom: 64px;
@@ -866,43 +967,43 @@ table {
     color: #fff;
     text-shadow: #888 1px 1px
 }
-
+ 
 #chat,#chat * {
     user-select: text;
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text
 }
-
+ 
 #chat ul {
     list-style: none;
     margin: 4px;
     padding: 0;
     background-attachment: local
 }
-
+ 
 #chat li {
     padding: 2px;
     opacity: 0
 }
-
+ 
 #chat li .id {
     margin-right: 6px
 }
-
+ 
 #chat li .name {
     font-weight: 700;
     margin-right: 10px
 }
-
+ 
 #chat li .message {
     margin-right: 6px
 }
-
+ 
 #chat li .quote {
     color: #789922
 }
-
+ 
 #chat input {
     margin: 4px;
     width: 99%;
@@ -914,40 +1015,40 @@ table {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px
 }
-
+ 
 #chat input::-webkit-input-placeholder {
     color: #ccc
 }
-
+ 
 #chat input:-moz-placeholder {
     color: #ccc
 }
-
+ 
 #chat input:focus {
     outline: 0;
     border: 1px solid #ff8
 }
-
+ 
 #chat.chatting {
     background: rgba(64,80,80,.75);
     border-radius: 5px;
     box-shadow: 1px 1px 5px #888;
     transition: all .1s
 }
-
+ 
 #chat.chatting li {
     display: list-item!important;
     opacity: 1!important;
     text-shadow: #aaa 1px 1px
 }
-
+ 
 #chat.chatting ul {
     max-height: 50em;
     overflow-y: scroll;
     overflow-x: hidden;
     word-wrap: break-word
 }
-
+ 
 #social {
     position: fixed;
     top: 4px;
@@ -955,7 +1056,7 @@ table {
     width: 80px;
     font-size: 12px
 }
-
+ 
 #social #more-button {
     margin-top: 4px;
     width: 77px;
@@ -970,23 +1071,23 @@ table {
     background: url(kitten1.png) 0 4px no-repeat;
     background-color: #dee
 }
-
+ 
 #social #more-button:hover {
     color: #899;
     background-color: #e8f8f0;
     transition: background-color .25s
 }
-
+ 
 #social .fb-like {
     position: absolute;
     right: 0
 }
-
+ 
 #social #inclinations {
     margin-top: 50px;
     margin-bottom: 20px
 }
-
+ 
 #more {
     display: none;
     width: 1250px;
@@ -1003,123 +1104,123 @@ table {
     right: 50px;
     text-shadow: none
 }
-
+ 
 #more div {
     margin: 0;
     padding: 0
 }
-
+ 
 #more .items {
     margin-left: 1%
 }
-
+ 
 #more .items .item {
     width: 33%;
     float: left;
     background: #cdd;
     transition: background .25s
 }
-
+ 
 #more .items .item:hover {
     background: #d0e0e0;
     transition: background .25s
 }
-
+ 
 #more .items .item .content {
     height: 200px;
     padding: 10px;
     border-right: 1px solid #bcc;
     border-bottom: 1px solid #bcc
 }
-
+ 
 #more .items .item .content p {
     margin-top: 1em;
     margin-bottom: 1em
 }
-
+ 
 #more .header {
     padding: 5px 10px
 }
-
+ 
 #more .footer {
     clear: both;
     padding: 5px 10px;
     font-size: 12px
 }
-
+ 
 #email:before {
     content: url(envelope.png);
     margin: 4px
 }
-
+ 
 #room-notice {
     z-index: 1
 }
-
+ 
 #cursors {
     z-index: 2
 }
-
+ 
 #chat {
     z-index: 100
 }
-
+ 
 #social {
     z-index: 200
 }
-
+ 
 #names {
     z-index: 300
 }
-
+ 
 #piano {
     z-index: 400
 }
-
+ 
 #piano .key {
     z-index: 401
 }
-
+ 
 #piano .key.sharp {
     z-index: 402
 }
-
+ 
 #bottom {
     z-index: 500
 }
-
+ 
 #crown {
     z-index: 600
 }
-
+ 
 .notification {
     z-index: 700
 }
-
+ 
 #cursors .cursor {
     z-index: 800
 }
-
+ 
 #chat.chatting {
     z-index: 900
 }
-
+ 
 .participant-menu {
     z-index: 1000
 }
-
+ 
 #modal {
     z-index: 10000
 }
-
+ 
 #tooltip {
     z-index: 20000
 }
-
+ 
 .clear {
     clear: both
 }
-
+ 
 .spin {
     animation: spin 1s linear infinite;
     -webkit-animation: spin 1s linear infinite;
@@ -1127,42 +1228,42 @@ table {
     -o-animation: spin 1s linear infinite;
     -ms-animation: spin 1s linear infinite
 }
-
+ 
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0)
     }
-
+ 
     100% {
         -webkit-transform: rotate(360deg)
     }
 }
-
+ 
 @-moz-keyframes spin {
     0% {
         -moz-transform: rotate(0)
     }
-
+ 
     100% {
         -moz-transform: rotate(360deg)
     }
 }
-
+ 
 @-o-keyframes spin {
     0% {
         -o-transform: rotate(0)
     }
-
+ 
     100% {
         -o-transform: rotate(360deg)
     }
 }
-
+ 
 @-ms-keyframes spin {
     0% {
         -ms-transform: rotate(0)
     }
-
+ 
     100% {
         -ms-transform: rotate(360deg)
     }
