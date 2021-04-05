@@ -2940,7 +2940,9 @@ Rect.prototype.contains = function(x, y) {
 
 
 
-
+    if (window.location !== window.parent.location) {
+        new Notification({title:'Notice', target:'#midi-btn', duration:15000, text:'MIDI In/Out does not work if you join the site through multiplayerpiano.com. To make it work, go to mppclone.com.'});
+    }
 
 
 
