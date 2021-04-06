@@ -1183,10 +1183,10 @@ Rect.prototype.contains = function(x, y) {
 	if(channel_id == "") channel_id = "lobby";
 
     var wssport = 8443;
-    if (window.location.hostname == "mppclone.com" || window.location.hostname == "www.mppclone.com") {
-        var gClient = new Client("wss://" + window.location.hostname + ":" + wssport, localStorage.password);
+    if (window.location.hostname === "10.0.0.24") {
+        var gClient = new Client("ws://10.0.0.24:8443", localStorage.password);
     } else {
-        var gClient = new Client("ws://" + window.location.hostname + ":" + wssport, localStorage.password);
+        var gClient = new Client('wss://mppclone.com:8443', localStorage.password);
     }
 	gClient.setChannel(channel_id);
 	gClient.start();
