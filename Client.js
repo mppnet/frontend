@@ -132,12 +132,17 @@ Client.prototype.connect = function() {
 		self.emit("connect");
 		self.emit("status", "Joining channel...");
 	});
-	this.ws.addEventListener("message", function(evt) {
-		var transmission = JSON.parse(evt.data);
-		for(var i = 0; i < transmission.length; i++) {
-			var msg = transmission[i];
-			self.emit(msg.m, msg);
-		}
+	this.ws.addEventListener("message", async function(evt) {
+        if (typeof evt.data === 'string') {
+            var transmission = JSON.parse(evt.data);
+		    for(var i = 0; i < transmission.length; i++) {
+		    	var msg = transmission[i];
+		    	self.emit(msg.m, msg);
+		    }
+        } else {
+            var transmission = messageFromBinary(await evt.data.arrayBuffer());
+            if (transmission) self.emit(transmission.m, transmission);
+        }
 	});
 };
 
@@ -173,19 +178,18 @@ Client.prototype.bindEventListeners = function() {
 		self.removeParticipant(msg.p);
 	});
 	this.on("b", function(msg) {
-		if (self.password) {
-			try {
-				self.sendArray([{"m": "hi", "🐈": self['🐈']++ || undefined, "password": self.password, code:getResponseCode(msg.code) }]);
-			} catch (err) {
-				self.sendArray([{"m": "hi", "🐈": self['🐈']++ || undefined, "password": self.password, code:"broken" }]);
-			}
-        } else {
-            try {
-				self.sendArray([{"m": "hi", "🐈": self['🐈']++ || undefined, code:getResponseCode(msg.code) }]);
-			} catch (err) {
-				self.sendArray([{"m": "hi", "🐈": self['🐈']++ || undefined, code:"broken" }]);
-			}
+        var hiMsg = {m:'hi'};
+        hiMsg['🐈'] = self['🐈']++ || undefined;
+        try {
+            hiMsg.code = getResponseCode(msg.code);
+        } catch (err) {
+            hiMsg.code = 'broken';
         }
+		if ('password' in self) {
+			hiMsg.password = self.password;
+        }
+        if (window.messageToBinary) hiMsg.v = 1;
+        self.sendArray([hiMsg])
 	});
 };
 
@@ -194,7 +198,18 @@ Client.prototype.send = function(raw) {
 };
 
 Client.prototype.sendArray = function(arr) {
-	this.send(JSON.stringify(arr));
+    if (window.messageToBinary) {
+        arr.forEach(msg => {
+            var res = messageToBinary(msg);
+            if (res) {
+                this.send(res);
+            } else {
+                this.send(JSON.stringify([msg]));
+            }
+        });
+    } else {
+        this.send(JSON.stringify(arr));
+    }
 };
 
 Client.prototype.setChannel = function(id, set) {
