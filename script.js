@@ -1225,6 +1225,13 @@ Rect.prototype.contains = function(x, y) {
         });
     })();
 
+    // Make ban evasion slightly more difficult
+    (function() {
+        gClient.on("hi", function(msg) {
+            localStorage.old_id = msg.u._id;
+        });
+    })();
+
 	// Handle changes to participants
 	(function() {
 		gClient.on("participant added", function(part) {
