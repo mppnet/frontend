@@ -188,6 +188,9 @@ Client.prototype.bindEventListeners = function() {
 		if ('password' in self) {
 			hiMsg.password = self.password;
         }
+        if (localStorage.old_id) {
+            hiMsg.old_id = localStorage.old_id;
+        }
         if (window.messageToBinary) hiMsg.v = 1;
         self.sendArray([hiMsg])
 	});
