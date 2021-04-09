@@ -2417,7 +2417,6 @@ Rect.prototype.contains = function(x, y) {
 				history.pushState({"depth": gHistoryDepth += 1, "name": name}, "Piano > " + name, url);
 			} else {
 				window.location = url;
-                console.log(url + ' if you\'re seeing this logging it means I forgot to remove it from script.js, please let me know I forgot about this.');
 				return;
 			}
 		}
