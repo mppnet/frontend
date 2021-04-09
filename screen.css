@@ -97,6 +97,21 @@ table {
     left: 4px
 }
 
+#names .name.bot:after {
+    content: "✔ Bot";
+    position: relative;
+    top: 0px;
+    left: 2px;
+    color: #fff;
+    background: #1351ad;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    white-space: nowrap;
+    padding: 2px;
+    font-size: 10px
+}
+
 #names .name.play {
     transform: translateY(-4px);
     -webkit-transform: translateY(-4px)
