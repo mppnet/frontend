@@ -1327,6 +1327,11 @@ Rect.prototype.contains = function(x, y) {
 						$(part.nameDiv).removeClass("owner");
 						$(part.cursorDiv).removeClass("owner");
 					}
+                    if(part.bot) {
+						$(part.nameDiv).addClass("bot");
+					} else {
+						$(part.nameDiv).removeClass("bot");
+					}
 					if(gPianoMutes.indexOf(part._id) !== -1) {
 						$(part.nameDiv).addClass("muted-notes");
 					} else {
