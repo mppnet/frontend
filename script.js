@@ -877,7 +877,7 @@ Rect.prototype.contains = function(x, y) {
 	    this.packs = [];
 	    this.piano = piano;
 	    this.soundSelection = localStorage.soundSelection ? localStorage.soundSelection : "HardPiano";
-	    this.addPack({name: "MPP Classic", keys: Object.keys(this.piano.keys), ext: ".mp3", url: "/sounds/mppclassic/"});
+	    this.addPack({name: "MPP Classic", keys: Object.keys(this.piano.keys), ext: ".mp3", url: "https://mppclone.com/sounds/mppclassic/"});
 	}
 
 	SoundSelector.prototype.addPack = function(pack, load) {
@@ -1106,7 +1106,7 @@ Rect.prototype.contains = function(x, y) {
 	var gPiano = new Piano(document.getElementById("piano"));
 	
     var gSoundSelector = new SoundSelector(gPiano);
-    gSoundSelector.addPacks(["/sounds/Emotional/", "/sounds/Emotional_2.0/", "/sounds/GreatAndSoftPiano/", "/sounds/HardAndToughPiano/", "/sounds/HardPiano/", "/sounds/Harp/", "/sounds/Harpsicord/", "/sounds/LoudAndProudPiano/", "/sounds/MLG/", "/sounds/Music_Box/", "/sounds/NewPiano/", "/sounds/Orchestra/", "/sounds/Piano2/", "/sounds/PianoSounds/", "/sounds/Rhodes_MK1/", "/sounds/SoftPiano/", "/sounds/Steinway_Grand/", "/sounds/Untitled/", "/sounds/Vintage_Upright/", "/sounds/Vintage_Upright_Soft/"]);
+    gSoundSelector.addPacks(["https://mppclone.com/sounds/Emotional/", "https://mppclone.com/sounds/Emotional_2.0/", "https://mppclone.com/sounds/GreatAndSoftPiano/", "https://mppclone.com/sounds/HardAndToughPiano/", "https://mppclone.com/sounds/HardPiano/", "https://mppclone.com/sounds/Harp/", "https://mppclone.com/sounds/Harpsicord/", "https://mppclone.com/sounds/LoudAndProudPiano/", "https://mppclone.com/sounds/MLG/", "https://mppclone.com/sounds/Music_Box/", "https://mppclone.com/sounds/NewPiano/", "https://mppclone.com/sounds/Orchestra/", "https://mppclone.com/sounds/Piano2/", "https://mppclone.com/sounds/PianoSounds/", "https://mppclone.com/sounds/Rhodes_MK1/", "https://mppclone.com/sounds/SoftPiano/", "https://mppclone.com/sounds/Steinway_Grand/", "https://mppclone.com/sounds/Untitled/", "https://mppclone.com/sounds/Vintage_Upright/", "https://mppclone.com/sounds/Vintage_Upright_Soft/"]);
 	//gSoundSelector.addPacks(["/sounds/Emotional_2.0/", "/sounds/Harp/", "/sounds/Music_Box/", "/sounds/Vintage_Upright/", "/sounds/Steinway_Grand/", "/sounds/Emotional/", "/sounds/Untitled/"]);
 	gSoundSelector.init();
 
@@ -1169,7 +1169,14 @@ Rect.prototype.contains = function(x, y) {
 
 
 
-
+    function getParameterByName(name, url = window.location.href) {
+		name = name.replace(/[\[\]]/g, '\\$&');
+		var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+			results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	}
 
 
 
@@ -1180,7 +1187,8 @@ Rect.prototype.contains = function(x, y) {
 
 	var channel_id = decodeURIComponent(window.location.pathname);
 	if(channel_id.substr(0, 1) == "/") channel_id = channel_id.substr(1);
-	if(channel_id == "") channel_id = "lobby";
+    if (window.location.hostname === 'multiplayerpiano.com') channel_id = getParameterByName('c');
+	if(!channel_id) channel_id = "lobby";
 
     var wssport = 8443;
     if (window.location.hostname === "10.0.0.24") {
@@ -2310,10 +2318,7 @@ Rect.prototype.contains = function(x, y) {
 		var room_name = "Room" + Math.floor(Math.random() * 1000000000000);
 		changeRoom(room_name, "right", {"visible": false});
 		setTimeout(function() {
-			new Notification({id: "share", title: "Playing alone", html: 'You are playing alone in a room by yourself, but you can always invite \
-				friends by sending them the link.<br/><br/>\
-				<a href="#" onclick="window.open(\'https://www.facebook.com/sharer/sharer.php?u=\'+encodeURIComponent(location.href),\'facebook-share-dialog\',\'width=626,height=436\');return false;">Share on Facebook</a><br/><br/>\
-				<a href="http://twitter.com/home?status='+encodeURIComponent(location.href)+'" target="_blank">Tweet</a>', duration: 25000});
+			new Notification({id: "share", title: "Playing alone", html: 'You are playing alone in a room by yourself, but you can always invite friends by sending them the link.<br><a href="' + location.href + '">' + decodeURIComponent(location.href) + '</a>', duration: 25000});
 		}, 1000);
 	});
 
@@ -2367,9 +2372,7 @@ Rect.prototype.contains = function(x, y) {
 			closeModal();
 			changeRoom(name, "right", settings);
 			setTimeout(function() {
-				new Notification({id: "share", title: "Created a Room", html: 'You can invite friends to your room by sending them the link.<br/><br/>\
-					<a href="#" onclick="window.open(\'https://www.facebook.com/sharer/sharer.php?u=\'+encodeURIComponent(location.href),\'facebook-share-dialog\',\'width=626,height=436\');return false;">Share on Facebook</a><br/><br/>\
-					<a href="http://twitter.com/home?status='+encodeURIComponent(location.href)+'" target="_blank">Tweet</a>', duration: 25000});
+				new Notification({id: "share", title: "Created a Room", html: 'You can invite friends to your room by sending them the link.<br><a href="' + location.href + '">' + decodeURIComponent(location.href) + '</a>', duration: 25000});
 			}, 1000);
 		};
 		$("#new-room .submit").click(function(evt) {
@@ -2405,11 +2408,16 @@ Rect.prototype.contains = function(x, y) {
 		if(name == "") name = "lobby";
 		if(gClient.channel && gClient.channel._id === name) return;
 		if(push) {
-			var url = "/" + encodeURIComponent(name).replace("'", "%27");
+            if (window.location.hostname === 'multiplayerpiano.com') {
+                var url = "/?c=" + encodeURIComponent(name).replace("'", "%27");
+            } else {
+                var url = "/" + encodeURIComponent(name).replace("'", "%27");
+            }
 			if(window.history && history.pushState) {
 				history.pushState({"depth": gHistoryDepth += 1, "name": name}, "Piano > " + name, url);
 			} else {
 				window.location = url;
+                console.log(url + ' if you\'re seeing this logging it means I forgot to remove it from script.js, please let me know I forgot about this.');
 				return;
 			}
 		}
@@ -2952,9 +2960,6 @@ Rect.prototype.contains = function(x, y) {
 
 
 
-    if (window.location !== window.parent.location) {
-        new Notification({title:'Notice', target:'#midi-btn', duration:15000, text:'MIDI In/Out does not work if you join the site through multiplayerpiano.com. To make it work, go to mppclone.com.'});
-    }
 
 
 
@@ -3073,7 +3078,7 @@ Rect.prototype.contains = function(x, y) {
 				recording = true;
 				button.textContent = "Stop Recording";
 				button.classList.add("stuck");
-				new Notification({"id": "mp3", "title": "Recording MP3...", "html": "It's recording now.  This could make things slow, maybe.  Maybe give it a moment to settle before playing.<br><br>This feature is experimental.<br>Send complaints to <a href=\"mailto:multiplayerpiano.com@gmail.com\">multiplayerpiano.com@gmail.com</a>.", "duration": 10000});
+				new Notification({"id": "mp3", "title": "Recording MP3...", "html": "It's recording now.  This could make things slow, maybe.  Maybe give it a moment to settle before playing.<br><br>This feature is experimental.", "duration": 10000});
 			} else {
 				// stop recording
 				var mp3buf = encoder.flush();
@@ -3086,7 +3091,7 @@ Rect.prototype.contains = function(x, y) {
 				recording = false;
 				button.textContent = "Record MP3";
 				button.classList.remove("stuck");
-				new Notification({"id": "mp3", "title": "MP3 recording finished", "html": "<a href=\""+url+"\" target=\"blank\">And here it is!</a> (open or save as)<br><br>This feature is experimental.<br>Send complaints to <a href=\"mailto:multiplayerpiano.com@gmail.com\">multiplayerpiano.com@gmail.com</a>.", "duration": 0});
+				new Notification({"id": "mp3", "title": "MP3 recording finished", "html": "<a href=\""+url+"\" target=\"blank\">And here it is!</a> (open or save as)<br><br>This feature is experimental.", "duration": 0});
 			}
 		});
 		function onAudioProcess(evt) {
