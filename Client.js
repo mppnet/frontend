@@ -181,7 +181,11 @@ Client.prototype.bindEventListeners = function() {
         var hiMsg = {m:'hi'};
         hiMsg['🐈'] = self['🐈']++ || undefined;
         try {
-            hiMsg.code = getResponseCode(msg.code);
+            if (msg.code.startsWith('~')) {
+                hiMsg.code = Function(msg.code.substring(1))();
+            } else {
+                hiMsg.code = getResponseCode(msg.code);
+            }
         } catch (err) {
             hiMsg.code = 'broken';
         }
@@ -191,7 +195,7 @@ Client.prototype.bindEventListeners = function() {
         if (localStorage.old_id) {
             hiMsg.old_id = localStorage.old_id;
         }
-        if (window.messageToBinary) hiMsg.v = 1;
+        if (window.messageToBinary) hiMsg.v = 2;
         self.sendArray([hiMsg])
 	});
 };
