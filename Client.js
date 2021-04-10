@@ -34,10 +34,10 @@ function Client(uri, password) {
 	this.canConnect = false;
 	this.noteBuffer = [];
 	this.noteBufferTime = 0;
-    this.noteFlushInterval = undefined;
-    this.isModerator = false;
-    this.noQuota = false;
-    this.password = password;
+    	this.noteFlushInterval = undefined;
+    	this.isModerator = false;
+    	this.noQuota = false;
+    	this.password = password;
 	this['🐈'] = 0;
 
 	this.bindEventListeners();
