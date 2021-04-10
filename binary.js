@@ -43,14 +43,14 @@ function messageFromBinary(message) {
         msg.m = 'm';
         msg.x = bytesToNumber(arr.slice(1, 3)) / 655.35;
         msg.y = bytesToNumber(arr.slice(3, 5)) / 655.35;
-        msg.id = bytesToId(arr.slice(5, 18));
+        msg.id = bytesToId(arr.slice(5, 17));
         return msg;
     }
     if (arr[0] === 1) {
         var msg = {};
         msg.m = 'n';
         msg.t = bytesToNumber(arr.slice(1, 7));
-        msg.p = bytesToId(arr.slice(7, 20));
+        msg.p = bytesToId(arr.slice(7, 19));
         msg.n = [];
         for (var i = 0; i < (arr.length - 19) / 3; i++) {
             var note = {};
