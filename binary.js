@@ -2,6 +2,7 @@ var keys = ["a-1", "as-1", "b-1", "c0", "cs0", "d0", "ds0", "e0", "f0", "fs0", "
 
 function messageToBinary(message) {
     if (message.m === 'm') {
+        if (!(message.x >= 0 && message.y >= 0 && message.x <= 100 && message.y <= 100)) return;
         var arr = new Uint8Array(5);
         arr[0] = 0;
         var newX = Math.round(message.x * 655.35);
