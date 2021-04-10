@@ -2261,6 +2261,7 @@ Rect.prototype.contains = function(x, y) {
 			var info = $("#room .info[roomid=\"" + (room.id + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0') + "\"]");
 			if(info.length == 0) {
 				info = $("<div class=\"info\"></div>");
+				info.attr("roomname", room._id);
                 info.attr("roomid", room.id);
 				$("#room .more").append(info);
 			}
