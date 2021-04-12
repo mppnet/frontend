@@ -34,10 +34,10 @@ function Client(uri, password) {
 	this.canConnect = false;
 	this.noteBuffer = [];
 	this.noteBufferTime = 0;
-    	this.noteFlushInterval = undefined;
-    	this.isModerator = false;
-    	this.noQuota = false;
-    	this.password = password;
+    this.noteFlushInterval = undefined;
+    this.isModerator = false;
+    this.noQuota = false;
+    this.password = password;
 	this['🐈'] = 0;
 
 	this.bindEventListeners();
@@ -103,7 +103,7 @@ Client.prototype.connect = function() {
 		} else {
 			++self.connectionAttempts;
 		}
-		var ms_lut = [50, 2950, 7000, 10000];
+		var ms_lut = [50, 2500, 10000, 20000, 60000];
 		var idx = self.connectionAttempts;
 		if(idx >= ms_lut.length) idx = ms_lut.length - 1;
 		var ms = ms_lut[idx];
@@ -114,7 +114,6 @@ Client.prototype.connect = function() {
 		self.ws.close(); // self.ws.emit("close");
 	});
 	this.ws.addEventListener("open", function(evt) {
-        self.connectionTime = Date.now();
 		self.pingInterval = setInterval(function() {
 			self.sendArray([{m: "t", e: Date.now()}]);
 		}, 20000);
@@ -149,6 +148,7 @@ Client.prototype.connect = function() {
 Client.prototype.bindEventListeners = function() {
 	var self = this;
 	this.on("hi", function(msg) {
+        self.connectionTime = Date.now();
 		self.user = msg.u;
 		self.receiveServerTime(msg.t, msg.e || undefined);
 		if(self.desiredChannelId) {
