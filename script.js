@@ -1196,6 +1196,7 @@ Rect.prototype.contains = function(x, y) {
     } else {
         var gClient = new Client('wss://mppclone.com:8443', localStorage.password);
     }
+    if (localStorage.password) localStorage.token = localStorage.password //migrate to the name "token" instead of "password"
 	gClient.setChannel(channel_id);
 	gClient.start();
 
@@ -1323,36 +1324,42 @@ Rect.prototype.contains = function(x, y) {
 			for(var id in gClient.ppl) {
 				if(gClient.ppl.hasOwnProperty(id)) {
 					var part = gClient.ppl[id];
-					if(part.id === gClient.participantId) {
-						$(part.nameDiv).addClass("me");
-					} else {
-						$(part.nameDiv).removeClass("me");
-					}
-					if(msg.ch.crown && msg.ch.crown.participantId === part.id) {
-						$(part.nameDiv).addClass("owner");
-						$(part.cursorDiv).addClass("owner");
-					} else {
-						$(part.nameDiv).removeClass("owner");
-						$(part.cursorDiv).removeClass("owner");
-					}
-                    if(part.bot) {
-						$(part.nameDiv).addClass("bot");
-					} else {
-						$(part.nameDiv).removeClass("bot");
-					}
-					if(gPianoMutes.indexOf(part._id) !== -1) {
-						$(part.nameDiv).addClass("muted-notes");
-					} else {
-						$(part.nameDiv).removeClass("muted-notes");
-					}
-					if(gChatMutes.indexOf(part._id) !== -1) {
-						$(part.nameDiv).addClass("muted-chat");
-					} else {
-						$(part.nameDiv).removeClass("muted-chat");
-					}
+					updateLabels(part);
 				}
 			}
 		});
+        gClient.on("participant added", function(part) {
+            updateLabels(part);
+        });
+        function updateLabels(part) {
+            if(part.id === gClient.participantId) {
+                $(part.nameDiv).addClass("me");
+            } else {
+                $(part.nameDiv).removeClass("me");
+            }
+            if(gClient.channel.crown && gClient.channel.crown.participantId === part.id) {
+                $(part.nameDiv).addClass("owner");
+                $(part.cursorDiv).addClass("owner");
+            } else {
+                $(part.nameDiv).removeClass("owner");
+                $(part.cursorDiv).removeClass("owner");
+            }
+            if(part.bot) {
+                $(part.nameDiv).addClass("bot");
+            } else {
+                $(part.nameDiv).removeClass("bot");
+            }
+            if(gPianoMutes.indexOf(part._id) !== -1) {
+                $(part.nameDiv).addClass("muted-notes");
+            } else {
+                $(part.nameDiv).removeClass("muted-notes");
+            }
+            if(gChatMutes.indexOf(part._id) !== -1) {
+                $(part.nameDiv).addClass("muted-chat");
+            } else {
+                $(part.nameDiv).removeClass("muted-chat");
+            }
+        }
 		function updateCursor(msg) {
 			const part = gClient.ppl[msg.id];
 			if (part && part.cursorDiv) {
