@@ -21,7 +21,7 @@ function messageToBinary(message) {
             if (message.n[i].s === 1) {
                 arr[7 + i * 3 + 1] = 0;
             } else {
-                arr[7 + i * 3 + 1] = 1 + Math.round(Math.max(message.n[i].v, 1) * 254);
+                arr[7 + i * 3 + 1] = 1 + Math.round(Math.min(message.n[i].v, 1) * 254);
             }
             arr[7 + i * 3 + 2] = message.n[i].d || 0;
         }
