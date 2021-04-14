@@ -2272,7 +2272,7 @@ Rect.prototype.contains = function(x, y) {
                 info.attr("roomid", room.id);
 				$("#room .more").append(info);
 			}
-			info.text("(" + room.count + ") " + room._id);
+			info.text(room.count + '/' + ('limit' in room.settings ? room.settings.limit : 20) + " " + room._id);
 			if(room.settings.lobby) info.addClass("lobby");
 			else info.removeClass("lobby");
 			if(!room.settings.chat) info.addClass("no-chat");
