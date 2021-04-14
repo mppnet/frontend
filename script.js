@@ -1081,7 +1081,7 @@ Rect.prototype.contains = function(x, y) {
 		if(!this.keys.hasOwnProperty(note) || !participant) return;
 		var key = this.keys[note];
 		if(key.loaded) this.audio.play(key.note, vol, delay_ms, participant.id);
-		if(gMidiOutTest) gMidiOutTest(key.note, vol * 100, delay_ms);
+		if(gMidiOutTest) gMidiOutTest(key.note, vol * 100, delay_ms, participant.id);
 		var self = this;
 		setTimeout(function() {
 			self.renderer.visualize(key, participant.color);
@@ -1100,7 +1100,7 @@ Rect.prototype.contains = function(x, y) {
 		if(!this.keys.hasOwnProperty(note)) return;
 		var key = this.keys[note];
 		if(key.loaded) this.audio.stop(key.note, delay_ms, participant.id);
-		if(gMidiOutTest) gMidiOutTest(key.note, 0, delay_ms);
+		if(gMidiOutTest) gMidiOutTest(key.note, 0, delay_ms, participant.id);
 	};
 	
 	var gPiano = new Piano(document.getElementById("piano"));
@@ -1602,6 +1602,7 @@ Rect.prototype.contains = function(x, y) {
 	var gShowIdsInChat = localStorage.showIdsInChat == "true";
 	var gNoChatColors = localStorage.noChatColors == "true";
 	var gNoBackgroundColor = localStorage.noBackgroundColor == "true";
+	var gOutputOwnNotes = localStorage.outputOwnNotes == "true";
 
 
 
@@ -2822,11 +2823,11 @@ Rect.prototype.contains = function(x, y) {
 								}
 								console.log("output", output);
 							}
-							gMidiOutTest = function(note_name, vel, delay_ms) {
+							gMidiOutTest = function(note_name, vel, delay_ms, participantId) {
+							    if (!gOutputOwnNotes && participantId === gClient.participantId) return;
 								var note_number = MIDI_KEY_NAMES.indexOf(note_name);
 								if(note_number == -1) return;
 								note_number = note_number + 9 - MIDI_TRANSPOSE;
-
 								var outputs = midi.outputs.values();
 								for(var output_it = outputs.next(); output_it && !output_it.done; output_it = outputs.next()) {
 									var output = output_it.value;
@@ -3358,6 +3359,22 @@ Rect.prototype.contains = function(x, y) {
                     } else {
                     	setBackgroundColorToDefault();
                     }
+			    };
+				html.appendChild(setting);
+			})();
+
+			// output own notes
+			(function() {
+				var setting = document.createElement("div");
+			    setting.classList = "setting";
+			    setting.innerText = "Output own notes to MIDI";
+			    if (gOutputOwnNotes) {
+                    setting.classList.toggle("enabled");
+			    }
+			    setting.onclick = function() {
+			    	setting.classList.toggle("enabled");
+			    	localStorage.outputOwnNotes = setting.classList.contains("enabled");
+			    	gOutputOwnNotes = setting.classList.contains("enabled");
 			    };
 				html.appendChild(setting);
 			})();
