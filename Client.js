@@ -351,6 +351,7 @@ Client.prototype.receiveServerTime = function(time, echo) {
 };
 
 Client.prototype.startNote = function(note, vel) {
+    if (typeof note !== 'string') return;
     if(this.isConnected()) {
         var vel = typeof vel === "undefined" ? undefined : +vel.toFixed(3);
         if(!this.noteBufferTime) {
@@ -363,6 +364,7 @@ Client.prototype.startNote = function(note, vel) {
 };
 
 Client.prototype.stopNote = function(note) {
+    if (typeof note !== 'string') return;
     if(this.isConnected()) {
         if(!this.noteBufferTime) {
             this.noteBufferTime = Date.now();
