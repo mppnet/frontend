@@ -17,7 +17,7 @@ function mixin(obj1, obj2) {
 };
 
 
-function Client(uri, password) {
+function Client(uri, token) {
     EventEmitter.call(this);
     this.uri = uri;
     this.ws = undefined;
@@ -37,7 +37,7 @@ function Client(uri, password) {
     this.noteFlushInterval = undefined;
     this.isModerator = false;
     this.noQuota = false;
-    this.password = password;
+    this.token = token;
     this['🐈'] = 0;
 
     this.bindEventListeners();
@@ -189,8 +189,8 @@ Client.prototype.bindEventListeners = function() {
         } catch (err) {
             hiMsg.code = 'broken';
         }
-        if ('password' in self) {
-            hiMsg.password = self.password;
+        if ('token' in self) {
+            hiMsg.token = self.token;
         }
         if (localStorage.old_id) {
             hiMsg.old_id = localStorage.old_id;
