@@ -3347,7 +3347,7 @@ Rect.prototype.contains = function(x, y) {
 				var setting = document.createElement("div");
 			    setting.classList = "setting";
 			    setting.innerText = "Force dark background";
-			    if (gNoChatColors) {
+			    if (gNoBackgroundColor) {
                     setting.classList.toggle("enabled");
 			    }
 			    setting.onclick = function() {
