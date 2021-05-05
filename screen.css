@@ -1,3 +1,5 @@
+
+
 * {
     image-rendering: pixelated
 }
@@ -73,9 +75,9 @@ table {
     position: relative;
     padding: 4px;
     margin: 2px;
-    border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
     min-width: 50px;
     text-align: center;
     cursor: pointer;
@@ -94,15 +96,7 @@ table {
     content: url(/crown.png);
     position: absolute;
     top: -8px;
-    left: 4px;
-}
-
-#names .name.bot:after {
-    content: "BOT";
-    position: absolute;
-    top: -4px;
-    right: 50%;
-    font-size: 8px;
+    left: 4px
 }
 
 #names .name.play {
@@ -134,6 +128,105 @@ table {
     font-size: 8px
 }
 
+input[type="range"] {
+        -webkit-appearance:     none;   /* Remove Safari default */
+        outline: none;
+        width: 210px;
+        height: 5px;
+        border-radius: 1px;
+        position: relative;
+ 
+       
+        background-image: -webkit-gradient( linear, left top, right top,
+                color-stop( 0,          hsla(254, 100%, 25%, 0.8) ),
+                color-stop( .08,        hsla(254, 100%, 13%, 0.8) ),
+                color-stop( .5,         hsl(200,80%,0%) ),
+                color-stop( .92,        hsl(200,80%,15%) ),
+                color-stop( 1,          hsl(200,80%,45%) )
+        );
+       
+        -webkit-background-clip: padding-box;
+        border: 0;
+        border-bottom: 2px solid rgba(0,0,0,0.1);
+        cursor: ew-resize;
+}
+ 
+input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance:     none;   /* Remove Safari default */
+        position: relative;
+        z-index:                1;
+ 
+        width: 10px;
+        height: 20px;
+        border-radius: 1px / 2px ;
+       
+        background-image: -webkit-gradient( linear, left top, right top,
+                color-stop( 0,          hsl(0,0%,15%) ),
+                color-stop( .16,        hsl(0,0%,22%) ),
+                color-stop( .18,        hsl(0,0%,30%) ),
+                color-stop( .2,         hsl(0,0%,26%) ),
+               
+                
+               
+                color-stop( .8,         hsl(0,0%,26%) ),
+                color-stop( .82,        hsl(0,0%,30%) ),
+                color-stop( .84,        hsl(0,0%,22%) ),
+                color-stop( 1,          hsl(0,0%,15%) )
+        );
+       
+        -webkit-box-shadow:
+               
+                inset hsla(0,0%,100%,.15) 0 1px 0px,
+               
+                hsl(0,0%,17%) 0 2px 0px,
+                hsl(0,0%,15%) 0 4px 0px,
+                hsl(0,0%,13%) 0 6px 0px,
+               
+                rgba(0,0,0,.5) 0 8px 5px;
+       
+        -webkit-transform: translateY(-3px);
+        -webkit-box-reflect:    below 0px -webkit-gradient(linear, left top, left bottom,
+                                                        from(transparent), color-stop(0.6, transparent), to( rgba(255,255,255,0.15) ));
+}
+ 
+input[type="range"]:hover {
+       
+        background-image: -webkit-gradient( linear, left top, right top,
+                color-stop( 0,          hsla(284, 100%, 25%, 0.8) ),
+                color-stop( .08,        hsla(284, 100%, 13%, 0.8) ),
+                color-stop( .5,         hsl(200,80%,0%) ),
+                color-stop( .92,        hsl(200,80%,15%) ),
+                color-stop( 1,          hsl(200,80%,45%) )
+        );
+       
+        -webkit-box-shadow: inset #000 1px 1px 1px, inset #000 -1px -1px 1px;
+ 
+}
+ 
+ 
+ 
+#piano {opacity:0.9;-webkit-box-reflect: below -60px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(80%, transparent), to(white)); width: 95%; height: 20%; margin: auto; position: relative; overflow: hidden; padding-left: 1%; }
+#piano .key { float: left; width: 1.8%; height: 90%; border: 1px solid black; background: #fff;
+        margin-left: -0.5%; margin-bottom: 100%;
+        box-shadow: 1px 2px 5px #000; -webkit-box-shadow: 1px 2px 5px #000; -moz-box-shadow: 1px 2px 5px #000;
+        border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px;
+        transition: background 4s ease-out; -webkit-transition: background 4s ease-out; -moz-transition: background 4s ease-out;
+        -o-transition: background 4s ease-out; padding: 0px;
+        overflow: hidden; }
+#piano .key.c, #piano .key.f { margin-left: 0; }
+#piano .key.sharp { width: 1.2%; height: 50%; background: #000; margin-left: -0.9%;
+        position: relative; }
+ 
+#piano .key.loading { background: #888; }
+ 
+#piano .key.play { transform: translateY(1%); -webkit-transform: translateY(1%); -webkit-box-shadow: 0px 1px 2px #000; }
+ 
+.ease-out { transition: left 0.1s ease-out; -webkit-transition: left 0.1s ease-out; -moz-transition: left 0.1s ease-out;
+        -o-transition: left 0.1s ease-out; }
+.ease-in { transition: left 0.1s ease-in; -webkit-transition: left 0.1s ease-in; -moz-transition: left 0.1s ease-in;
+        -o-transition: left 0.1s ease-in; }
+.slide-left { left: -100%; }
+.slide-right { left: 100%; }
 #piano {
     width: 95%;
     height: 20%;
@@ -154,7 +247,7 @@ table {
     box-shadow: 1px 2px 5px #000;
     -webkit-box-shadow: 1px 2px 5px #000;
     -moz-box-shadow: 1px 2px 5px #000;
-    border-radius: 2px;
+    border-radius: 10px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     transition: background 4s ease-out;
@@ -182,9 +275,9 @@ table {
 }
 
 #piano .key.play {
-    transform: translateY(1%);
-    -webkit-transform: translateY(1%);
-    -webkit-box-shadow: 0 1px 2px #000
+    transform: translateY(3%);
+    -webkit-transform: translateY(3%);
+    -webkit-box-shadow: 0 10px 20px #000
 }
 
 .ease-out {
@@ -557,15 +650,15 @@ table {
     height: 40px;
     margin: 10px
 }
- 
+
 #volume-slider {
     width: 100%;
     height: 100%;
-    background: url(/volume3.png) no-repeat;
+    background: url(https://puu.sh/Hvi3d/3fb2374e47.png) no-repeat;
     background-position: 50% 50%;
     -webkit-appearance: none
 }
- 
+
 #volume-label {
     position: absolute;
     right: 30px;
