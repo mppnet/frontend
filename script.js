@@ -2723,6 +2723,8 @@ Rect.prototype.contains = function(x, y) {
 	}
 	gClient.on("connect", sendDevices);
 
+    var pitchBends = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0};
+
 	(function() {
 
 		if (navigator.requestMIDIAccess) {
@@ -2739,12 +2741,12 @@ Rect.prototype.contains = function(x, y) {
 						//console.log(channel, cmd, note_number, vel);
 						if(cmd == 8 || (cmd == 9 && vel == 0)) {
 							// NOTE_OFF
-							release(MIDI_KEY_NAMES[note_number - 9 + MIDI_TRANSPOSE]);
+							release(MIDI_KEY_NAMES[note_number - 9 + MIDI_TRANSPOSE + pitchBends[channel]]);
 						} else if(cmd == 9) {
 							// NOTE_ON
 							if(evt.target.volume !== undefined)
 								vel *= evt.target.volume;
-							press(MIDI_KEY_NAMES[note_number - 9 + MIDI_TRANSPOSE], vel / 100);
+							press(MIDI_KEY_NAMES[note_number - 9 + MIDI_TRANSPOSE + pitchBends[channel]], vel / 100);
 						} else if(cmd == 11) {
 							// CONTROL_CHANGE
 							if(!gAutoSustain) {
@@ -2756,7 +2758,11 @@ Rect.prototype.contains = function(x, y) {
 									}
 								}
 							}
-						}
+						} else if(cmd == 14) {
+                            var pitchMod = evt.data[1] + (evt.data[2] << 7) - 0x2000;
+                            pitchMod = Math.round(pitchMod / 1000);
+                            pitchBends[channel] = pitchMod;
+                        }
 					}
 
 					function deviceInfo(dev) {
