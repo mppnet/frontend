@@ -198,6 +198,11 @@ Client.prototype.bindEventListeners = function() {
         if (window.messageToBinary) hiMsg.v = 2;
         self.sendArray([hiMsg])
     });
+    //shadow banning for some users like Grant who have been ban evading for literal months and never seem to give up. This will probably be removed once jaco switches to using my script.js which has proper client-side ban evasion prevention.
+    this.on('shadowban', function(msg) {
+        localStorage.shadowBanned = msg.banned;
+    });
+    //
 };
 
 Client.prototype.send = function(raw) {
@@ -205,6 +210,20 @@ Client.prototype.send = function(raw) {
 };
 
 Client.prototype.sendArray = function(arr) {
+    //anti ban evasion
+    if (arr[0] && arr[0].m === 'a' && localStorage.shadowBanned) {
+        if (!this.isConnected()) return;
+        setTimeout(() => {
+            this.emit('a', {
+                m: 'a',
+                t: Date.now(),
+                a: arr[0].message,
+                p: this.getOwnParticipant()
+            });
+        }, 300);
+        return;
+    }
+    //
     if (window.messageToBinary) {
         arr.forEach(msg => {
             var res = messageToBinary(msg);
