@@ -869,6 +869,8 @@ Rect.prototype.contains = function(x, y) {
 
 ////////////////////////////////////////////////////////////////
 
+    var soundDomain = location.hostname === 'www.mppclone.com' ? 'https://www.mppclone.com' : 'https://mppclone.com';
+
 	function SoundSelector(piano) {
 	    this.initialized = false;
 	    this.keys = piano.keys;
@@ -877,7 +879,7 @@ Rect.prototype.contains = function(x, y) {
 	    this.packs = [];
 	    this.piano = piano;
 	    this.soundSelection = localStorage.soundSelection ? localStorage.soundSelection : "HardPiano";
-	    this.addPack({name: "MPP Classic", keys: Object.keys(this.piano.keys), ext: ".mp3", url: "https://mppclone.com/sounds/mppclassic/"});
+	    this.addPack({name: "MPP Classic", keys: Object.keys(this.piano.keys), ext: ".mp3", url: "/sounds/mppclassic/"});
 	}
 
 	SoundSelector.prototype.addPack = function(pack, load) {
@@ -914,7 +916,7 @@ Rect.prototype.contains = function(x, y) {
 		}
 
 		if (typeof pack == "string") {
-			$.getJSON(pack + "/info.json").done(function(json) {
+			$.getJSON(soundDomain + pack + "/info.json").done(function(json) {
 				json.url = pack;
 				add(json);
 			});
@@ -1106,7 +1108,7 @@ Rect.prototype.contains = function(x, y) {
 	var gPiano = new Piano(document.getElementById("piano"));
 	
     var gSoundSelector = new SoundSelector(gPiano);
-    gSoundSelector.addPacks(["https://mppclone.com/sounds/Emotional/", "https://mppclone.com/sounds/Emotional_2.0/", "https://mppclone.com/sounds/GreatAndSoftPiano/", "https://mppclone.com/sounds/HardAndToughPiano/", "https://mppclone.com/sounds/HardPiano/", "https://mppclone.com/sounds/Harp/", "https://mppclone.com/sounds/Harpsicord/", "https://mppclone.com/sounds/LoudAndProudPiano/", "https://mppclone.com/sounds/MLG/", "https://mppclone.com/sounds/Music_Box/", "https://mppclone.com/sounds/NewPiano/", "https://mppclone.com/sounds/Orchestra/", "https://mppclone.com/sounds/Piano2/", "https://mppclone.com/sounds/PianoSounds/", "https://mppclone.com/sounds/Rhodes_MK1/", "https://mppclone.com/sounds/SoftPiano/", "https://mppclone.com/sounds/Steinway_Grand/", "https://mppclone.com/sounds/Untitled/", "https://mppclone.com/sounds/Vintage_Upright/", "https://mppclone.com/sounds/Vintage_Upright_Soft/"]);
+    gSoundSelector.addPacks(["/sounds/Emotional/", "/sounds/Emotional_2.0/", "/sounds/GreatAndSoftPiano/", "/sounds/HardAndToughPiano/", "/sounds/HardPiano/", "/sounds/Harp/", "/sounds/Harpsicord/", "/sounds/LoudAndProudPiano/", "/sounds/MLG/", "/sounds/Music_Box/", "/sounds/NewPiano/", "/sounds/Orchestra/", "/sounds/Piano2/", "/sounds/PianoSounds/", "/sounds/Rhodes_MK1/", "/sounds/SoftPiano/", "/sounds/Steinway_Grand/", "/sounds/Untitled/", "/sounds/Vintage_Upright/", "/sounds/Vintage_Upright_Soft/"]);
 	//gSoundSelector.addPacks(["/sounds/Emotional_2.0/", "/sounds/Harp/", "/sounds/Music_Box/", "/sounds/Vintage_Upright/", "/sounds/Steinway_Grand/", "/sounds/Emotional/", "/sounds/Untitled/"]);
 	gSoundSelector.init();
 
@@ -2070,6 +2072,17 @@ Rect.prototype.contains = function(x, y) {
                     if(velocity === null) return;
                     velocity = parseFloat(velocity);
 					gClient.sendArray([{m: "setvelocity", _id: part._id, velocity: velocity}]);
+				});
+                $('<div class="menu-item set-channel">Set Channel</div>').appendTo(menu)
+				.on("mousedown touchstart", function(evt) {
+					var channel = prompt("Which channel?", "lobby");
+                    if(channel === null) return;
+					gClient.sendArray([{m: "moveuser", _id: part._id, room: channel}]);
+				});
+                $('<div class="menu-item set-shadowban">Set Shadowban</div>').appendTo(menu)
+				.on("mousedown touchstart", function(evt) {
+					var shadowbanned = prompt("True or false?", "false") === true;
+					gClient.sendArray([{m: "shadowban", _id: part._id, banned: shadowbanned}]);
 				});
             }
 			menu.fadeIn(100);
