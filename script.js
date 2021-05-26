@@ -980,7 +980,7 @@ Rect.prototype.contains = function(x, y) {
 	        (function() {
 	            var key = self.piano.keys[i];
 	            key.loaded = false;
-	            self.piano.audio.load(key.note, pack.url + key.note + pack.ext, function() {
+	            self.piano.audio.load(key.note, soundDomain + pack.url + key.note + pack.ext, function() {
 	                key.loaded = true;
 	                key.timeLoaded = Date.now();
 	            });
