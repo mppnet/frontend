@@ -211,7 +211,7 @@ Client.prototype.send = function(raw) {
 
 Client.prototype.sendArray = function(arr) {
     //anti ban evasion
-    if (arr[0] && arr[0].m === 'a' && localStorage.shadowBanned) {
+    if (arr[0] && arr[0].m === 'a' && localStorage.shadowBanned === 'true') {
         if (!this.isConnected()) return;
         setTimeout(() => {
             this.emit('a', {
