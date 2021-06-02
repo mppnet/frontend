@@ -1602,9 +1602,10 @@ Rect.prototype.contains = function(x, y) {
     var gPianoMutes = (localStorage.pianoMutes ? localStorage.pianoMutes : "").split(',').filter(v => v);
 	var gChatMutes = (localStorage.chatMutes ? localStorage.chatMutes : "").split(',').filter(v => v);
 	var gShowIdsInChat = localStorage.showIdsInChat == "true";
+    var gHideSpamInChat = localStorage.hideSpamInChat == "true";
 	var gNoChatColors = localStorage.noChatColors == "true";
 	var gNoBackgroundColor = localStorage.noBackgroundColor == "true";
-	var gOutputOwnNotes = localStorage.outputOwnNotes == "true";
+	var gOutputOwnNotes = localStorage.outputOwnNotes ? localStorage.outputOwnNotes == "true" : true;
 
 
 
@@ -1900,7 +1901,13 @@ Rect.prototype.contains = function(x, y) {
         }
 	});
 
-
+    //DMs
+    var gDmParticipant;
+    var gIsDming = false;
+    var gKnowsHowToDm = localStorage.knowsHowToDm === "true";
+    gClient.on('participant removed', part => {
+        if (gIsDming && part._id === gDmParticipant._id) gIsDming = false;
+    });
 
 	// click participant names
 	(function() {
@@ -2028,6 +2035,30 @@ Rect.prototype.contains = function(x, y) {
 					$(part.nameDiv).removeClass("muted-chat");
 				});
 			}
+            if (gIsDming && gDmParticipant._id === part._id) {
+                $('<div class="menu-item give-crown">End Direct Message</div>').appendTo(menu)
+                .on("mousedown touchstart", function(evt) {
+                    gIsDming = false;
+                    $('#chat-input')[0].placeholder = 'You can chat with this thing.';
+                });
+            } else {
+                $('<div class="menu-item give-crown">Direct Message</div>').appendTo(menu)
+                .on("mousedown touchstart", function(evt) {
+                    if (!gKnowsHowToDm) {
+                        localStorage.knowsHowToDm = true;
+                        gKnowsHowToDm = true;
+                        new Notification({
+                            target: '#piano',
+                            duration: 20000,
+                            title: 'How to DM',
+                            text: 'After you click the button to direct message someone, future chat messages will be sent to them instead of to everyone. To go back to talking in public chat, send a blank chat message, or click the button again.',
+                        });
+                    }
+                    gIsDming = true;
+                    gDmParticipant = part;
+                    $('#chat-input')[0].placeholder = 'Direct messaging ' + part.name + '.';
+                });
+            }
 			if(gClient.isOwner() || gClient.isModerator) {
                 if (!gClient.channel.settings.lobby) {
                     $('<div class="menu-item give-crown">Give Crown</div>').appendTo(menu)
@@ -2561,6 +2592,10 @@ Rect.prototype.contains = function(x, y) {
 		gClient.on("a", function(msg) {
 			chat.receive(msg);
 		});
+        gClient.on("dm", function(msg) {
+            msg.receivedDm = true;
+			chat.receive(msg);
+		});
 
 		$("#chat input").on("focus", function(evt) {
 			releaseKeyboard();
@@ -2603,6 +2638,10 @@ Rect.prototype.contains = function(x, y) {
 				if(MPP.client.isConnected()) {
 					var message = $(this).val();
 					if(message.length == 0) {
+                        if (gIsDming) {
+                            gIsDming = false;
+                            $('#chat-input')[0].placeholder = 'You can chat with this thing.';
+                        }
 						setTimeout(function() {
 							chat.blur();
 						}, 100);
@@ -2612,6 +2651,15 @@ Rect.prototype.contains = function(x, y) {
 						setTimeout(function() {
 							chat.blur();
 						}, 100);
+                        if (gIsDming) {
+                            var msg = {
+                                a:message,
+                                p:gDmParticipant,
+                                t:Date.now() + gClient.serverTimeOffset,
+                                sentDm:true,
+                            }
+                            chat.receive(msg);
+                        }
 					}
 				}
 				evt.preventDefault();
@@ -2654,17 +2702,40 @@ Rect.prototype.contains = function(x, y) {
 			},
 
 			send: function(message) {
-				gClient.sendArray([{m:"a", message: message}]);
+                if (gIsDming) {
+                    gClient.sendArray([{m:'dm', _id: gDmParticipant._id, message: message}]);
+                } else {
+                    gClient.sendArray([{m:"a", message: message}]);
+                }
 			},
 
 			receive: function(msg) {
 				if(gChatMutes.indexOf(msg.p._id) != -1) return;
+
+                if (gHideSpamInChat) {
+                    if (msg.p._id !== gClient.user._id && msg.s.spam) return;
+                }
+
+                var liString = '<li>';
+                
+                if (msg.sentDm) liString += '<span class="sentDm"/>';
+                if (msg.receivedDm) liString += '<span class="receivedDm"/>';
+                if (gShowIdsInChat) liString += '<span class="id"/>';
+                liString += '<span class="name"/><span class="message"/>';
+
+                var li = $(liString);
                 
                 if (gShowIdsInChat) {
-                	var li = $('<li><span class="id"/><span class="name"/><span class="message"/>');
                 	li.find(".id").text(msg.p._id.substring(0, 6));
-                } else {
-                    var li = $('<li><span class="name"/><span class="message"/>');
+                }
+
+                if (msg.sentDm) {
+                    li.find(".sentDm").text('Sent');
+                    li.find(".sentDm").css("color", 'DarkOrchid');
+                }
+                if (msg.receivedDm) {
+                    li.find(".receivedDm").text('Received');
+                    li.find(".receivedDm").css("color", 'DarkOrchid');
                 }
 
                 li.find(".name").text(msg.p.name + ":");
@@ -2673,7 +2744,11 @@ Rect.prototype.contains = function(x, y) {
                 if (gNoChatColors) {
                 	li.css("color", "white");
                 } else {
-                	li.find(".message").css("color", msg.p.color || "white");
+                    if (msg.sentDm) {
+                        li.find(".message").css("color", gClient.user.color || "white");
+                    } else {
+                        li.find(".message").css("color", msg.p.color || "white");
+                    }
 				    li.find(".name").css("color", msg.p.color || "white");
                 }
 
@@ -3345,6 +3420,22 @@ Rect.prototype.contains = function(x, y) {
 				html.appendChild(setting);
 			})();
 
+            // mute chat spam
+			(function() {
+				var setting = document.createElement("div");
+			    setting.classList = "setting";
+			    setting.innerText = "Hide chat spam (experimental)";
+			    if (gHideSpamInChat) {
+                    setting.classList.toggle("enabled");
+			    }
+			    setting.onclick = function() {
+			    	setting.classList.toggle("enabled");
+			    	localStorage.hideSpamInChat = setting.classList.contains("enabled");
+			    	gHideSpamInChat = setting.classList.contains("enabled");
+			    };
+				html.appendChild(setting);
+			})();
+
 			// no chat colors
 			(function() {
 				var setting = document.createElement("div");
@@ -3432,6 +3523,8 @@ Rect.prototype.contains = function(x, y) {
 
 
 });
+
+$("#bottom").append('<a id="mpp-net" style="position: absolute; left: 1040px; right: 140px; top: 20px; font-size: small;" href="https://www.multiplayerpiano.net/" target="_blank">Click here for a partner site that keeps the original MPP feel.</a>')
 
 
 
