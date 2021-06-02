@@ -968,6 +968,14 @@ input[type="range"]:hover {
     opacity: 0
 }
 
+#chat li .receivedDm {
+    margin-right: 6px
+}
+
+#chat li .sentDm {
+    margin-right: 6px
+}
+
 #chat li .id {
     margin-right: 6px
 }
