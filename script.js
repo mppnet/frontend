@@ -2730,11 +2730,11 @@ Rect.prototype.contains = function(x, y) {
                 }
 
                 if (msg.sentDm) {
-                    li.find(".sentDm").text('Sent');
+                    li.find(".sentDm").text('To');
                     li.find(".sentDm").css("color", 'DarkOrchid');
                 }
                 if (msg.receivedDm) {
-                    li.find(".receivedDm").text('Received');
+                    li.find(".receivedDm").text('From');
                     li.find(".receivedDm").css("color", 'DarkOrchid');
                 }
 
