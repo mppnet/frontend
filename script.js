@@ -2036,13 +2036,13 @@ Rect.prototype.contains = function(x, y) {
 				});
 			}
             if (gIsDming && gDmParticipant._id === part._id) {
-                $('<div class="menu-item give-crown">End Direct Message</div>').appendTo(menu)
+                $('<div class="menu-item">End Direct Message</div>').appendTo(menu)
                 .on("mousedown touchstart", function(evt) {
                     gIsDming = false;
                     $('#chat-input')[0].placeholder = 'You can chat with this thing.';
                 });
             } else {
-                $('<div class="menu-item give-crown">Direct Message</div>').appendTo(menu)
+                $('<div class="menu-item">Direct Message</div>').appendTo(menu)
                 .on("mousedown touchstart", function(evt) {
                     if (!gKnowsHowToDm) {
                         localStorage.knowsHowToDm = true;
