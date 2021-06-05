@@ -969,20 +969,32 @@ input[type="range"]:hover {
 }
 
 #chat li .receivedDm {
-    margin-right: 6px
+    margin-right: 8px
 }
 
 #chat li .sentDm {
-    margin-right: 6px
+    margin-right: 8px
+}
+
+#chat li .otherDm {
+    margin-right: 8px
+}
+
+#chat li .dmArrow {
+    margin-right: 8px
 }
 
 #chat li .id {
-    margin-right: 6px
+    margin-right: 8px
 }
 
 #chat li .name {
     font-weight: 700;
-    margin-right: 10px
+    margin-right: 8px
+}
+#chat li .name2 {
+    font-weight: 700;
+    margin-right: 8px
 }
 
 #chat li .message {
