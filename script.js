@@ -1602,6 +1602,7 @@ Rect.prototype.contains = function(x, y) {
     var gPianoMutes = (localStorage.pianoMutes ? localStorage.pianoMutes : "").split(',').filter(v => v);
 	var gChatMutes = (localStorage.chatMutes ? localStorage.chatMutes : "").split(',').filter(v => v);
 	var gShowIdsInChat = localStorage.showIdsInChat == "true";
+    var gShowTimestampsInChat = localStorage.showTimestampsInChat == "true";
     var gHideSpamInChat = localStorage.hideSpamInChat == "true";
 	var gNoChatColors = localStorage.noChatColors == "true";
 	var gNoBackgroundColor = localStorage.noBackgroundColor == "true";
@@ -2715,6 +2716,8 @@ Rect.prototype.contains = function(x, y) {
 
                 var isSpecialDm = false;
                 
+                if (gShowTimestampsInChat) liString += '<span class="timestamp"/>';
+
                 if (msg.m === 'dm') {
                     if (msg.sender._id === gClient.user._id) { //sent dm
                         liString += '<span class="sentDm"/>';
@@ -2753,6 +2756,10 @@ Rect.prototype.contains = function(x, y) {
                         li.find(".dmArrow").text('->');
                         li.find(".dmArrow").css("color", '#ff55ff');
                     }
+                }
+
+                if (gShowTimestampsInChat) {
+                    li.find(".timestamp").text(new Date(msg.t).toLocaleTimeString());
                 }
 
                 //apply names, colors, ids
@@ -3452,7 +3459,7 @@ Rect.prototype.contains = function(x, y) {
 			(function() {
 				var setting = document.createElement("div");
 			    setting.classList = "setting";
-			    setting.innerText = "IDs next to names in chat";
+			    setting.innerText = "Show user IDs in chat";
 			    if (gShowIdsInChat) {
                     setting.classList.toggle("enabled");
 			    }
@@ -3460,6 +3467,22 @@ Rect.prototype.contains = function(x, y) {
 			    	setting.classList.toggle("enabled");
 			    	localStorage.showIdsInChat = setting.classList.contains("enabled");
 			    	gShowIdsInChat = setting.classList.contains("enabled");
+			    };
+				html.appendChild(setting);
+			})();
+
+            // show timestamps in chat
+			(function() {
+				var setting = document.createElement("div");
+			    setting.classList = "setting";
+			    setting.innerText = "Timestamps in chat";
+			    if (gShowTimestampsInChat) {
+                    setting.classList.toggle("enabled");
+			    }
+			    setting.onclick = function() {
+			    	setting.classList.toggle("enabled");
+			    	localStorage.showTimestampsInChat = setting.classList.contains("enabled");
+			    	gShowTimestampsInChat = setting.classList.contains("enabled");
 			    };
 				html.appendChild(setting);
 			})();
