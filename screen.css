@@ -984,6 +984,10 @@ input[type="range"]:hover {
     margin-right: 8px
 }
 
+#chat li .timestamp {
+    margin-right: 8px
+}
+
 #chat li .id {
     margin-right: 8px
 }
