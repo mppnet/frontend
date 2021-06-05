@@ -1756,7 +1756,7 @@ Rect.prototype.contains = function(x, y) {
 
 	var capsLockKey = false;
 
-	var transpose_octave = 0;
+	var transpose = 0;
 	
 	function handleKeyDown(evt) {
 		//console.log(evt);
@@ -1767,10 +1767,13 @@ Rect.prototype.contains = function(x, y) {
 				binding.held = true;
 
 				var note = binding.note;
-				var octave = 1 + note.octave + transpose_octave;
+				var octave = 1 + note.octave;
 				if(evt.shiftKey) ++octave;
 				else if(capsLockKey || evt.ctrlKey) --octave;
 				note = note.note + octave;
+                var index = Object.keys(gPiano.keys).indexOf(note);
+                note = Object.keys(gPiano.keys)[index + transpose];
+                if (note === undefined) return;
 				var vol = velocityFromMouseY();
 				press(note, vol);
 			}
@@ -1791,10 +1794,14 @@ Rect.prototype.contains = function(x, y) {
 		} else if(code === 0x20) { // Space Bar
 			pressSustain();
 			evt.preventDefault();
-		} else if((code === 38 || code === 39) && transpose_octave < 3) {
-			++transpose_octave;
-		} else if((code === 40 || code === 37) && transpose_octave > -2) {
-			--transpose_octave;
+		} else if(code === 38 && transpose <= 24) {
+			transpose += 12;
+		} else if(code === 40 && transpose >= -12) {
+			transpose -= 12;
+        } else if (code === 39 && transpose < 36) {
+            transpose++;
+        } else if (code === 37 && transpose > -24) {
+            transpose--;
 		} else if(code == 9) { // Tab (don't tab away from the piano)
 			evt.preventDefault();
 		} else if(code == 8) { // Backspace (don't navigate Back)
@@ -1811,10 +1818,13 @@ Rect.prototype.contains = function(x, y) {
 				binding.held = false;
 				
 				var note = binding.note;
-				var octave = 1 + note.octave + transpose_octave;
+				var octave = 1 + note.octave;
 				if(evt.shiftKey) ++octave;
 				else if(capsLockKey || evt.ctrlKey) --octave;
 				note = note.note + octave;
+                var index = Object.keys(gPiano.keys).indexOf(note);
+                note = Object.keys(gPiano.keys)[index + transpose];
+                if (note === undefined) return;
 				release(note);
 			}
 
@@ -2704,7 +2714,11 @@ Rect.prototype.contains = function(x, y) {
 			},
 
 			receive: function(msg) {
-				if(gChatMutes.indexOf(msg.p._id) != -1) return;
+                if (msg.m === 'dm') {
+                    if(gChatMutes.indexOf(msg.sender._id) != -1) return;
+                } else {
+                    if(gChatMutes.indexOf(msg.p._id) != -1) return;
+                }
 
                 if (gHideSpamInChat) {
                     if (msg.p._id !== gClient.user._id && msg.s && msg.s.spam) return;
