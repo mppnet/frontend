@@ -1906,7 +1906,10 @@ Rect.prototype.contains = function(x, y) {
     var gIsDming = false;
     var gKnowsHowToDm = localStorage.knowsHowToDm === "true";
     gClient.on('participant removed', part => {
-        if (gIsDming && part._id === gDmParticipant._id) gIsDming = false;
+        if (gIsDming && part._id === gDmParticipant._id) {
+            gIsDming = false;
+            $('#chat-input')[0].placeholder = 'You can chat with this thing.';
+        }
     });
 
 	// click participant names
@@ -2593,7 +2596,6 @@ Rect.prototype.contains = function(x, y) {
 			chat.receive(msg);
 		});
         gClient.on("dm", function(msg) {
-            msg.receivedDm = true;
 			chat.receive(msg);
 		});
 
@@ -2651,15 +2653,6 @@ Rect.prototype.contains = function(x, y) {
 						setTimeout(function() {
 							chat.blur();
 						}, 100);
-                        if (gIsDming) {
-                            var msg = {
-                                a:message,
-                                p:gDmParticipant,
-                                t:Date.now() + gClient.serverTimeOffset,
-                                sentDm:true,
-                            }
-                            chat.receive(msg);
-                        }
 					}
 				}
 				evt.preventDefault();
@@ -2713,44 +2706,95 @@ Rect.prototype.contains = function(x, y) {
 				if(gChatMutes.indexOf(msg.p._id) != -1) return;
 
                 if (gHideSpamInChat) {
-                    if (msg.p._id !== gClient.user._id && msg.s.spam) return;
+                    if (msg.p._id !== gClient.user._id && msg.s && msg.s.spam) return;
                 }
+
+                //construct string for creating list element
 
                 var liString = '<li>';
+
+                var isSpecialDm = false;
                 
-                if (msg.sentDm) liString += '<span class="sentDm"/>';
-                if (msg.receivedDm) liString += '<span class="receivedDm"/>';
-                if (gShowIdsInChat) liString += '<span class="id"/>';
-                liString += '<span class="name"/><span class="message"/>';
+                if (msg.m === 'dm') {
+                    if (msg.sender._id === gClient.user._id) { //sent dm
+                        liString += '<span class="sentDm"/>';
+                    } else if (msg.recipient._id === gClient.user._id) { //received dm
+                        liString += '<span class="receivedDm"/>';
+                    } else { //someone else's dm
+                        liString += '<span class="otherDm"/>';
+                        isSpecialDm = true;
+                    }
+                }
+
+                if (isSpecialDm) {
+                    if (gShowIdsInChat) liString += '<span class="id"/>';
+                    liString += '<span class="name"/><span class="dmArrow"/>';
+                    if (gShowIdsInChat) liString += '<span class="id2"/>';
+                    liString += '<span class="name2"/><span class="message"/>';
+                } else {
+                    if (gShowIdsInChat) liString += '<span class="id"/>';
+                    liString += '<span class="name"/><span class="message"/>';
+                }
 
                 var li = $(liString);
-                
-                if (gShowIdsInChat) {
-                	li.find(".id").text(msg.p._id.substring(0, 6));
-                }
 
-                if (msg.sentDm) {
-                    li.find(".sentDm").text('To');
-                    li.find(".sentDm").css("color", 'DarkOrchid');
-                }
-                if (msg.receivedDm) {
-                    li.find(".receivedDm").text('From');
-                    li.find(".receivedDm").css("color", 'DarkOrchid');
-                }
+                //prefix before dms so people know it's a dm
+                if (msg.m === 'dm') {
+                    if (msg.sender._id === gClient.user._id) { //sent dm
+                        li.find(".sentDm").text('To');
+                        li.find(".sentDm").css("color", '#ff55ff');
+                    } else if (msg.recipient._id === gClient.user._id) { //received dm
+                        li.find(".receivedDm").text('From');
+                        li.find(".receivedDm").css("color", '#ff55ff');
+                    } else { //someone else's dm
+                        li.find(".otherDm").text('DM');
+                        li.find(".otherDm").css("color", '#ff55ff');
 
-                li.find(".name").text(msg.p.name + ":");
-                li[0].title = msg.p._id;
-				li.find(".message").text(msg.a);
-                if (gNoChatColors) {
-                	li.css("color", "white");
-                } else {
-                    if (msg.sentDm) {
-                        li.find(".message").css("color", gClient.user.color || "white");
-                    } else {
-                        li.find(".message").css("color", msg.p.color || "white");
+                        li.find(".dmArrow").text('->');
+                        li.find(".dmArrow").css("color", '#ff55ff');
                     }
-				    li.find(".name").css("color", msg.p.color || "white");
                 }
+
+                //apply names, colors, ids
+				li.find(".message").text(msg.a);
+
+                if (msg.m === 'dm') {
+                    if (!gNoChatColors) li.find(".message").css("color", msg.sender.color || "white");
+                    if (gShowIdsInChat) li.find(".id").text(msg.sender._id.substring(0, 6));
+
+                    if (msg.sender._id === gClient.user._id) { //sent dm
+                        if (!gNoChatColors) li.find(".name").css("color", msg.recipient.color || "white");
+                        li.find(".name").text(msg.recipient.name + ":");
+                        li[0].title = msg.recipient._id;
+                    } else if (msg.recipient._id === gClient.user._id) { //received dm
+                        if (!gNoChatColors) li.find(".name").css("color", msg.sender.color || "white");
+                        li.find(".name").text(msg.sender.name + ":");
+
+                        li[0].title = msg.sender._id;
+                    } else { //someone else's dm
+                        if (!gNoChatColors) li.find(".name").css("color", msg.sender.color || "white");
+                        if (!gNoChatColors) li.find(".name2").css("color", msg.recipient.color || "white");
+                        li.find(".name").text(msg.sender.name);
+                        li.find(".name2").text(msg.recipient.name + ":");
+
+                        if (gShowIdsInChat) li.find(".id").text(msg.sender._id.substring(0, 6));
+                        if (gShowIdsInChat) li.find(".id2").text(msg.recipient._id.substring(0, 6));
+
+                        li[0].title = msg.sender._id;
+                    }
+                } else {
+                    if (!gNoChatColors) li.find(".message").css("color", msg.p.color || "white");
+                    if (!gNoChatColors) li.find(".name").css("color", msg.p.color || "white");
+
+                    li.find(".name").text(msg.p.name + ":");
+
+                    if (!gNoChatColors) li.find(".message").css("color", msg.p.color || "white");
+                    if (gShowIdsInChat) li.find(".id").text(msg.p._id.substring(0, 6));
+
+                    li[0].title = msg.p._id;
+                }
+
+                //put list element in chat
 
 				$("#chat ul").append(li);
 
