@@ -1180,7 +1180,10 @@ Rect.prototype.contains = function(x, y) {
 		return decodeURIComponent(results[2].replace(/\+/g, ' '));
 	}
 
-
+    //remove chat autocomplete
+    if (window.location.hostname === 'multiplayerpiano.com') {
+        $('#chat-input')[0].autocomplete = 'off';
+    }
 
 
 // internet science
