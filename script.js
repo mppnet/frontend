@@ -1201,7 +1201,6 @@ Rect.prototype.contains = function(x, y) {
     } else {
         var gClient = new Client('wss://mppclone.com:8443', localStorage.token || localStorage.password);
     }
-    if (localStorage.password) localStorage.token = localStorage.password //migrate to the name "token" instead of "password"
 	gClient.setChannel(channel_id);
 	gClient.start();
 
