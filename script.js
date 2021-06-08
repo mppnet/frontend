@@ -1798,12 +1798,16 @@ Rect.prototype.contains = function(x, y) {
 			evt.preventDefault();
 		} else if(code === 38 && transpose <= 24) {
 			transpose += 12;
+            sendTransposeNotif();
 		} else if(code === 40 && transpose >= -12) {
 			transpose -= 12;
+            sendTransposeNotif();
         } else if (code === 39 && transpose < 36) {
             transpose++;
+            sendTransposeNotif();
         } else if (code === 37 && transpose > -24) {
             transpose--;
+            sendTransposeNotif();
 		} else if(code == 9) { // Tab (don't tab away from the piano)
 			evt.preventDefault();
 		} else if(code == 8) { // Backspace (don't navigate Back)
@@ -1811,6 +1815,15 @@ Rect.prototype.contains = function(x, y) {
 			evt.preventDefault();
 		}
 	};
+
+    function sendTransposeNotif() {
+        new Notification({
+            title: 'Transposing',
+            html: 'Transpose level: ' + transpose,
+            target: '#midi-btn',
+            duration: 1500
+        });
+    }
 
 	function handleKeyUp(evt) {
 		var code = parseInt(evt.keyCode);
