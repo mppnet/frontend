@@ -638,6 +638,10 @@ input[type="range"]:hover {
     background: url(/volume3.png) no-repeat;
     background-position: 50% 50%;
     -webkit-appearance: none
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 0;
 }
  
 #volume-label {
