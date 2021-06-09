@@ -1772,6 +1772,7 @@ Rect.prototype.contains = function(x, y) {
 				var octave = 1 + note.octave;
 				if(evt.shiftKey) ++octave;
 				else if(capsLockKey || evt.ctrlKey) --octave;
+                else if (evt.altKey) octave += 2;
 				note = note.note + octave;
                 var index = Object.keys(gPiano.keys).indexOf(note);
                 note = Object.keys(gPiano.keys)[index + transpose];
@@ -1836,6 +1837,7 @@ Rect.prototype.contains = function(x, y) {
 				var octave = 1 + note.octave;
 				if(evt.shiftKey) ++octave;
 				else if(capsLockKey || evt.ctrlKey) --octave;
+                else if (evt.altKey) octave += 2;
 				note = note.note + octave;
                 var index = Object.keys(gPiano.keys).indexOf(note);
                 note = Object.keys(gPiano.keys)[index + transpose];
