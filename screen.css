@@ -996,6 +996,10 @@ input[type="range"]:hover {
     margin-right: 8px
 }
 
+#chat li .id2 {
+    margin-right: 8px
+}
+
 #chat li .name {
     font-weight: 700;
     margin-right: 8px
