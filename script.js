@@ -1486,7 +1486,7 @@ Rect.prototype.contains = function(x, y) {
 			} else {
 				$("#room-settings-btn").hide();
             }
-            if(!gClient.channel.settings.lobby && gClient.isModerator) {
+            if(!gClient.channel.settings.lobby && (gClient.isModerator || gClient.channel.settings.owner_id === gClient.user._id)) {
                 $("#getcrown-btn").show();
                 $("#makelobby-btn").show();
 			} else {
@@ -1797,16 +1797,16 @@ Rect.prototype.contains = function(x, y) {
 		} else if(code === 0x20) { // Space Bar
 			pressSustain();
 			evt.preventDefault();
-		} else if(code === 38 && transpose <= 24) {
+		} else if(code === 38 && transpose <= 100) {
 			transpose += 12;
             sendTransposeNotif();
-		} else if(code === 40 && transpose >= -12) {
+		} else if(code === 40 && transpose >= -100) {
 			transpose -= 12;
             sendTransposeNotif();
-        } else if (code === 39 && transpose < 36) {
+        } else if (code === 39 && transpose < 100) {
             transpose++;
             sendTransposeNotif();
-        } else if (code === 37 && transpose > -24) {
+        } else if (code === 37 && transpose > -100) {
             transpose--;
             sendTransposeNotif();
 		} else if(code == 9) { // Tab (don't tab away from the piano)
@@ -3621,8 +3621,6 @@ Rect.prototype.contains = function(x, y) {
 
 
 });
-
-$("#bottom").append('<a id="mpp-net" style="position: absolute; left: 1040px; right: 140px; top: 20px; font-size: small;" href="https://www.multiplayerpiano.net/" target="_blank">Click here for a partner site that keeps the original MPP feel.</a>')
 
 
 
