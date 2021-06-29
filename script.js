@@ -1256,23 +1256,26 @@ Rect.prototype.contains = function(x, y) {
 			var div = document.createElement("div");
 			div.className = "name";
 			div.participantId = part.id;
-			div.textContent = part.name || "";
             div.style.backgroundColor = part.color || "#777";
             div.id = 'namediv-' + part._id;
-			if(gClient.participantId === part.id) {
-				$(div).addClass("me");
-			}
-			if(gClient.channel && gClient.channel.crown && gClient.channel.crown.participantId === part.id) {
-				$(div).addClass("owner");
-			}
-			if(gPianoMutes.indexOf(part._id) !== -1) {
-				$(part.nameDiv).addClass("muted-notes");
-			}
-			if(gChatMutes.indexOf(part._id) !== -1) {
-				$(part.nameDiv).addClass("muted-chat");
-			}
 			div.style.display = "none";
 			part.nameDiv = $("#names")[0].appendChild(div);
+
+            if (part.tag) {
+                div = document.createElement("div");
+			    div.className = "nametag";
+			    div.textContent = part.tag || "";
+                div.style.backgroundColor = tagColor(part.tag);
+                div.id = 'nametag-' + part._id;
+			    part.nameDiv.appendChild(div);
+            }
+
+            div = document.createElement("div");
+			div.className = "nametext";
+			div.textContent = part.name || "";
+            div.id = 'nametext-' + part._id;
+			part.nameDiv.appendChild(div);
+
 			$(part.nameDiv).fadeIn(2000);
 
 			// sort names
@@ -1318,7 +1321,7 @@ Rect.prototype.contains = function(x, y) {
 			var name = part.name || "";
 			var color = part.color || "#777";
 			part.nameDiv.style.backgroundColor = color;
-			part.nameDiv.textContent = name;
+			$('#nametext-' + part._id)[0].textContent = name;
 			$(part.cursorDiv)
 			.find(".name")
 			.text(name)
@@ -1348,11 +1351,6 @@ Rect.prototype.contains = function(x, y) {
                 $(part.nameDiv).removeClass("owner");
                 $(part.cursorDiv).removeClass("owner");
             }
-            if(part.bot) {
-                $(part.nameDiv).addClass("bot");
-            } else {
-                $(part.nameDiv).removeClass("bot");
-            }
             if(gPianoMutes.indexOf(part._id) !== -1) {
                 $(part.nameDiv).addClass("muted-notes");
             } else {
@@ -1363,6 +1361,13 @@ Rect.prototype.contains = function(x, y) {
             } else {
                 $(part.nameDiv).removeClass("muted-chat");
             }
+        }
+        function tagColor(tag) {
+            if (tag === 'BOT') return '#33f';
+            if (tag === 'OWNER') return '#f33';
+            if (tag === 'ADMIN') return '#f33';
+            if (tag === 'MOD') return '#3f3';
+            return '#777';
         }
 		function updateCursor(msg) {
 			const part = gClient.ppl[msg.id];
@@ -1944,17 +1949,21 @@ Rect.prototype.contains = function(x, y) {
 	(function() {
 		var ele = document.getElementById("names");
 		var touchhandler = function(e) {
-			var target_jq = $(e.target);
+            var target = e.path.find(function(ele) {
+                return ele.id && ele.id.startsWith('namediv');
+            });
+			var target_jq = $(target);
+            if (!target_jq) return;
 			if(target_jq.hasClass("name")) {
 				target_jq.addClass("play");
-				if(e.target.participantId == gClient.participantId) {
+                var id = target.participantId;
+				if(id == gClient.participantId) {
 					openModal("#rename", "input[name=name]");
 					setTimeout(function() {
 						$("#rename input[name=name]").val(gClient.ppl[gClient.participantId].name);
 						$("#rename input[name=color]").val(gClient.ppl[gClient.participantId].color);
 					}, 100);
-				} else if(e.target.participantId) {
-					var id = e.target.participantId;
+				} else if(id) {
 					var part = gClient.ppl[id] || null;
 					if(part) {
 						participantMenu(part);
