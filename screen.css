@@ -79,6 +79,7 @@ table {
     min-width: 50px;
     text-align: center;
     cursor: pointer;
+    height: 15px;
     line-height: 15px
 }
 
@@ -95,14 +96,6 @@ table {
     position: absolute;
     top: -8px;
     left: 4px;
-}
-
-#names .name.bot:after {
-    content: "BOT";
-    position: absolute;
-    top: -4px;
-    right: 50%;
-    font-size: 8px;
 }
 
 #names .name.play {
@@ -133,6 +126,26 @@ table {
     right: 50%;
     font-size: 8px
 }
+
+.nametag {
+    float: left;
+    position: relative;
+    padding: 4px;
+    margin-right: 5px;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 10px;
+    line-height: 7px
+}
+
+.nametext {
+    float: left;
+    margin-left: 5px;
+}
+
 input[type="range"] {
         -webkit-appearance:     none;   /* Remove Safari default */
         outline: none;
