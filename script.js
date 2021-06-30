@@ -1274,6 +1274,7 @@ Rect.prototype.contains = function(x, y) {
 			div.className = "nametext";
 			div.textContent = part.name || "";
             div.id = 'nametext-' + part._id;
+            if (part.tag) div.style.float = 'left';
 			part.nameDiv.appendChild(div);
 
 			$(part.nameDiv).fadeIn(2000);
