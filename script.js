@@ -1259,6 +1259,7 @@ Rect.prototype.contains = function(x, y) {
             div.style.backgroundColor = part.color || "#777";
             div.id = 'namediv-' + part._id;
 			div.style.display = "none";
+            if (part.veteran) div.title = 'This user is a veteran of Multiplayer Piano';
 			part.nameDiv = $("#names")[0].appendChild(div);
 
             if (part.tag) {
@@ -1275,6 +1276,7 @@ Rect.prototype.contains = function(x, y) {
 			div.textContent = part.name || "";
             div.id = 'nametext-' + part._id;
             if (part.tag) div.style.float = 'left';
+            if (part.veteran) div.style.color = '#ffdf00';
 			part.nameDiv.appendChild(div);
 
 			$(part.nameDiv).fadeIn(2000);
@@ -1300,6 +1302,7 @@ Rect.prototype.contains = function(x, y) {
 				div.className = "name";
 				div.style.backgroundColor = part.color || "#777"
 				div.textContent = part.name || "";
+                if (part.veteran) div.style.color = '#ffdf00';
 				part.cursorDiv.appendChild(div);
 
 			} else {
@@ -1364,10 +1367,10 @@ Rect.prototype.contains = function(x, y) {
             }
         }
         function tagColor(tag) {
-            if (tag === 'BOT') return '#33f';
-            if (tag === 'OWNER') return '#f33';
-            if (tag === 'ADMIN') return '#f33';
-            if (tag === 'MOD') return '#3f3';
+            if (tag === 'BOT') return '#55f';
+            if (tag === 'OWNER') return '#a00';
+            if (tag === 'ADMIN') return '#f55';
+            if (tag === 'MOD') return '#0a0';
             return '#777';
         }
 		function updateCursor(msg) {
