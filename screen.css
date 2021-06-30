@@ -142,8 +142,7 @@ table {
 }
 
 .nametext {
-    float: left;
-    margin-left: 5px;
+    
 }
 
 input[type="range"] {
