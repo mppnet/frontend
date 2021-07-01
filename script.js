@@ -1260,6 +1260,10 @@ Rect.prototype.contains = function(x, y) {
             div.id = 'namediv-' + part._id;
 			div.style.display = "none";
             if (part.veteran) div.title = 'This user is a veteran of Multiplayer Piano';
+            if (part.tag === 'BOT') div.title = 'This is an authorized bot.';
+            if (part.tag === 'MOD') div.title = 'This user is an official moderator of the site.';
+            if (part.tag === 'ADMIN') div.title = 'This user is an official administrator of the site.';
+            if (part.tag === 'OWNER') div.title = 'This user is the owner of the site.';
 			part.nameDiv = $("#names")[0].appendChild(div);
 
             if (part.tag) {
