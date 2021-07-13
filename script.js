@@ -1622,6 +1622,7 @@ Rect.prototype.contains = function(x, y) {
 	var gNoChatColors = localStorage.noChatColors == "true";
 	var gNoBackgroundColor = localStorage.noBackgroundColor == "true";
 	var gOutputOwnNotes = localStorage.outputOwnNotes ? localStorage.outputOwnNotes == "true" : true;
+	var gVirtualPianoLayout = localStorage.virtualPianoLayout == "true";
 
 
 
@@ -1724,50 +1725,101 @@ Rect.prototype.contains = function(x, y) {
 
 
 	var n = function(a, b) { return {note: new Note(a, b), held: false}; };
-	var key_binding = {
-		65: n("gs"),
-		90: n("a"),
-		83: n("as"),
-		88: n("b"),
-		67: n("c", 1),
-		70: n("cs", 1),
-		86: n("d", 1),
-		71: n("ds", 1),
-		66: n("e", 1),
-		78: n("f", 1),
-		74: n("fs", 1),
-		77: n("g", 1),
-		75: n("gs", 1),
-		188: n("a", 1),
-		76: n("as", 1),
-		190: n("b", 1),
-		191: n("c", 2),
-		222: n("cs", 2),
 
-		49: n("gs", 1),
-		81: n("a", 1),
-		50: n("as", 1),
-		87: n("b", 1),
-		69: n("c", 2),
-		52: n("cs", 2),
-		82: n("d", 2),
-		53: n("ds", 2),
-		84: n("e", 2),
-		89: n("f", 2),
-		55: n("fs", 2),
-		85: n("g", 2),
-		56: n("gs", 2),
-		73: n("a", 2),
-		57: n("as", 2),
-		79: n("b", 2),
-		80: n("c", 3),
-		189: n("cs", 3),
-		173: n("cs", 3), // firefox why
-		219: n("d", 3),
-		187: n("ds", 3),
-		61: n("ds", 3), // firefox why
-		221: n("e", 3)
-	};
+	var layouts = {
+		MPP: {
+			65: n("gs"),
+			90: n("a"),
+			83: n("as"),
+			88: n("b"),
+			67: n("c", 1),
+			70: n("cs", 1),
+			86: n("d", 1),
+			71: n("ds", 1),
+			66: n("e", 1),
+			78: n("f", 1),
+			74: n("fs", 1),
+			77: n("g", 1),
+			75: n("gs", 1),
+			188: n("a", 1),
+			76: n("as", 1),
+			190: n("b", 1),
+			191: n("c", 2),
+			222: n("cs", 2),
+
+			49: n("gs", 1),
+			81: n("a", 1),
+			50: n("as", 1),
+			87: n("b", 1),
+			69: n("c", 2),
+			52: n("cs", 2),
+			82: n("d", 2),
+			53: n("ds", 2),
+			84: n("e", 2),
+			89: n("f", 2),
+			55: n("fs", 2),
+			85: n("g", 2),
+			56: n("gs", 2),
+			73: n("a", 2),
+			57: n("as", 2),
+			79: n("b", 2),
+			80: n("c", 3),
+			189: n("cs", 3),
+			173: n("cs", 3), // firefox why
+			219: n("d", 3),
+			187: n("ds", 3),
+			61: n("ds", 3), // firefox why
+			221: n("e", 3)
+		},
+		VP: {
+			112: n("c", -1),
+			113: n("d", -1),
+			114: n("e", -1),
+			115: n("f", -1),
+			116: n("g", -1),
+			117: n("a", -1),
+			118: n("b", -1),
+
+			49: n("c"),
+			50: n("d"),
+			51: n("e"),
+			52: n("f"),
+			53: n("g"),
+			54: n("a"),
+			55: n("b"),
+			56: n("c", 1),
+			57: n("d", 1),
+			48: n("e", 1),
+			81: n("f", 1),
+			87: n("g", 1),
+			69: n("a", 1),
+			82: n("b", 1),
+			84: n("c", 2),
+			89: n("d", 2),
+			85: n("e", 2),
+			73: n("f", 2),
+			79: n("g", 2),
+			80: n("a", 2),
+			65: n("b", 2),
+			83: n("c", 3),
+			68: n("d", 3),
+			70: n("e", 3),
+			71: n("f", 3),
+			72: n("g", 3),
+			74: n("a", 3),
+			75: n("b", 3),
+			76: n("c", 4),
+			90: n("d", 4),
+			88: n("e", 4),
+			67: n("f", 4),
+			86: n("g", 4),
+			66: n("a", 4),
+			78: n("b", 4),
+			77: n("c", 5),
+		}
+	}
+
+	var key_binding = gVirtualPianoLayout ? layouts.VP : layouts.MPP; 
 
 	var capsLockKey = false;
 
@@ -1783,12 +1835,17 @@ Rect.prototype.contains = function(x, y) {
 
 				var note = binding.note;
 				var octave = 1 + note.octave;
-				if(evt.shiftKey) ++octave;
-				else if(capsLockKey || evt.ctrlKey) --octave;
-                else if (evt.altKey) octave += 2;
+				if(!gVirtualPianoLayout) {
+					if(evt.shiftKey) ++octave;
+					else if(capsLockKey || evt.ctrlKey) --octave;
+					else if (evt.altKey) octave += 2;
+				}
 				note = note.note + octave;
                 var index = Object.keys(gPiano.keys).indexOf(note);
-                note = Object.keys(gPiano.keys)[index + transpose];
+                if(gVirtualPianoLayout && evt.shiftKey) {
+                	note = Object.keys(gPiano.keys)[index + transpose + 1];
+                }
+                else note = Object.keys(gPiano.keys)[index + transpose];
                 if (note === undefined) return;
 				var vol = velocityFromMouseY();
 				press(note, vol);
@@ -1848,12 +1905,17 @@ Rect.prototype.contains = function(x, y) {
 				
 				var note = binding.note;
 				var octave = 1 + note.octave;
-				if(evt.shiftKey) ++octave;
-				else if(capsLockKey || evt.ctrlKey) --octave;
-                else if (evt.altKey) octave += 2;
+				if(!gVirtualPianoLayout) {
+					if(evt.shiftKey) ++octave;
+					else if(capsLockKey || evt.ctrlKey) --octave;
+	                else if (evt.altKey) octave += 2;
+	            }
 				note = note.note + octave;
                 var index = Object.keys(gPiano.keys).indexOf(note);
-                note = Object.keys(gPiano.keys)[index + transpose];
+                if(gVirtualPianoLayout && evt.shiftKey) {
+                	note = Object.keys(gPiano.keys)[index + transpose + 1];
+                }
+                else note = Object.keys(gPiano.keys)[index + transpose];
                 if (note === undefined) return;
 				release(note);
 			}
@@ -3600,6 +3662,23 @@ Rect.prototype.contains = function(x, y) {
 			    	setting.classList.toggle("enabled");
 			    	localStorage.outputOwnNotes = setting.classList.contains("enabled");
 			    	gOutputOwnNotes = setting.classList.contains("enabled");
+			    };
+				html.appendChild(setting);
+			})();
+
+			// virtual piano layout
+			(function() {
+				var setting = document.createElement("div");
+			    setting.classList = "setting";
+			    setting.innerText = "Virtual Piano layout";
+			    if (gVirtualPianoLayout) {
+                    setting.classList.toggle("enabled");
+			    }
+			    setting.onclick = function() {
+			    	setting.classList.toggle("enabled");
+			    	localStorage.virtualPianoLayout = setting.classList.contains("enabled");
+			    	gVirtualPianoLayout = setting.classList.contains("enabled");
+			    	key_binding = gVirtualPianoLayout ? layouts.VP : layouts.MPP;
 			    };
 				html.appendChild(setting);
 			})();
