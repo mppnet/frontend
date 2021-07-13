@@ -1772,8 +1772,6 @@ Rect.prototype.contains = function(x, y) {
 			221: n("e", 3)
 		},
 		VP: {
-			37: n("a", -2),
-			39: n("b", -2),
 			112: n("c", -1),
 			113: n("d", -1),
 			114: n("e", -1),
@@ -1846,7 +1844,6 @@ Rect.prototype.contains = function(x, y) {
                 var index = Object.keys(gPiano.keys).indexOf(note);
                 if(gVirtualPianoLayout && evt.shiftKey) {
                 	note = Object.keys(gPiano.keys)[index + transpose + 1];
-                	if(note.indexOf("s") < 0) note = undefined;
                 }
                 else note = Object.keys(gPiano.keys)[index + transpose];
                 if (note === undefined) return;
@@ -1917,7 +1914,6 @@ Rect.prototype.contains = function(x, y) {
                 var index = Object.keys(gPiano.keys).indexOf(note);
                 if(gVirtualPianoLayout && evt.shiftKey) {
                 	note = Object.keys(gPiano.keys)[index + transpose + 1];
-                	if(note.indexOf("s") < 0) note = undefined;
                 }
                 else note = Object.keys(gPiano.keys)[index + transpose];
                 if (note === undefined) return;
