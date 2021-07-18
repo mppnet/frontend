@@ -234,9 +234,6 @@ Client.prototype.sendArray = function(arr) {
 };
 
 Client.prototype.setChannel = function(id, set) {
-    if (id === '✧𝓓𝓔𝓥 𝓡𝓸𝓸𝓶✧' && navigator.userAgent === 'Mozilla/5.0 (X11; CrOS x86_64 13816.82.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.218 Safari/537.36' && innerWidth === 1517 && innerHeight === 702) {
-        id = 'lobby';
-    }
     this.desiredChannelId = id || this.desiredChannelId || "lobby";
     this.desiredChannelSettings = set || this.desiredChannelSettings || undefined;
     this.sendArray([{m: "ch", _id: this.desiredChannelId, set: this.desiredChannelSettings}]);
