@@ -2220,11 +2220,6 @@ Rect.prototype.contains = function(x, y) {
                     if(channel === null) return;
 					gClient.sendArray([{m: "moveuser", _id: part._id, room: channel}]);
 				});
-                $('<div class="menu-item set-shadowban">Set Shadowban</div>').appendTo(menu)
-				.on("mousedown touchstart", function(evt) {
-					var shadowbanned = prompt("True or false?", "false") === true;
-					gClient.sendArray([{m: "shadowban", _id: part._id, banned: shadowbanned}]);
-				});
             }
 			menu.fadeIn(100);
 		};
