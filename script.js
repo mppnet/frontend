@@ -1245,6 +1245,8 @@ Rect.prototype.contains = function(x, y) {
         });
     })();
 
+    var participantTouchhandler; //declare this outside of the smaller functions so it can be used below and setup later
+
 	// Handle changes to participants
 	(function() {
 		gClient.on("participant added", function(part) {
@@ -1253,35 +1255,37 @@ Rect.prototype.contains = function(x, y) {
 			part.displayY = 50;
 
 			// add nameDiv
-			var div = document.createElement("div");
-			div.className = "name";
-			div.participantId = part.id;
-            div.style.backgroundColor = part.color || "#777";
-            div.id = 'namediv-' + part._id;
-			div.style.display = "none";
-            if (part.veteran) div.title = 'This user is a veteran of Multiplayer Piano';
-            if (part.tag === 'BOT') div.title = 'This is an authorized bot.';
-            if (part.tag === 'MOD') div.title = 'This user is an official moderator of the site.';
-            if (part.tag === 'ADMIN') div.title = 'This user is an official administrator of the site.';
-            if (part.tag === 'OWNER') div.title = 'This user is the owner of the site.';
-			part.nameDiv = $("#names")[0].appendChild(div);
+			var nameDiv = document.createElement("div");
+			nameDiv.className = "name";
+			nameDiv.participantId = part.id;
+            nameDiv.style.backgroundColor = part.color || "#777";
+            nameDiv.id = 'namediv-' + part._id;
+			nameDiv.style.display = "none";
+            if (part.veteran) nameDiv.title = 'This user is a veteran of Multiplayer Piano';
+            if (part.tag === 'BOT') nameDiv.title = 'This is an authorized bot.';
+            if (part.tag === 'MOD') nameDiv.title = 'This user is an official moderator of the site.';
+            if (part.tag === 'ADMIN') nameDiv.title = 'This user is an official administrator of the site.';
+            if (part.tag === 'OWNER') nameDiv.title = 'This user is the owner of the site.';
+            nameDiv.addEventListener("mousedown", e => participantTouchhandler(e, nameDiv));
+            nameDiv.addEventListener("touchstart", e => participantTouchhandler(e, nameDiv));
+			part.nameDiv = $("#names")[0].appendChild(nameDiv);
 
             if (part.tag) {
-                div = document.createElement("div");
-			    div.className = "nametag";
-			    div.textContent = part.tag || "";
-                div.style.backgroundColor = tagColor(part.tag);
-                div.id = 'nametag-' + part._id;
-			    part.nameDiv.appendChild(div);
+                var tagDiv = document.createElement("div");
+			    tagDiv.className = "nametag";
+			    tagDiv.textContent = part.tag || "";
+                tagDiv.style.backgroundColor = tagColor(part.tag);
+                tagDiv.id = 'nametag-' + part._id;
+			    part.nameDiv.appendChild(tagDiv);
             }
 
-            div = document.createElement("div");
-			div.className = "nametext";
-			div.textContent = part.name || "";
-            div.id = 'nametext-' + part._id;
-            if (part.tag) div.style.float = 'left';
-            if (part.veteran) div.style.color = '#ffdf00';
-			part.nameDiv.appendChild(div);
+            var textDiv = document.createElement("div");
+			textDiv.className = "nametext";
+			textDiv.textContent = part.name || "";
+            textDiv.id = 'nametext-' + part._id;
+            if (part.tag) textDiv.style.float = 'left';
+            if (part.veteran) textDiv.style.color = '#ffdf00';
+			part.nameDiv.appendChild(textDiv);
 
 			$(part.nameDiv).fadeIn(2000);
 
@@ -2017,11 +2021,8 @@ Rect.prototype.contains = function(x, y) {
 
 	// click participant names
 	(function() {
-		var ele = document.getElementById("names");
-		var touchhandler = function(e) {
-            var target = e.path.find(function(ele) {
-                return ele.id && ele.id.startsWith('namediv');
-            });
+		participantTouchhandler = function(e, ele) {
+            var target = ele;
 			var target_jq = $(target);
             if (!target_jq) return;
 			if(target_jq.hasClass("name")) {
@@ -2037,13 +2038,11 @@ Rect.prototype.contains = function(x, y) {
 					var part = gClient.ppl[id] || null;
 					if(part) {
 						participantMenu(part);
-						e.stopPropagation();
+                        e.stopPropagation();
 					}
 				}
 			}
 		};
-		ele.addEventListener("mousedown", touchhandler);
-		ele.addEventListener("touchstart", touchhandler);
 		var releasehandler = function(e) {
 			$("#names .name").removeClass("play");
 		};
