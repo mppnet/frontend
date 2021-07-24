@@ -200,6 +200,8 @@ Client.prototype.send = function(raw) {
 };
 
 Client.prototype.sendArray = function(arr) {
+    this.send(JSON.stringify(arr));
+    /*
     if (window.messageToBinary) {
         arr.forEach(msg => {
             var res = messageToBinary(msg);
@@ -212,6 +214,7 @@ Client.prototype.sendArray = function(arr) {
     } else {
         this.send(JSON.stringify(arr));
     }
+    */
 };
 
 Client.prototype.setChannel = function(id, set) {
