@@ -1197,9 +1197,9 @@ Rect.prototype.contains = function(x, y) {
 
     var wssport = 8443;
     if (window.location.hostname === "10.0.0.24") {
-        var gClient = new Client("ws://10.0.0.24:8443", localStorage.token || localStorage.password);
+        var gClient = new Client("ws://localhost:8443");
     } else {
-        var gClient = new Client('wss://mppclone.com:8443', localStorage.token || localStorage.password);
+        var gClient = new Client('wss://mppclone.com:8443');
     }
 	gClient.setChannel(channel_id);
 	gClient.start();
