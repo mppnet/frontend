@@ -153,6 +153,7 @@ Client.prototype.bindEventListeners = function() {
         if(self.desiredChannelId) {
             self.setChannel();
         }
+        if (msg.token) localStorage.token = msg.token;
     });
     this.on("t", function(msg) {
         self.receiveServerTime(msg.t, msg.e || undefined);
@@ -184,11 +185,8 @@ Client.prototype.bindEventListeners = function() {
         } catch (err) {
             hiMsg.code = 'broken';
         }
-        if ('token' in self) {
-            hiMsg.token = self.token;
-        }
-        if (localStorage.old_id) {
-            hiMsg.old_id = localStorage.old_id;
+        if (localStorage.token) {
+            hiMsg.token = localStorage.token;
         }
         if (window.messageToBinary) hiMsg.v = 2;
         self.sendArray([hiMsg])
