@@ -2989,7 +2989,7 @@ Rect.prototype.contains = function(x, y) {
 							// NOTE_ON
 							if(evt.target.volume !== undefined)
 								vel *= evt.target.volume;
-							press(MIDI_KEY_NAMES[note_number - 9 + MIDI_TRANSPOSE + pitchBends[channel]], vel / 100);
+							press(MIDI_KEY_NAMES[note_number - 9 + MIDI_TRANSPOSE + pitchBends[channel]], vel / 127);
 						} else if(cmd == 11) {
 							// CONTROL_CHANGE
 							if(!gAutoSustain) {
