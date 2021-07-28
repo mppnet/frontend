@@ -1127,6 +1127,7 @@ Rect.prototype.contains = function(x, y) {
 
 	function press(id, vol) {
 		if(!gClient.preventsPlaying() && gNoteQuota.spend(1)) {
+            id = Object.keys(gPiano.keys)[Object.keys(gPiano.keys).indexOf(id) + transpose];
 			gHeldNotes[id] = true;
 			gSustainedNotes[id] = true;
 			gPiano.play(id, vol !== undefined ? vol : DEFAULT_VELOCITY, gClient.getOwnParticipant(), 0);
@@ -1877,9 +1878,9 @@ Rect.prototype.contains = function(x, y) {
 				note = note.note + octave;
                 var index = Object.keys(gPiano.keys).indexOf(note);
                 if(gVirtualPianoLayout && evt.shiftKey) {
-                	note = Object.keys(gPiano.keys)[index + transpose + 1];
+                	note = Object.keys(gPiano.keys)[index + 1];
                 }
-                else note = Object.keys(gPiano.keys)[index + transpose];
+                else note = Object.keys(gPiano.keys)[index];
                 if (note === undefined) return;
 				var vol = velocityFromMouseY();
 				press(note, vol);
@@ -1947,9 +1948,9 @@ Rect.prototype.contains = function(x, y) {
 				note = note.note + octave;
                 var index = Object.keys(gPiano.keys).indexOf(note);
                 if(gVirtualPianoLayout && evt.shiftKey) {
-                	note = Object.keys(gPiano.keys)[index + transpose + 1];
+                	note = Object.keys(gPiano.keys)[index + 1];
                 }
-                else note = Object.keys(gPiano.keys)[index + transpose];
+                else note = Object.keys(gPiano.keys)[index];
                 if (note === undefined) return;
 				release(note);
 			}
