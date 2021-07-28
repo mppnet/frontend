@@ -1127,7 +1127,6 @@ Rect.prototype.contains = function(x, y) {
 
 	function press(id, vol) {
 		if(!gClient.preventsPlaying() && gNoteQuota.spend(1)) {
-            id = Object.keys(gPiano.keys)[Object.keys(gPiano.keys).indexOf(id) + transpose];
 			gHeldNotes[id] = true;
 			gSustainedNotes[id] = true;
 			gPiano.play(id, vol !== undefined ? vol : DEFAULT_VELOCITY, gClient.getOwnParticipant(), 0);
@@ -1886,9 +1885,9 @@ Rect.prototype.contains = function(x, y) {
 				note = note.note + octave;
                 var index = Object.keys(gPiano.keys).indexOf(note);
                 if(gVirtualPianoLayout && evt.shiftKey) {
-                	note = Object.keys(gPiano.keys)[index + 1];
+                	note = Object.keys(gPiano.keys)[index + transpose + 1];
                 }
-                else note = Object.keys(gPiano.keys)[index];
+                else note = Object.keys(gPiano.keys)[index + transpose];
                 if (note === undefined) return;
 				var vol = velocityFromMouseY();
 				press(note, vol);
@@ -1956,9 +1955,9 @@ Rect.prototype.contains = function(x, y) {
 				note = note.note + octave;
                 var index = Object.keys(gPiano.keys).indexOf(note);
                 if(gVirtualPianoLayout && evt.shiftKey) {
-                	note = Object.keys(gPiano.keys)[index + 1];
+                	note = Object.keys(gPiano.keys)[index + transpose + 1];
                 }
-                else note = Object.keys(gPiano.keys)[index];
+                else note = Object.keys(gPiano.keys)[index + transpose];
                 if (note === undefined) return;
 				release(note);
 			}
@@ -3023,12 +3022,12 @@ Rect.prototype.contains = function(x, y) {
 						//console.log(channel, cmd, note_number, vel);
 						if(cmd == 8 || (cmd == 9 && vel == 0)) {
 							// NOTE_OFF
-							release(MIDI_KEY_NAMES[note_number - 9 + MIDI_TRANSPOSE + pitchBends[channel]]);
+							release(MIDI_KEY_NAMES[note_number - 9 + MIDI_TRANSPOSE + transpose + pitchBends[channel]]);
 						} else if(cmd == 9) {
 							// NOTE_ON
 							if(evt.target.volume !== undefined)
 								vel *= evt.target.volume;
-							press(MIDI_KEY_NAMES[note_number - 9 + MIDI_TRANSPOSE + pitchBends[channel]], vel / 127);
+							press(MIDI_KEY_NAMES[note_number - 9 + MIDI_TRANSPOSE + transpose + pitchBends[channel]], vel / 127);
 						} else if(cmd == 11) {
 							// CONTROL_CHANGE
 							if(!gAutoSustain) {
