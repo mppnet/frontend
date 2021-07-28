@@ -16,7 +16,7 @@ function mixin(obj1, obj2) {
 };
 
 
-function Client(uri, token) {
+function Client(uri) {
     EventEmitter.call(this);
     this.uri = uri;
     this.ws = undefined;
@@ -36,7 +36,6 @@ function Client(uri, token) {
     this.noteFlushInterval = undefined;
     this.isModerator = false;
     this.noQuota = false;
-    this.token = token;
     this['🐈'] = 0;
 
     this.bindEventListeners();
@@ -291,10 +290,9 @@ Client.prototype.participantUpdate = function(update) {
         this.emit("participant added", part);
         this.emit("count", this.countParticipants());
     } else {
-        if(update.x) part.x = update.x;
-        if(update.y) part.y = update.y;
-        if(update.color) part.color = update.color;
-        if(update.name) part.name = update.name;
+        Object.keys(update).forEach(key => {
+            part[key] = update[key];
+        });
     }
 };
 
