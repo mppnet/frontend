@@ -1249,27 +1249,42 @@ Rect.prototype.contains = function(x, y) {
 
 	// Handle changes to participants
 	(function() {
-		gClient.on("participant added", function(part) {
+        function setupNameDiv(part) {
+            var hadNameDiv = Boolean(part.nameDiv);
 
-			part.displayX = 150;
-			part.displayY = 50;
-
-			// add nameDiv
-			var nameDiv = document.createElement("div");
-			nameDiv.className = "name";
-			nameDiv.participantId = part.id;
+            var nameDiv;
+            if (hadNameDiv) {
+                nameDiv = part.nameDiv;
+                $(nameDiv).empty();
+            } else {
+                nameDiv = document.createElement("div");
+                nameDiv.addEventListener("mousedown", e => participantTouchhandler(e, nameDiv));
+                nameDiv.addEventListener("touchstart", e => participantTouchhandler(e, nameDiv));
+                nameDiv.style.display = "none";
+                $(nameDiv).fadeIn(2000);
+                nameDiv.id = 'namediv-' + part._id;
+                nameDiv.className = "name";
+			    nameDiv.participantId = part.id;
+                $("#names")[0].appendChild(nameDiv);
+                part.nameDiv = nameDiv;
+            }
             nameDiv.style.backgroundColor = part.color || "#777";
-            nameDiv.id = 'namediv-' + part._id;
-			nameDiv.style.display = "none";
             if (part.veteran) nameDiv.title = 'This user is a veteran of Multiplayer Piano';
             if (part.tag === 'BOT') nameDiv.title = 'This is an authorized bot.';
             if (part.tag === 'MOD') nameDiv.title = 'This user is an official moderator of the site.';
             if (part.tag === 'ADMIN') nameDiv.title = 'This user is an official administrator of the site.';
             if (part.tag === 'OWNER') nameDiv.title = 'This user is the owner of the site.';
-            nameDiv.addEventListener("mousedown", e => participantTouchhandler(e, nameDiv));
-            nameDiv.addEventListener("touchstart", e => participantTouchhandler(e, nameDiv));
-			part.nameDiv = $("#names")[0].appendChild(nameDiv);
 
+            updateLabels(part);
+
+            if (part.vanished) {
+                var vanishDiv = document.createElement("div");
+			    vanishDiv.className = "nametag";
+			    vanishDiv.textContent = 'VANISH';
+                vanishDiv.style.backgroundColor = '#00ffcc';
+                vanishDiv.id = 'namevanish-' + part._id;
+			    part.nameDiv.appendChild(vanishDiv);
+            }
             if (part.tag) {
                 var tagDiv = document.createElement("div");
 			    tagDiv.className = "nametag";
@@ -1287,16 +1302,21 @@ Rect.prototype.contains = function(x, y) {
             if (part.veteran) textDiv.style.color = '#ffdf00';
 			part.nameDiv.appendChild(textDiv);
 
-			$(part.nameDiv).fadeIn(2000);
-
-			// sort names
-			var arr = $("#names .name");
+            var arr = $("#names .name");
 			arr.sort(function(a, b) {
 				if (a.id > b.id) return 1;
 				else if (a.id < b.id) return -1;
 				else return 0;
 			});
 			$("#names").html(arr);
+        }
+		gClient.on("participant added", function(part) {
+
+			part.displayX = 150;
+			part.displayY = 50;
+
+			// add nameDiv
+			setupNameDiv(part);
 
 			// add cursorDiv
 			if(gClient.participantId !== part.id || gSeeOwnCursor) {
@@ -1330,14 +1350,7 @@ Rect.prototype.contains = function(x, y) {
 			});
 		});
 		gClient.on("participant update", function(part) {
-			var name = part.name || "";
-			var color = part.color || "#777";
-			part.nameDiv.style.backgroundColor = color;
-			$('#nametext-' + part._id)[0].textContent = name;
-			$(part.cursorDiv)
-			.find(".name")
-			.text(name)
-			.css("background-color", color);
+			setupNameDiv(part);
 		});
 		gClient.on("ch", function(msg) {
 			for(var id in gClient.ppl) {
@@ -1505,11 +1518,19 @@ Rect.prototype.contains = function(x, y) {
             }
             if(!gClient.channel.settings.lobby && (gClient.isModerator || gClient.channel.settings.owner_id === gClient.user._id)) {
                 $("#getcrown-btn").show();
-                $("#makelobby-btn").show();
 			} else {
                 $("#getcrown-btn").hide();
-                $("#makelobby-btn").hide();
 			}
+            if (gClient.isModerator) {
+                $("#vanish-btn").show();
+                if (gClient.getOwnParticipant().vanished) {
+                    $("#vanish-btn").text('Unvanish');
+                } else {
+                    $("#vanish-btn").text('Vanish');
+                }
+            } else {
+                $("#vanish-btn").hide();
+            }
 		});
 		$("#room-settings-btn").click(function(evt) {
 			if(gClient.channel && (gClient.isOwner() || gClient.isModerator)) {
@@ -1556,9 +1577,18 @@ Rect.prototype.contains = function(x, y) {
         gClient.sendArray([{m:'chown', id:MPP.client.getOwnParticipant().id}]);
     });
 
-    // Make lobby button
-    $("#makelobby-btn").click(function(evt) {
-        gClient.sendArray([{m:'makelobby'}]);
+    // Vanish or unvanish button
+    $("#vanish-btn").click(function(evt) {
+        gClient.sendArray([{m:'v', vanish:!gClient.getOwnParticipant().vanished}]);
+    });
+    gClient.on('participant update', part => {
+        if (part._id === gClient.getOwnParticipant()._id) {
+            if (part.vanished) {
+                $("#vanish-btn").text('Unvanish');
+            } else {
+                $("#vanish-btn").text('Vanish');
+            }
+        }
     });
 
 	// Handle notifications
