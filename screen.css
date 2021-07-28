@@ -596,7 +596,7 @@ input[type="range"]:hover {
     left: 900px;
     top: 32px
 }
-#makelobby-btn {
+#vanish-btn {
     position: absolute;
     left: 780px;
     top: 4px
@@ -649,7 +649,7 @@ input[type="range"]:hover {
     height: 100%;
     background: url(/volume3.png) no-repeat;
     background-position: 50% 50%;
-    -webkit-appearance: none
+    -webkit-appearance: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
