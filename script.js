@@ -1250,7 +1250,7 @@ Rect.prototype.contains = function(x, y) {
 
 	// Handle changes to participants
 	(function() {
-        function setupNameDiv(part) {
+        function setupParticipantDivs(part) {
             var hadNameDiv = Boolean(part.nameDiv);
 
             var nameDiv;
@@ -1310,6 +1310,8 @@ Rect.prototype.contains = function(x, y) {
 				else return 0;
 			});
 			$("#names").html(arr);
+
+
         }
 		gClient.on("participant added", function(part) {
 
@@ -1317,7 +1319,7 @@ Rect.prototype.contains = function(x, y) {
 			part.displayY = 50;
 
 			// add nameDiv
-			setupNameDiv(part);
+			setupParticipantDivs(part);
 
 			// add cursorDiv
 			if(gClient.participantId !== part.id || gSeeOwnCursor) {
@@ -1351,7 +1353,13 @@ Rect.prototype.contains = function(x, y) {
 			});
 		});
 		gClient.on("participant update", function(part) {
-			setupNameDiv(part);
+            var name = part.name || "";
+			var color = part.color || "#777";
+			setupParticipantDivs(part);
+            $(part.cursorDiv)
+			.find(".name")
+			.text(name)
+			.css("background-color", color);
 		});
 		gClient.on("ch", function(msg) {
 			for(var id in gClient.ppl) {
