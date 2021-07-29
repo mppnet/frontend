@@ -101,7 +101,7 @@ Client.prototype.connect = function() {
         } else {
             ++self.connectionAttempts;
         }
-        var ms_lut = [50, 2500, 10000, 20000, 60000];
+        var ms_lut = [50, 2500, 10000];
         var idx = self.connectionAttempts;
         if(idx >= ms_lut.length) idx = ms_lut.length - 1;
         var ms = ms_lut[idx];
@@ -130,15 +130,10 @@ Client.prototype.connect = function() {
         self.emit("status", "Joining channel...");
     });
     this.ws.addEventListener("message", async function(evt) {
-        if (typeof evt.data === 'string') {
-            var transmission = JSON.parse(evt.data);
-            for(var i = 0; i < transmission.length; i++) {
-                var msg = transmission[i];
-                self.emit(msg.m, msg);
-            }
-        } else {
-            var transmission = messageFromBinary(await evt.data.arrayBuffer());
-            if (transmission) self.emit(transmission.m, transmission);
+        var transmission = JSON.parse(evt.data);
+        for(var i = 0; i < transmission.length; i++) {
+            var msg = transmission[i];
+            self.emit(msg.m, msg);
         }
     });
 };
@@ -187,7 +182,6 @@ Client.prototype.bindEventListeners = function() {
         if (localStorage.token) {
             hiMsg.token = localStorage.token;
         }
-        if (window.messageToBinary) hiMsg.v = 2;
         self.sendArray([hiMsg])
     });
 };
@@ -198,20 +192,6 @@ Client.prototype.send = function(raw) {
 
 Client.prototype.sendArray = function(arr) {
     this.send(JSON.stringify(arr));
-    /*
-    if (window.messageToBinary) {
-        arr.forEach(msg => {
-            var res = messageToBinary(msg);
-            if (res) {
-                this.send(res);
-            } else {
-                this.send(JSON.stringify([msg]));
-            }
-        });
-    } else {
-        this.send(JSON.stringify(arr));
-    }
-    */
 };
 
 Client.prototype.setChannel = function(id, set) {
@@ -293,6 +273,8 @@ Client.prototype.participantUpdate = function(update) {
         Object.keys(update).forEach(key => {
             part[key] = update[key];
         });
+        if (!update.tag) delete part.tag;
+        if (!update.vanished) delete part.vanished;
     }
 };
 
