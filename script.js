@@ -1238,13 +1238,6 @@ Rect.prototype.contains = function(x, y) {
         });
     })();
 
-    // Make ban evasion slightly more difficult
-    (function() {
-        gClient.on("hi", function(msg) {
-            localStorage.old_id = msg.u._id;
-        });
-    })();
-
     var participantTouchhandler; //declare this outside of the smaller functions so it can be used below and setup later
 
 	// Handle changes to participants
