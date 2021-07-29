@@ -34,7 +34,7 @@ function Client(uri) {
     this.noteBuffer = [];
     this.noteBufferTime = 0;
     this.noteFlushInterval = undefined;
-    this.isModerator = false;
+    this.permissions = {};
     this.noQuota = false;
     this['🐈'] = 0;
 
@@ -148,6 +148,11 @@ Client.prototype.bindEventListeners = function() {
             self.setChannel();
         }
         if (msg.token) localStorage.token = msg.token;
+        if (msg.permissions) {
+            self.permissions = msg.permissions;
+        } else {
+            self.permissions = {};
+        }
     });
     this.on("t", function(msg) {
         self.receiveServerTime(msg.t, msg.e || undefined);
@@ -296,7 +301,7 @@ Client.prototype.isOwner = function() {
 };
 
 Client.prototype.preventsPlaying = function() {
-    return this.isConnected() && !this.isOwner() && this.getChannelSetting("crownsolo") === true && !this.isModerator;
+    return this.isConnected() && !this.isOwner() && this.getChannelSetting("crownsolo") === true && !this.permissions.playNotesAnywhere;
 };
 
 Client.prototype.receiveServerTime = function(time, echo) {
