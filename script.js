@@ -1226,14 +1226,18 @@ Rect.prototype.contains = function(x, y) {
     // Show moderator buttons
     (function() {
         gClient.on("hi", function(msg) {
-            if (msg.moderator) {
-                gClient.isModerator = true;
+            if (gClient.permissions.clearChat) {
                 $("#clearchat-btn").show();
-                $("#chat-input")[0].maxLength = 4096;
             }
-            if (msg.noquota) {
-                gClient.noQuota = true;
-                $("#chat-input")[0].maxLength = 4096;
+            if (gClient.permissions.vanish) {
+                $("#vanish-btn").show();
+                if (gClient.getOwnParticipant().vanished) {
+                    $("#vanish-btn").text('Unvanish');
+                } else {
+                    $("#vanish-btn").text('Vanish');
+                }
+            } else {
+                $("#vanish-btn").hide();
             }
         });
     })();
@@ -1270,7 +1274,9 @@ Rect.prototype.contains = function(x, y) {
 
             updateLabels(part);
 
+            var hasOtherDiv = false;
             if (part.vanished) {
+                hasOtherDiv = true;
                 var vanishDiv = document.createElement("div");
 			    vanishDiv.className = "nametag";
 			    vanishDiv.textContent = 'VANISH';
@@ -1279,6 +1285,7 @@ Rect.prototype.contains = function(x, y) {
 			    part.nameDiv.appendChild(vanishDiv);
             }
             if (part.tag) {
+                hasOtherDiv = true;
                 var tagDiv = document.createElement("div");
 			    tagDiv.className = "nametag";
 			    tagDiv.textContent = part.tag || "";
@@ -1291,7 +1298,7 @@ Rect.prototype.contains = function(x, y) {
 			textDiv.className = "nametext";
 			textDiv.textContent = part.name || "";
             textDiv.id = 'nametext-' + part._id;
-            if (part.tag) textDiv.style.float = 'left';
+            if (hasOtherDiv) textDiv.style.float = 'left';
             if (part.veteran) textDiv.style.color = '#ffdf00';
 			part.nameDiv.appendChild(textDiv);
 
@@ -1512,29 +1519,19 @@ Rect.prototype.contains = function(x, y) {
 	// Room settings button
 	(function() {
 		gClient.on("ch", function(msg) {
-			if(gClient.isOwner() || gClient.isModerator) {
+			if(gClient.isOwner() || gClient.permissions.chsetAnywhere) {
 				$("#room-settings-btn").show();
 			} else {
 				$("#room-settings-btn").hide();
             }
-            if(!gClient.channel.settings.lobby && (gClient.isModerator || gClient.channel.settings.owner_id === gClient.user._id)) {
+            if(!gClient.channel.settings.lobby && (gClient.permissions.chownAnywhere || gClient.channel.settings.owner_id === gClient.user._id)) {
                 $("#getcrown-btn").show();
 			} else {
                 $("#getcrown-btn").hide();
 			}
-            if (gClient.isModerator) {
-                $("#vanish-btn").show();
-                if (gClient.getOwnParticipant().vanished) {
-                    $("#vanish-btn").text('Unvanish');
-                } else {
-                    $("#vanish-btn").text('Vanish');
-                }
-            } else {
-                $("#vanish-btn").hide();
-            }
 		});
 		$("#room-settings-btn").click(function(evt) {
-			if(gClient.channel && (gClient.isOwner() || gClient.isModerator)) {
+			if(gClient.channel && (gClient.isOwner() || gClient.permissions.chsetAnywhere)) {
 				var settings = gClient.channel.settings;
 				openModal("#room-settings");
 				setTimeout(function() {
@@ -2199,7 +2196,7 @@ Rect.prototype.contains = function(x, y) {
                     $('#chat-input')[0].placeholder = 'Direct messaging ' + part.name + '.';
                 });
             }
-			if(gClient.isOwner() || gClient.isModerator) {
+			if(gClient.isOwner() || gClient.permissions.chownAnywhere) {
                 if (!gClient.channel.settings.lobby) {
                     $('<div class="menu-item give-crown">Give Crown</div>').appendTo(menu)
 				    .on("mousedown touchstart", function(evt) {
@@ -2216,7 +2213,7 @@ Rect.prototype.contains = function(x, y) {
 					gClient.sendArray([{m: "kickban", _id: part._id, ms: ms}]);
 				});
             }
-            if (gClient.isModerator) {
+            if (gClient.permissions.siteBan) {
                 $('<div class="menu-item site-ban">Site Ban</div>').appendTo(menu)
 				.on("mousedown touchstart", function(evt) {
 					var hours = prompt("How many hours?", "1");
@@ -2225,25 +2222,24 @@ Rect.prototype.contains = function(x, y) {
 					var ms = hours * 60 * 60 * 1000;
 					gClient.sendArray([{m: "siteban", _id: part._id, ms: ms}]);
                 });
+            }
+            if (gClient.permissions.usersetOthers) {
                 $('<div class="menu-item set-color">Set Color</div>').appendTo(menu)
 				.on("mousedown touchstart", function(evt) {
 					var color = prompt("What color?", part.color);
 					if(color === null) return;
 					gClient.sendArray([{m: "setcolor", _id: part._id, color: color}]);
                 });
+            }
+            if (gClient.permissions.usersetOthers) {
                 $('<div class="menu-item set-name">Set Name</div>').appendTo(menu)
 				.on("mousedown touchstart", function(evt) {
 					var name = prompt("What name?", part.name);
 					if(name === null) return;
 					gClient.sendArray([{m: "setname", _id: part._id, name: name}]);
                 });
-                $('<div class="menu-item set-velocity">Set Velocity</div>').appendTo(menu)
-				.on("mousedown touchstart", function(evt) {
-					var velocity = prompt("What velocity? (0-1 decimal)", "1");
-                    if(velocity === null) return;
-                    velocity = parseFloat(velocity);
-					gClient.sendArray([{m: "setvelocity", _id: part._id, velocity: velocity}]);
-				});
+            }
+            if (gClient.permissions.changeChannelOthers) {
                 $('<div class="menu-item set-channel">Set Channel</div>').appendTo(menu)
 				.on("mousedown touchstart", function(evt) {
 					var channel = prompt("Which channel?", "lobby");
