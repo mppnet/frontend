@@ -1231,11 +1231,6 @@ Rect.prototype.contains = function(x, y) {
             }
             if (gClient.permissions.vanish) {
                 $("#vanish-btn").show();
-                if (gClient.getOwnParticipant().vanished) {
-                    $("#vanish-btn").text('Unvanish');
-                } else {
-                    $("#vanish-btn").text('Vanish');
-                }
             } else {
                 $("#vanish-btn").hide();
             }
@@ -1580,6 +1575,15 @@ Rect.prototype.contains = function(x, y) {
         gClient.sendArray([{m:'v', vanish:!gClient.getOwnParticipant().vanished}]);
     });
     gClient.on('participant update', part => {
+        if (part._id === gClient.getOwnParticipant()._id) {
+            if (part.vanished) {
+                $("#vanish-btn").text('Unvanish');
+            } else {
+                $("#vanish-btn").text('Vanish');
+            }
+        }
+    });
+    gClient.on('participant added', part => {
         if (part._id === gClient.getOwnParticipant()._id) {
             if (part.vanished) {
                 $("#vanish-btn").text('Unvanish');
