@@ -1654,7 +1654,6 @@ Rect.prototype.contains = function(x, y) {
 	var gChatMutes = (localStorage.chatMutes ? localStorage.chatMutes : "").split(',').filter(v => v);
 	var gShowIdsInChat = localStorage.showIdsInChat == "true";
     var gShowTimestampsInChat = localStorage.showTimestampsInChat == "true";
-    var gHideSpamInChat = localStorage.hideSpamInChat == "true";
 	var gNoChatColors = localStorage.noChatColors == "true";
 	var gNoBackgroundColor = localStorage.noBackgroundColor == "true";
 	var gOutputOwnNotes = localStorage.outputOwnNotes ? localStorage.outputOwnNotes == "true" : true;
@@ -2841,10 +2840,6 @@ Rect.prototype.contains = function(x, y) {
                     if(gChatMutes.indexOf(msg.p._id) != -1) return;
                 }
 
-                if (gHideSpamInChat) {
-                    if (msg.p._id !== gClient.user._id && msg.s && msg.s.spam) return;
-                }
-
                 //construct string for creating list element
 
                 var liString = '<li>';
@@ -3618,22 +3613,6 @@ Rect.prototype.contains = function(x, y) {
 			    	setting.classList.toggle("enabled");
 			    	localStorage.showTimestampsInChat = setting.classList.contains("enabled");
 			    	gShowTimestampsInChat = setting.classList.contains("enabled");
-			    };
-				html.appendChild(setting);
-			})();
-
-            // mute chat spam
-			(function() {
-				var setting = document.createElement("div");
-			    setting.classList = "setting";
-			    setting.innerText = "Hide chat spam (experimental)";
-			    if (gHideSpamInChat) {
-                    setting.classList.toggle("enabled");
-			    }
-			    setting.onclick = function() {
-			    	setting.classList.toggle("enabled");
-			    	localStorage.hideSpamInChat = setting.classList.contains("enabled");
-			    	gHideSpamInChat = setting.classList.contains("enabled");
 			    };
 				html.appendChild(setting);
 			})();
