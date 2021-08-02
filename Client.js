@@ -170,7 +170,7 @@ Client.prototype.bindEventListeners = function() {
     });
     this.on("m", function(msg) {
         if(self.ppl.hasOwnProperty(msg.id)) {
-            self.participantUpdate(msg);
+            self.participantMoveMouse(msg);
         }
     });
     this.on("bye", function(msg) {
@@ -280,6 +280,14 @@ Client.prototype.participantUpdate = function(update) {
         });
         if (!update.tag) delete part.tag;
         if (!update.vanished) delete part.vanished;
+    }
+};
+
+Client.prototype.participantMoveMouse = function(update) {
+    var part = this.ppl[update.id] || null;
+    if(part !== null) {
+        part.x = update.x;
+        part.y = update.y;
     }
 };
 
