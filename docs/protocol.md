@@ -3,7 +3,7 @@
 ## Message Format
 All messages sent by the client and the server are JSON arrays. Socket messages are strings, not binary. Each array can contain one or more individual message objects. Each individual message object has a "m" property where its value is a string signaling which message type it is.
 #### Example socket message:
-[{"m":"hi","token":"abcdef"}]
+\[{"m":"hi","token":"abcdef"}]
 
 ## Important concepts
 ### Colors
@@ -42,13 +42,13 @@ In some messages, the server will send a participant info object instead of an i
 Mouse will start as (200, 100) for users who haven't sent a mouse position.
 #### Example
 {\
-  "\_id":"514df042c61528f566530313",\
-  "id":"514df042c61528f566530313",\
-  "name":"Lapis",\
-  "color":"#ff8ff9",\
-  "tag":"OWNER",\
-  "x":50,\
-  "y":50\
+&nbsp; "\_id":"514df042c61528f566530313",\
+&nbsp; "id":"514df042c61528f566530313",\
+&nbsp; "name":"Lapis",\
+&nbsp; "color":"#ff8ff9",\
+&nbsp; "tag":"OWNER",\
+&nbsp; "x":50,\
+&nbsp; "y":50\
 }
 
 ### Channel settings
@@ -65,13 +65,13 @@ Channel settings are an object with properties for each setting.
 - ?"lobby": Whether the channel is a lobby (boolean). Clients cannot change this property. If this property is not present, the channel is not a lobby.
 #### Example
 {\
-  "lobby":true,\
-  "limit":20,\
-  "color":"#73b3cc",\
-  "color2":"#273546",\
-  "visible":true,\
-  "chat":true\
-  "crownsolo":false\
+&nbsp; "lobby":true,\
+&nbsp; "limit":20,\
+&nbsp; "color":"#73b3cc",\
+&nbsp; "color2":"#273546",\
+&nbsp; "visible":true,\
+&nbsp; "chat":true\
+&nbsp; "crownsolo":false\
 }
 
 ### Crown
@@ -84,16 +84,16 @@ This is an object containing information about the crown in that channel.
 - "endPos": An object containing an "x" and "y" property with coordinates (numbers) where the crown's animation should finish.
 #### Example
 {\
-  "userId":"b40df99cc2ca6f503fba77cb",\
-  "time":1627968456997,\
-  "startPos":{\
-    "x":75.8,\
-    "y":30.6\
-  },\
-  "endPos":{\
-    "x":75.8,\
-    "y":82.3\
-  }\
+&nbsp; "userId":"b40df99cc2ca6f503fba77cb",\
+&nbsp; "time":1627968456997,\
+&nbsp; "startPos":{\
+&nbsp; &nbsp; "x":75.8,\
+&nbsp; &nbsp; "y":30.6\
+&nbsp; },\
+&nbsp; "endPos":{\
+&nbsp; &nbsp; "x":75.8,\
+&nbsp; &nbsp; "y":82.3\
+&nbsp; }\
 }
 
 ### Target
@@ -104,11 +104,11 @@ This is an object describing who something should be sent to. Currently this is 
 - "ids": If "mode" is "ids", this is sent with an array of user ids.
 #### Example
 {\
-  "mode":"ids",\
-  "ids":\[\
-    "4d354eaddf02eedc6211034c",\
-    "fd4365210b7f25b6cb0ed683"\
-  ]\
+&nbsp; "mode":"ids",\
+&nbsp; "ids":\[\
+&nbsp; &nbsp; "4d354eaddf02eedc6211034c",\
+&nbsp; &nbsp; "fd4365210b7f25b6cb0ed683"\
+&nbsp; ]\
 }
 
 ### Note
@@ -120,9 +120,9 @@ Notes can either be a note start, or a note stop. Note starts have a "v" propert
 - ?"s": 1 if the note is a note stop.
 #### Example
 {\
-  "n":"b2",\
-  "d":150,\
-  "v":0.32\
+&nbsp; "n":"b2",\
+&nbsp; "d":150,\
+&nbsp; "v":0.32\
 }
 
 ## Client -> Server Messages
@@ -133,14 +133,14 @@ Notes can either be a note start, or a note stop. Note starts have a "v" propert
 - "message": String to send in chat for everyone in your channel. Must be less 512 characters or less and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
 #### Example
 {\
-  "m":"a",\
-  "message":"Hello :D"\
+&nbsp; "m":"a",\
+&nbsp; "message":"Hello :D"\
 }
 ### Bye
 A "bye" message can be sent to close the client's socket. No more messages will be handled after the server receives "bye". Standard browser clients don't send this.
 #### Example
 {\
-  "m":"bye"\
+&nbsp; "m":"bye"\
 }
 ### Ch
 A "ch" message can be sent to attempt to change the client's channel. If the specified channel does not exist, it will be created.
@@ -149,11 +149,11 @@ A "ch" message can be sent to attempt to change the client's channel. If the spe
 - ?"set": Optional settings to initialize the channel with if it doesn't exist. See channel settings. If a property isn't sent in this object, the server will use the default value.
 #### Example
 {\
-  "m":"ch",\
-  "\_id":"My new room",\
-  "set":{\
-    "visible":false\
-  }\
+&nbsp; "m":"ch",\
+&nbsp; "\_id":"My new room",\
+&nbsp; "set":{\
+&nbsp; &nbsp; "visible":false\
+&nbsp; }\
 }
 ### Chown
 Clients can send chown messages to drop the crown or give it to someone else.
@@ -161,8 +161,8 @@ Clients can send chown messages to drop the crown or give it to someone else.
 - ?"id": The user id who should receive the crown (string). If this property is not present or if the id is invalid, the participant will drop the crown.
 #### Example
 {\
-  "m":"chown",\
-  "id":"f46132453478f0a8679e1584"\
+&nbsp; "m":"chown",\
+&nbsp; "id":"f46132453478f0a8679e1584"\
 }
 ### Chset
 Clients can send this to change a channel's settings if they have the crown.
@@ -170,12 +170,12 @@ Clients can send this to change a channel's settings if they have the crown.
 - "set": Channel settings to change. See channel settings. If a property isn't sent, it will stay as it is. The only exception is "color2" which gets deleted from the channel's settings if the property is not sent.
 #### Example
 {\
-  "m":"chset",\
-  "set":{\
-    "color":"#0066ff",\
-    "color2":"#ff9900",\
-    "chat":"false"\
-  }\
+&nbsp; "m":"chset",\
+&nbsp; "set":{\
+&nbsp; &nbsp; "color":"#0066ff",\
+&nbsp; &nbsp; "color2":"#ff9900",\
+&nbsp; &nbsp; "chat":"false"\
+&nbsp; }\
 }
 ### Custom
 Clients can send custom data using this message. This is meant for developers to create addons for multiple people but being restricted to the standard protocol. A participant can only send 16384 bytes of custom data per 10 seconds. This is measured by the stringified value in the "data" property. If the "data" property is not present, it is treated as null.
@@ -184,25 +184,25 @@ Clients can send custom data using this message. This is meant for developers to
 - "target": Object representing who this should get sent to. See target in Important Concepts.
 #### Example
 {\
-  "m":"custom",\
-  "data":{\
-    "xyz":"abc",\
-    "def":"ghi",\
-    "jkl":\[\
-      "mno",\
-      123,\
-      456,\
-      null,\
-      "hi",\
-      {\
-        "idk"\
-      },\
-      true\
-    ]\
-  },\
-  target: {\
-    "mode":"subscribed"\
-  }\
+&nbsp; "m":"custom",\
+&nbsp; "data":{\
+&nbsp; &nbsp; "xyz":"abc",\
+&nbsp; &nbsp; "def":"ghi",\
+&nbsp; &nbsp; "jkl":\[\
+&nbsp; &nbsp; &nbsp; "mno",\
+&nbsp; &nbsp; &nbsp; 123,\
+&nbsp; &nbsp; &nbsp; 456,\
+&nbsp; &nbsp; &nbsp; null,\
+&nbsp; &nbsp; &nbsp; "hi",\
+&nbsp; &nbsp; &nbsp; {\
+&nbsp; &nbsp; &nbsp; &nbsp; "idk"\
+&nbsp; &nbsp; &nbsp; },\
+&nbsp; &nbsp; &nbsp; true\
+&nbsp; &nbsp; ]\
+&nbsp; },\
+&nbsp; target: {\
+&nbsp; &nbsp; "mode":"subscribed"\
+&nbsp; }\
 }
 
 ### Devices
@@ -211,24 +211,24 @@ Browser clients send a list of connected midi inputs and outputs with this. Bots
 - "list": An array of device infos.
 #### Example
 {\
-  "m":"devices",\
-  "list":\[\
-    {\
-      "type": "input",\
-      "manufacturer": "",\
-      "name": "loopMIDI Port",\
-      "version": "1.0",\
-      "enabled": true,\
-      "volume": 1\
-    },\
-    {\
-      "type": "output",\
-      "manufacturer": "",\
-      "name": "OmniMIDI",\
-      "version": "0.6",\
-      "volume": 1\
-    }\
-  ]\
+&nbsp; "m":"devices",\
+&nbsp; "list":\[\
+&nbsp; &nbsp; {\
+&nbsp; &nbsp; &nbsp; "type": "input",\
+&nbsp; &nbsp; &nbsp; "manufacturer": "",\
+&nbsp; &nbsp; &nbsp; "name": "loopMIDI Port",\
+&nbsp; &nbsp; &nbsp; "version": "1.0",\
+&nbsp; &nbsp; &nbsp; "enabled": true,\
+&nbsp; &nbsp; &nbsp; "volume": 1\
+&nbsp; &nbsp; },\
+&nbsp; &nbsp; {\
+&nbsp; &nbsp; &nbsp; "type": "output",\
+&nbsp; &nbsp; &nbsp; "manufacturer": "",\
+&nbsp; &nbsp; &nbsp; "name": "OmniMIDI",\
+&nbsp; &nbsp; &nbsp; "version": "0.6",\
+&nbsp; &nbsp; &nbsp; "volume": 1\
+&nbsp; &nbsp; }\
+&nbsp; ]\
 }
 
 ### Dm
@@ -238,9 +238,9 @@ Browser clients send a list of connected midi inputs and outputs with this. Bots
 - "\_id": User id to send the message to (string).
 #### Example
 {\
-  "m":"dm",\
-  "message":"hi there",\
-  "\_id":"a8c86bb6e74c9ec8900e061a"\
+&nbsp; "m":"dm",\
+&nbsp; "message":"hi there",\
+&nbsp; "\_id":"a8c86bb6e74c9ec8900e061a"\
 }
 
 ### Hi
@@ -250,8 +250,8 @@ A "hi" message is sent when the client first connects to the server. This must b
 - ?"code": Response generated by the anti-bot system. Bots can ignore this, valid bot tokens will bypass the anti-bot system.
 #### Example
 {\
-  "m":"hi",\
-  "token":"this is not a valid token"\
+&nbsp; "m":"hi",\
+&nbsp; "token":"this is not a valid token"\
 }
 
 ### Kickban
@@ -261,9 +261,9 @@ This is sent to ban a user from the channel.
 - "ms": The amount of milliseconds to ban the user for. Between 0 and 3600000.
 #### Example
 {\
-  "m":"kickban",\
-  "\_id":"a4ea42f1d9770e671f938e8c",\
-  "ms":300000\
+&nbsp; "m":"kickban",\
+&nbsp; "\_id":"a4ea42f1d9770e671f938e8c",\
+&nbsp; "ms":300000\
 }
 
 ### M
@@ -273,22 +273,22 @@ This is sent to move the participant's mouse.
 - "y": y position to move to (number). Can be any valid JSON number except NaN, even if it's out of the normal range.
 #### Example
 {\
-  "m":25,\
-  "y":63.5\
+&nbsp; "m":25,\
+&nbsp; "y":63.5\
 }
 
 ### -custom
 This is sent to unsubscribe from custom messages sent with the "subscribed" target.
 #### Example
 {\
-  "m":"-custom"\
+&nbsp; "m":"-custom"\
 }
 
 ### -ls
 This is sent to unsubscribe from channel list updates.
 #### Example
 {\
-  "m":"-ls"\
+&nbsp; "m":"-ls"\
 }
 
 ### N
@@ -298,33 +298,33 @@ This sends notes to other clients in the channel.
 - "n": An array of notes. See [note](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#note).
 #### Example
 {\
-  "m":"n",\
-  "t":1627971516894,\
-  "n":\[\
-    {\
-      "n":"c3",\
-      "v":0.75\
-    },\
-    {\
-      "n":"c3",\
-      "d":100,\
-      "s":1\
-    }\
-  ]\
+&nbsp; "m":"n",\
+&nbsp; "t":1627971516894,\
+&nbsp; "n":\[\
+&nbsp; &nbsp; {\
+&nbsp; &nbsp; &nbsp; "n":"c3",\
+&nbsp; &nbsp; &nbsp; "v":0.75\
+&nbsp; &nbsp; },\
+&nbsp; &nbsp; {\
+&nbsp; &nbsp; &nbsp; "n":"c3",\
+&nbsp; &nbsp; &nbsp; "d":100,\
+&nbsp; &nbsp; &nbsp; "s":1\
+&nbsp; &nbsp; }\
+&nbsp; ]\
 }
 
 ### +custom
 This is sent to subscribe to custom messages sent with the "subscribed" target.
 #### Example
 {\
-  "m":"+custom"\
+&nbsp; "m":"+custom"\
 }
 
 ### +ls
 This is sent to subscribe to channel list updates.
 #### Example
 {\
-  "m":"+ls"\
+&nbsp; "m":"+ls"\
 }
 
 ### T
@@ -333,8 +333,8 @@ This is sent to subscribe to channel list updates.
 - ?"e": The client's time.
 #### Example
 {\
-  "m":"t",\
-  "e":1627972519126\
+&nbsp; "m":"t",\
+&nbsp; "e":1627972519126\
 }
 
 ### Unban
@@ -343,8 +343,8 @@ This is sent to subscribe to channel list updates.
 - "\_id": The user id to unban.
 #### Example
 {\
-  "m":"unban",\
-  "\_id":"0c49bea6c2a328101eee40b7"\
+&nbsp; "m":"unban",\
+&nbsp; "\_id":"0c49bea6c2a328101eee40b7"\
 }
 
 ### Userset
@@ -353,11 +353,11 @@ This is sent to subscribe to channel list updates.
 - "set": An object containing "name" and or "color" properties. "color" must be a valid color, and "name" must be 40 characters or less and fit [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
 #### Example
 {\
-  "m":"userset",\
-  "set":{\
-    "name":"Lapis",\
-    "color:"#ff8ff9"\
-  }\
+&nbsp; "m":"userset",\
+&nbsp; "set":{\
+&nbsp; &nbsp; "name":"Lapis",\
+&nbsp; &nbsp; "color:"#ff8ff9"\
+&nbsp; }\
 }
 
 ## Server -> Client Messages (coming soon)
