@@ -1,21 +1,21 @@
-#mppclone.com Protocol
+# mppclone.com Protocol
 
-##Message Format
+## Message Format
 All messages sent by the client and the server are JSON arrays. Socket messages are strings, not binary. Each array can contain one or more individual message objects. Each individual message object has a "m" property where its value is a string signaling which message type it is.
-####Example socket message:
+#### Example socket message:
 [{"m":"hi","token":"abcdef"}]
 
-##Referenced concepts
-###Colors
+## Important concepts
+### Colors
 All colors are hexadecimal strings.
-####Example
+#### Example
 "#ff8ff9"
-###Times
+### Times
 All times are UNIX timestamps (number). All times that are sent and received by clients are the server's time. Clients adjust the times they send and receive to ensure it lines up with the server's time. It figures out how much to adjust by using "t" messages.
-####Example
+#### Example
 1627968429598
 
-###String validation
+### String validation
 For most messages that get sent to other clients, strings are checked to make sure they don't cause issues. Strings following string validation must not include any of the following characters:
 - \n
 - \r
@@ -29,9 +29,9 @@ For most messages that get sent to other clients, strings are checked to make su
 - \u200f
 Strings following string validation cannot be made entirely of spaces, and cannot be empty.
 
-###Participant info
+### Participant info
 In some messages, the server will send a participant info object instead of an id.
-####Properties
+#### Properties
 - "id": The user's id (string).
 - "\_id": The user's id (string). This is identical to the above field but is sent to keep backwards compatibility.
 - "name": The user's name.
@@ -41,7 +41,7 @@ In some messages, the server will send a participant info object instead of an i
 - ?"tag": Optional tag (string). This is usually either "BOT", "MOD", "ADMIN", or "OWNER", but could be any string. If this property is not present, the user does not have a tag.
 - ?"vanished": Whether the user is vanished (boolean). Regular users and bots will never see this property, however moderators will receive this if they or another user are vanished. If this property is not present, the user is not vanished.
 Mouse will start as (200, 100) for users who haven't sent a mouse position.
-####Example
+#### Example
 {
   "\_id":"514df042c61528f566530313",
   "id":"514df042c61528f566530313",
@@ -52,9 +52,9 @@ Mouse will start as (200, 100) for users who haven't sent a mouse position.
   "y":50
 }
 
-###Channel settings
+### Channel settings
 Channel settings are an object with properties for each setting.
-####Properties
+#### Properties
 - "visible": Whether the channel is visible to normal users in the channel list (boolean).
 - "color": The channel's inner background color.
 - ?"color2": The channel's outer background color.
@@ -63,7 +63,7 @@ Channel settings are an object with properties for each setting.
 - "limit": The maximum amount of users that can join this channel (number). This is an integer between 0-99. If this is lowered while more users are in the channel, users won't get kicked. The crown holder and users who already have a participant in the channel bypass this limit.
 - ?"minOnlineTime": The minimum amount of time that a user needs to have been online to join this channel (number). It's measured in milliseconds. If this field is not present, the restriction does not apply. If a user holds the crown in this channel or if they already have a participant in the channel, they bypass this restriction.
 - ?"lobby": Whether the channel is a lobby (boolean). Clients cannot change this property. If this property is not present, the channel is not a lobby.
-####Example
+#### Example
 {
   "lobby":true,
   "limit":20,
@@ -73,15 +73,15 @@ Channel settings are an object with properties for each setting.
   "chat":true
 }
 
-###Crown
+### Crown
 This is an object containing information about the crown in that channel.
-####Properties
+#### Properties
 - "userId": The user id who has the crown (string).
 - ?"participantId": This field is either identical to "userId" or it is not present (string). If this field is not present, the crown is dropped. If it is present, the crown is held.
 - "time": The time at which the crown was dropped (number). If the crown is not dropped, this value can be ignored.
 - "startPos": An object containing an "x" and "y" property with coordinates (numbers) where the crown's animation should start.
 - "endPos": An object containing an "x" and "y" property with coordinates (numbers) where the crown's animation should finish.
-####Example
+#### Example
 {
   "userId":"b40df99cc2ca6f503fba77cb",
   "time":1627968456997,
@@ -95,16 +95,16 @@ This is an object containing information about the crown in that channel.
   }
 }
 
-##Client -> Server Messages
+## Client -> Server Messages
 
-###A
+### A
 "a" messages are sent by the client whenever the client chats. The sending client must be in a channel to use this message.
-####Properties
+#### Properties
 - "a": String to send in chat for everyone in your channel. Must be less than 512 characters and must follow string validation.
-###Bye
+### Bye
 A "bye" message can be sent to close the client's socket. No more messages will be handled after the server receives "bye". Standard browser clients don't send this.
-###Ch
+### Ch
 A "ch" message can be sent to attempt to change the client's channel. If the specified channel does not exist, it will be created.
-####Properties
+#### Properties
 - "\_id": Channel name. Must be less than 512 characters and must follow string validation.
 - ?"set": Optional settings to initialize the channel with if it doesn't exist. See channel settings. 
