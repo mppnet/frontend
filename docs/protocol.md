@@ -683,7 +683,7 @@ This is sent with all the information about a channel. It's broadcasted to every
 ```
 
 ### Custom (client-bound)
-This is sent when a client sends a (custom)[#custom-server-bound] message.
+This is sent when a client sends a [custom](#custom-server-bound) message.
 #### Properties
 - `"data"`: The data sent in this custom message. Can be any valid JSON.
 - `"p"`: The user id of the client who sent this custom message.
@@ -705,8 +705,8 @@ This is sent to the recipient when a client direct messages another participant.
 #### Properties
 - `"t"`: The server's time when the DM was handled.
 - `"a"`: The message's text.
-- `"sender"`: (Participant info)[#participant-info] for the user who sent the DM.
-- `"recipient"`: (Participant info)[#participant-info] for the user who is receiving the DM. This will usually be a client's own participant, unless the user is a moderator and can see other user's DMs.
+- `"sender"`: [Participant info](#participant-info) for the user who sent the DM.
+- `"recipient"`: [Participant info](#participant-info) for the user who is receiving the DM. This will usually be a client's own participant, unless the user is a moderator and can see other user's DMs.
 #### Example
 ```json
 {
@@ -733,7 +733,7 @@ This is sent to the recipient when a client direct messages another participant.
 This is sent as a response when the client first sends `"hi"`.
 #### Properties
 - `"t"`: The server's time when it handled the `"hi"` message.
-- `"u"`: The client's (participant info)[#participant info] except without `"id"`.
+- `"u"`: The client's [participant info](#participant info) except without `"id"`.
 - `"permissions"`: An object containing the client's permissions. This is usually empty and can be ignored by most bots.
 - `"token"`: A string token that the client can send back in the future to keep the same user. Bots should have their token hard coded and can ignore this.
 #### Example
@@ -755,7 +755,7 @@ This is sent as a response when the client first sends `"hi"`.
 This is sent when a client subscribes to the channel list, or when a channel updates while they are subscribed.
 #### Properties
 - `"c"`: Whether this is a complete list of channels (boolean). If true, `"u"` is an array with every channel. If false, `"u"` is an array with channels to update information for.
-- `"u"`: Array of (channel info)[#channel-info]s.
+- `"u"`: Array of [channel info](#channel-info)s.
 #### Example
 ```json
 {
@@ -814,7 +814,7 @@ This is broadcasted to every other client in a channel when a client sends notes
 #### Properties
 - `"t"`: The base time of this message. Notes with `"d"` properties are offset from this time by their `"d"` value.
 - `"p"`: The user id who sent the notes.
-- `"n"`: An array of (notes)[#note].
+- `"n"`: An array of [notes](#note).
 #### Example
 ```json
 {
