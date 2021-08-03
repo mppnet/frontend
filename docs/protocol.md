@@ -1,5 +1,38 @@
 # mppclone.com Protocol
 
+## Navigation
+- [Message Format](#message-format)
+- [Important concepts](#important-concepts)
+  - [Colors](#colors)
+  - [Times](#times)
+  - [String validation](#string-validation)
+  - [Participant info](#participant-info)
+  - [Channel settings](#channel-settings)
+  - [Crown](#crown)
+  - [Target](#target)
+  - [Note](#note)
+- [Client -> Server Messages](#client---server-messages)
+  - [A](#a (server-bound))
+  - [Bye](#bye)
+  - [Ch](#ch (server-bound))
+  - [Chown](#chown)
+  - [Chset](#chset)
+  - [Custom](#custom (server-bound))
+  - [Devices](#devices)
+  - [Dm](#dm (server-bound))
+  - [Hi](#hi (server-bound))
+  - [Kickban](#kickban)
+  - [M](#m (server-bound))
+  - [-custom](#-custom)
+  - [-ls](#-ls)
+  - [n](#n (server-bound))
+  - [+custom](#custom-1)
+  - [+ls](#ls)
+  - [T](#t (server-bound))
+  - [Unban](#unban)
+  - [Userset](#userset)
+- [Server -> Client Messages](#server---client-messages-coming-soon)
+
 ## Message Format
 All messages sent by the client and the server are JSON arrays. Socket messages are strings, not binary. Each array can contain one or more individual message objects. Each individual message object has a "m" property where its value is a string signaling which message type it is.
 #### Example socket message:
@@ -41,8 +74,8 @@ In some messages, the server will send a participant info object instead of an i
 - `"_id"`: The user's id (string). This is identical to the above field but is sent to keep backwards compatibility.
 - `"name"`: The user's name.
 - `"color"`: The user's color.
-- `"x"`: The user's mouse x coordinate (number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the left edge, 100 is on the right edge. Mouse will start as (200, 100) for users who haven't sent a mouse position.
-- `"y"`: The user's mouse y coordinate (number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the top edge, 100 is on the bottom edge.
+- `"x"`: The user's mouse x coordinate (number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the left edge, 100 is on the right edge. Default value is 200 until set by the user.
+- `"y"`: The user's mouse y coordinate (number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the top edge, 100 is on the bottom edge. Default value is 100 until set by the user.
 - `?"tag"`: Optional tag (string). This is usually either **"BOT"**, **"MOD"**, **"ADMIN"**, or **"OWNER"**, but could be any string. If this property is not present, the user does not have a tag.
 - `?"vanished"`: Whether the user is vanished (boolean). Regular users and bots will never see this property, however moderators will receive this if they or another user are vanished. If this property is not present, the user is not vanished.
 #### Example
@@ -142,10 +175,10 @@ Notes can either be a note start, or a note stop. Note starts have a "v" propert
 
 ## Client -> Server Messages
 
-### A
+### A (server-bound)
 "a" messages are sent to chat in the current channel.
 #### Properties
-- `"message"`: String to send in chat for everyone in your channel. Must be less 512 characters or less and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
+- `"message"`: String to send in chat for everyone in your channel. Must be less 512 characters or less and must follow [string validation](#string-validation).
 #### Example
 ```json
 {
@@ -153,7 +186,7 @@ Notes can either be a note start, or a note stop. Note starts have a "v" propert
   "message":"Hello :D"
 }
 ```
-### Bye
+### Bye (server-bound)
 A "bye" message can be sent to close the client's socket. No more messages will be handled after the server receives "bye". Standard browser clients don't send this.
 #### Example
 ```json
@@ -161,10 +194,10 @@ A "bye" message can be sent to close the client's socket. No more messages will 
   "m":"bye"
 }
 ```
-### Ch
+### Ch (server-bound)
 A "ch" message can be sent to attempt to change the client's channel. If the specified channel does not exist, it will be created.
 #### Properties
-- `"_id"`: Channel name. Must be less than 512 characters and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
+- `"_id"`: Channel name. Must be less than 512 characters and must follow [string validation](#string-validation).
 - `?"set"`: Optional settings to initialize the channel with if it doesn't exist. See channel settings. If a property isn't sent in this object, the server will use the default value.
 #### Example
 ```json
@@ -202,11 +235,11 @@ Clients can send this to change a channel's settings if they have the crown.
   }
 }
 ```
-### Custom
+### Custom (server-bound)
 Clients can send custom data using this message. This is meant for developers to create addons for multiple people without being restricted to the standard protocol. A participant can only send 16384 bytes of custom data per 10 seconds. This is measured by the stringified value in the "data" property. If the "data" property is not present, it is treated as null. Make sure you have lots of type checking for receiving custom messages, because someone could craft a malicious message to try to break your scripts.
 #### Properties
 - `"data"`: Data to send to other clients. This can be any valid JSON. It could be an array, an object, a string, a number, or boolean, or null. Object nesting is acceptable to any depth (within the data quota).
-- `"target"`: Object representing who this should get sent to. See [target](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#target).
+- `"target"`: Object representing who this should get sent to. See [target](#target).
 #### Example
 ```json
 {
@@ -260,10 +293,10 @@ Browser clients send a list of connected midi inputs and outputs with this. Bots
 }
 ```
 
-### Dm
+### Dm (server-bound)
 "dm" messages are sent to direct message another participant in the channel.
 #### Properties
-- `"message"`: String to send in chat to the target user. Must be 512 characters or less and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
+- `"message"`: String to send in chat to the target user. Must be 512 characters or less and must follow [string validation](#string-validation).
 - `"_id"`: User id to send the message to (string).
 #### Example
 ```json
@@ -274,7 +307,7 @@ Browser clients send a list of connected midi inputs and outputs with this. Bots
 }
 ```
 
-### Hi
+### Hi (server-bound)
 A "hi" message is sent when the client first connects to the server. This must be done before doing anything else.
 #### Properties
 - `?"token"`: A token to use (string). Valid tokens will assign the client a specific user when they join. If this property is not present, the client will get the default user for their IP address.
@@ -301,7 +334,7 @@ This is sent to ban a user from the channel.
 }
 ```
 
-### M
+### M (server-bound)
 This is sent to move the participant's mouse.
 #### Properties
 - `"x"`: x position to move to (number). Can be any valid JSON number, even if it's out of the normal range.
@@ -333,11 +366,11 @@ This is sent to unsubscribe from channel list updates.
 }
 ```
 
-### N
+### N (server-bound)
 This sends notes to other clients in the channel.
 #### Properties
 - `"t"`: The time at which the notes should play.
-- `"n"`: An array of notes. See [note](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#note).
+- `"n"`: An array of notes. See [note](#note).
 #### Example
 ```json
 {
@@ -375,7 +408,7 @@ This is sent to subscribe to channel list updates.
 }
 ```
 
-### T
+### T (server-bound)
 "t" is for pinging. This must be sent every 20 seconds, because the server will disconnect your client if it's not sent for more than 30 seconds.
 #### Properties
 - `?"e"`: The client's time.
@@ -402,7 +435,7 @@ This is sent to subscribe to channel list updates.
 ### Userset
 "userset" changes the name or color of the client's user.
 #### Properties
-- `"set"`: An object containing "name" and or "color" properties. "color" must be a valid color, and "name" must be 40 characters or less and fit [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
+- `"set"`: An object containing "name" and or "color" properties. "color" must be a valid color, and "name" must be 40 characters or less and fit [string validation](#string-validation).
 #### Example
 ```json
 {
@@ -415,3 +448,42 @@ This is sent to subscribe to channel list updates.
 ```
 
 ## Server -> Client Messages (coming soon)
+
+### A (client-bound)
+"a" messages are sent to every client in a room when someone chats.
+#### Properties
+- `"t"`: The server's time when it handled the chat message.
+- `"a"`: The text sent in chat.
+- `"p"`: Participant info of the user who sent the chat message.
+#### Example
+```json
+{
+  "m":"a",
+  "t":1628015260531,
+  "a":"test",
+  "p":{
+    "_id":"514df042c61528f566530313",
+    "name":"Lapis",
+    "color":"#ff8ff9",
+    "tag":"OWNER",
+    "id":"514df042c61528f566530313"
+  }
+}
+```
+
+### B (client-bound)
+A "b" message is sent immediately when a connection opens. It's used by the anti-bot system to keep bot spam out.
+#### Properties
+- `"code"`: A string used by the anti-bot system.
+#### Example
+```json
+{
+  "m":"b",
+  "code":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+}
+```
+
+### C
+A "c" message is sent whenever a client joins a channel, or when chat is cleared by moderators. It contains up to 32 messages of chat history for the current channel, including DMs.
+#### Properties
+- `"c"`: An array containing between 0 and 32 complete [A](#A (client-bound)) or [Dm](#Dm (client-bound)) messages, including the `"m"` property.
