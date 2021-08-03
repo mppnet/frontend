@@ -131,7 +131,7 @@ Notes can either be a note start, or a note stop. Note starts have a "v" propert
 ### A
 "a" messages are sent to chat in the current channel.
 #### Properties
-- "message": String to send in chat for everyone in your channel. Must be less 512 characters or less and must follow string validation.
+- "message": String to send in chat for everyone in your channel. Must be less 512 characters or less and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
 #### Example
 {
   "m":"a",
@@ -146,7 +146,7 @@ A "bye" message can be sent to close the client's socket. No more messages will 
 ### Ch
 A "ch" message can be sent to attempt to change the client's channel. If the specified channel does not exist, it will be created.
 #### Properties
-- "\_id": Channel name. Must be less than 512 characters and must follow string validation.
+- "\_id": Channel name. Must be less than 512 characters and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
 - ?"set": Optional settings to initialize the channel with if it doesn't exist. See channel settings. If a property isn't sent in this object, the server will use the default value.
 #### Example
 {
@@ -235,7 +235,7 @@ Browser clients send a list of connected midi inputs and outputs with this. Bots
 ### Dm
 "dm" messages are sent to direct message another participant in the channel.
 #### Properties
-- "message": String to send in chat to the target user. Must be 512 characters or less and must follow string validation.
+- "message": String to send in chat to the target user. Must be 512 characters or less and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
 - "\_id": User id to send the message to (string).
 #### Example
 {
@@ -296,7 +296,7 @@ This is sent to unsubscribe from channel list updates.
 This sends notes to other clients in the channel.
 #### Properties
 - "t": The time at which the notes should play.
-- "n": An array of notes. See note in Important Concepts.
+- "n": An array of notes. See [note](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#note).
 #### Example
 {
   "m":"n",
@@ -351,7 +351,7 @@ This is sent to subscribe to channel list updates.
 ### Userset
 "userset" changes the name or color of the client's user.
 #### Properties
-- "set": An object containing "name" and or "color" properties. "color" must be a valid color, and "name" must be 40 characters or less and fit string validation. See string validation in Important Concepts.
+- "set": An object containing "name" and or "color" properties. "color" must be a valid color, and "name" must be 40 characters or less and fit [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
 #### Example
 {
   "m":"userset",
