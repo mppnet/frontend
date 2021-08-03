@@ -40,7 +40,7 @@
   - [Custom](#custom-client-bound)
   - [Dm](#dm-client-bound)
   - [Hi](#hi-client-bound)
-  - [Ls](#ls)
+  - [Ls](#ls-1)
   - [M](#m-client-bound)
   - [N](#n-client-bound)
   - [Nq](#nq)
