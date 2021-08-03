@@ -16,7 +16,7 @@ All times are UNIX timestamps (number). All times that are sent and received by 
 1627968429598
 
 ### String validation
-For most messages that get sent to other clients, strings are checked to make sure they don't cause issues. Strings following string validation must not include any of the following characters:
+For most messages that get sent to other clients, strings are checked to make sure they don't cause issues. Strings following string validation cannot be made entirely of spaces, and cannot be empty. Strings following string validation must not include any of the following characters:
 - \n
 - \r
 - \v
@@ -26,8 +26,7 @@ For most messages that get sent to other clients, strings are checked to make su
 - \u2066
 - \u2067
 - \u202b
-- \u200f\
-Strings following string validation cannot be made entirely of spaces, and cannot be empty.
+- \u200f
 
 ### Participant info
 In some messages, the server will send a participant info object instead of an id.
