@@ -59,6 +59,7 @@ Channel settings are an object with properties for each setting.
 - "color": The channel's inner background color.
 - ?"color2": The channel's outer background color.
 - "chat": Whether chat is enabled in this channel (boolean).
+- "crownsolo": Whether anyone can play the piano (boolean). If this is false, only the crown holder can play the piano.
 - ?"no cussing": Whether no cussing is enabled (boolean). If this is enabled, some things in chat will get replaced with asterisks for users who don't have the crown. If this property isn't present, "no cussing" is disabled.
 - "limit": The maximum amount of users that can join this channel (number). This is an integer between 0-99. If this is lowered while more users are in the channel, users won't get kicked. The crown holder and users who already have a participant in the channel bypass this limit.
 - ?"minOnlineTime": The minimum amount of time that a user needs to have been online to join this channel (number). It's measured in milliseconds. If this field is not present, the restriction does not apply. If a user holds the crown in this channel or if they already have a participant in the channel, they bypass this restriction.
@@ -71,6 +72,7 @@ Channel settings are an object with properties for each setting.
   "color2":"#273546",
   "visible":true,
   "chat":true
+  "crownsolo":false
 }
 
 ### Crown
@@ -95,16 +97,123 @@ This is an object containing information about the crown in that channel.
   }
 }
 
+### Target
+This is an object describing who something should be sent to. Currently this is only used in "custom" messages. If mode is "subscribed", it targets everyone in the channel who is subscribed to custom messages. If mode is "id", it targets a single participant. If mode is "ids", it targets all of the listed participants. Targeting will **never** target the sender.
+#### Properties
+- "mode": This can either be "subscribed", "id", or "ids".
+- "id": If "mode" is "id", this is sent with a string user id.
+- "ids": If "mode" is "ids", this is sent with an array of user ids.
+#### Example
+{
+  "mode":"ids",
+  "ids":\[
+    "4d354eaddf02eedc6211034c",
+    "fd4365210b7f25b6cb0ed683"
+  ]
+}
+
 ## Client -> Server Messages
 
 ### A
-"a" messages are sent by the client whenever the client chats. The sending client must be in a channel to use this message.
+"a" messages are sent to chat in the current channel.
 #### Properties
 - "a": String to send in chat for everyone in your channel. Must be less than 512 characters and must follow string validation.
+#### Example
+{
+  "m":"a",
+  "a":"Hello :D"
+}
 ### Bye
 A "bye" message can be sent to close the client's socket. No more messages will be handled after the server receives "bye". Standard browser clients don't send this.
+#### Example
+{
+  "m":"bye"
+}
 ### Ch
 A "ch" message can be sent to attempt to change the client's channel. If the specified channel does not exist, it will be created.
 #### Properties
 - "\_id": Channel name. Must be less than 512 characters and must follow string validation.
-- ?"set": Optional settings to initialize the channel with if it doesn't exist. See channel settings. 
+- ?"set": Optional settings to initialize the channel with if it doesn't exist. See channel settings. If a property isn't sent in this object, the server will use the default value.
+#### Example
+{
+  "m":"ch",
+  "\_id":"My new room",
+  "set":{
+    "visible":false
+  }
+}
+### Chown
+Clients can send chown messages to drop the crown or give it to someone else.
+#### Properties
+- ?"id": The user id who should receive the crown (string). If this property is not present or if the id is invalid, the participant will drop the crown.
+#### Example
+{
+  "m":"chown",
+  "id":"f46132453478f0a8679e1584"
+}
+### Chset
+Clients can send this to change a channel's settings if they have the crown.
+#### Properties
+- "set": Channel settings to change. See channel settings. If a property isn't sent, it will stay as it is. The only exception is "color2" which gets deleted from the channel's settings if the property is not sent.
+#### Example
+{
+  "m":"chset",
+  "set":{
+    "color":"#0066ff",
+    "color2":"#ff9900",
+    "chat":"false"
+  }
+}
+### Custom
+Clients can send custom data using this message. This is meant for developers to create addons for multiple people but being restricted to the standard protocol. A participant can only send 16384 bytes of custom data per 10 seconds. This is measured by the stringified value in the "data" property. If the "data" property is not present, it is treated as null.
+#### Properties
+- "data": Data to send to other clients. This can be any valid JSON. It could be an array, an object, a string, a number, or boolean, or null. Object nesting is acceptable to any depth (within the data quota).
+- "target": Object representing who this should get sent to. See target in Important Concepts.
+#### Example
+{
+  "m":"custom",
+  "data":{
+    "xyz":"abc",
+    "def":"ghi",
+    "jkl":\[
+      "mno",
+      123,
+      456,
+      null,
+      "hi",
+      {
+        "idk"
+      },
+      true
+    ]
+  },
+  target: {
+    "mode":"subscribed"
+  }
+}
+
+### Devices
+Browser clients send a list of connected midi inputs and outputs with this. Bots don't need to send this.
+#### Properties
+- "list": An array of device infos.
+#### Example
+{
+  "m": "devices",
+  "list": \[
+    {
+      "type": "input",
+      "manufacturer": "",
+      "name": "loopMIDI Port",
+      "version": "1.0",
+      "enabled": true,
+      "volume": 1
+    },
+    {
+      "type": "output",
+      "manufacturer": "",
+      "name": "OmniMIDI",
+      "version": "0.6",
+      "volume": 1
+    }
+  ]
+}
