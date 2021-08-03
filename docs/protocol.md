@@ -28,7 +28,7 @@
   - [n](#n)
   - [+custom](#custom-1)
   - [+ls](#ls)
-  - [T][#t]
+  - [T](#t)
   - [Unban](#unban)
   - [Userset](#userset)
 - [Server -> Client Messages](#server---client-messages-coming-soon)
