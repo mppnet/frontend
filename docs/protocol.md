@@ -7,6 +7,7 @@
   - [Times](#times)
   - [String validation](#string-validation)
   - [Participant info](#participant-info)
+  - [Channel info](#channel-info)
   - [Channel settings](#channel-settings)
   - [Crown](#crown)
   - [Target](#target)
