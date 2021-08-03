@@ -35,11 +35,10 @@ In some messages, the server will send a participant info object instead of an i
 - "\_id": The user's id (string). This is identical to the above field but is sent to keep backwards compatibility.
 - "name": The user's name.
 - "color": The user's color.
-- "x": The user's mouse x coordinate (number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the left edge, 100 is on the right edge.
+- "x": The user's mouse x coordinate (number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the left edge, 100 is on the right edge. Mouse will start as (200, 100) for users who haven't sent a mouse position.
 - "y": The user's mouse y coordinate (number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the top edge, 100 is on the bottom edge.
 - ?"tag": Optional tag (string). This is usually either "BOT", "MOD", "ADMIN", or "OWNER", but could be any string. If this property is not present, the user does not have a tag.
 - ?"vanished": Whether the user is vanished (boolean). Regular users and bots will never see this property, however moderators will receive this if they or another user are vanished. If this property is not present, the user is not vanished.\
-Mouse will start as (200, 100) for users who haven't sent a mouse position.
 #### Example
 {\
 &nbsp; "\_id":"514df042c61528f566530313",\
