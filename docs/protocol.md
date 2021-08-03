@@ -195,7 +195,7 @@ Clients can send custom data using this message. This is meant for developers to
 &nbsp; &nbsp; &nbsp; null,\
 &nbsp; &nbsp; &nbsp; "hi",\
 &nbsp; &nbsp; &nbsp; {\
-&nbsp; &nbsp; &nbsp; &nbsp; "idk"\
+&nbsp; &nbsp; &nbsp; &nbsp; "idk":"lol"\
 &nbsp; &nbsp; &nbsp; },\
 &nbsp; &nbsp; &nbsp; true\
 &nbsp; &nbsp; ]\
