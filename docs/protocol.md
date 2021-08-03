@@ -38,13 +38,13 @@ For most messages that get sent to other clients, strings are checked to make su
 In some messages, the server will send a participant info object instead of an id.
 #### Properties
 - `"id"`: The user's id (string).
-- `"\_id"`: The user's id (string). This is identical to the above field but is sent to keep backwards compatibility.
+- `"_id"`: The user's id (string). This is identical to the above field but is sent to keep backwards compatibility.
 - `"name"`: The user's name.
 - `"color"`: The user's color.
 - `"x"`: The user's mouse x coordinate (number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the left edge, 100 is on the right edge. Mouse will start as (200, 100) for users who haven't sent a mouse position.
 - `"y"`: The user's mouse y coordinate (number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the top edge, 100 is on the bottom edge.
 - `?"tag"`: Optional tag (string). This is usually either **"BOT"**, **"MOD"**, **"ADMIN"**, or **"OWNER"**, but could be any string. If this property is not present, the user does not have a tag.
-- `?"vanished"`: Whether the user is vanished (boolean). Regular users and bots will never see this property, however moderators will receive this if they or another user are vanished. If this property is not present, the user is not vanished.\
+- `?"vanished"`: Whether the user is vanished (boolean). Regular users and bots will never see this property, however moderators will receive this if they or another user are vanished. If this property is not present, the user is not vanished.
 #### Example
 ```json
 {
@@ -164,7 +164,7 @@ A "bye" message can be sent to close the client's socket. No more messages will 
 ### Ch
 A "ch" message can be sent to attempt to change the client's channel. If the specified channel does not exist, it will be created.
 #### Properties
-- `"\_id"`: Channel name. Must be less than 512 characters and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
+- `"_id"`: Channel name. Must be less than 512 characters and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
 - `?"set"`: Optional settings to initialize the channel with if it doesn't exist. See channel settings. If a property isn't sent in this object, the server will use the default value.
 #### Example
 ```json
@@ -264,7 +264,7 @@ Browser clients send a list of connected midi inputs and outputs with this. Bots
 "dm" messages are sent to direct message another participant in the channel.
 #### Properties
 - `"message"`: String to send in chat to the target user. Must be 512 characters or less and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
-- `"\_id"`: User id to send the message to (string).
+- `"_id"`: User id to send the message to (string).
 #### Example
 ```json
 {
@@ -290,7 +290,7 @@ A "hi" message is sent when the client first connects to the server. This must b
 ### Kickban
 This is sent to ban a user from the channel.
 #### Properties
-- `"\_id"`: The user id to ban (string).
+- `"_id"`: The user id to ban (string).
 - `"ms"`: The amount of milliseconds to ban the user for. Between 0 and 3600000.
 #### Example
 ```json
@@ -390,7 +390,7 @@ This is sent to subscribe to channel list updates.
 ### Unban
 "unban" is sent to unban a user from the client's channel.
 #### Properties
-- `"\_id"`: The user id to unban.
+- `"_id"`: The user id to unban.
 #### Example
 ```json
 {
