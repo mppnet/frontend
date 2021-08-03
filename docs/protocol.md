@@ -181,7 +181,7 @@ Clients can send this to change a channel's settings if they have the crown.
 Clients can send custom data using this message. This is meant for developers to create addons for multiple people but being restricted to the standard protocol. A participant can only send 16384 bytes of custom data per 10 seconds. This is measured by the stringified value in the "data" property. If the "data" property is not present, it is treated as null.
 #### Properties
 - "data": Data to send to other clients. This can be any valid JSON. It could be an array, an object, a string, a number, or boolean, or null. Object nesting is acceptable to any depth (within the data quota).
-- "target": Object representing who this should get sent to. See target in Important Concepts.
+- "target": Object representing who this should get sent to. See [target](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#target).
 #### Example
 {\
 &nbsp; "m":"custom",\
