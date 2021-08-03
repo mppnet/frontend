@@ -12,7 +12,7 @@
   - [Target](#target)
   - [Note](#note)
 - [Client -> Server Messages](#client---server-messages)
-  - [A](#A (server-bound))
+  - [A](<#A (server-bound)>)
   - [Bye](#bye)
   - [Ch](#ch (server-bound))
   - [Chown](#chown)
