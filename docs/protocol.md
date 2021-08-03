@@ -486,4 +486,4 @@ A "b" message is sent immediately when a connection opens. It's used by the anti
 ### C
 A "c" message is sent whenever a client joins a channel, or when chat is cleared by moderators. It contains up to 32 messages of chat history for the current channel, including DMs.
 #### Properties
-- `"c"`: An array containing between 0 and 32 complete [A](#A (client-bound)) or [Dm](#Dm (client-bound)) messages, including the `"m"` property.
+- `"c"`: An array containing between 0 and 32 complete [A](#a-client-bound) or [Dm](#dm-client-bound) messages, including the `"m"` property.
