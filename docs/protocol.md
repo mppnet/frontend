@@ -77,6 +77,7 @@ All websocket close codes have a code (number) and a reason (string).
 - `4007` - `Exceeded x messages per y seconds.`: There is a cap on how many individual message objects can be sent in a period of time. If this cap is exceeded the socket is closed.
 - `4008` - `Bot detected.`: The client was detected as a bot during the handshake. Make sure you're using a valid bot token.
 - `4009` - `Client limit reached.`: There is a limit on how many clients can be connected at a time per user. Contact the owner if you need to connect more clients.
+- `4010` - `Too many violations, temporarily banned for 1 minute.`: The client had too many violations in a period of time. Violations close a socket with codes `4001` to `4007`.
 
 ## Important concepts
 ### Colors
