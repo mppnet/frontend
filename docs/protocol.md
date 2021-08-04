@@ -197,11 +197,12 @@ This is an object containing information about the crown in that channel.
 ```
 
 ### Target
-This is an object describing who something should be sent to. Currently this is only used in "custom" messages. If mode is "subscribed", it targets everyone in the channel who is subscribed to custom messages. If mode is "id", it targets a single participant. If mode is "ids", it targets all of the listed participants. Targeting will **never** target the sender.
+This is an object describing who something should be sent to. Currently this is only used in "custom" messages. If mode is "subscribed", it targets everyone in the channel who is subscribed to custom messages. Clients can subscribe or unsubscribe with [+custom](#custom-1) and [-custom](#-custom) If mode is "id", it targets a single participant. If mode is "ids", it targets all of the listed participants. Targeting will **never** target the sender.
 #### Properties
 - `"mode"`: This can either be **"subscribed"**, **"id"**, or **"ids"**.
 - `"id"`: If "mode" is "id", this is sent with a string user id.
-- `"ids"`: If "mode" is "ids", this is sent with an array of user ids.
+- `"ids"`: If "mode" is "ids", this is sent with an array of user ids. The array cannot be longer than 32.
+- `"global"`: Whether the message should be broadcasted outside of the channel (boolean). If false, the message is only sent to clients within a single channel.
 #### Example
 ```json
 {
