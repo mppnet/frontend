@@ -67,16 +67,16 @@ All messages sent by the client and the server are JSON arrays. Socket messages 
 - `429 Too Many Requests`: Too many clients tried to connect from the same IP address in a short period of time. Slow down connection rates, and make sure handshakes aren't failing.
 #### Websocket Close Codes
 All websocket close codes have a code (number) and a reason (string).
-- `4000 - Server closing.`: The server is closing, probably due to an update. Reconnect in a few seconds.
-- `4001 - Message is in binary instead of a string.`: Websocket messages can be either binary, or strings. The server does not handle binary messages, so make sure you're sending messages as strings.
-- `4002 - Exceeded x bytes per y seconds.`: There is a cap on how much data clients can send in a given period. This quota may change later, and the owner can manually increase it. Make sure you aren't sending extremely large messages.
-- `4003 - Message buffer length exceeded x.`: Internally, the server buffers messages so that things always get done in the right order, even if a message runs asynchronous code. Clients can hit this limit if they send too many messages too quickly, or if the server has an error. Errors in the server are rare and shouldn't happen. The owner is able to see if one happened.
-- `4004 - Websocket message is not valid JSON.`: All websocket messages must be valid JSON. The socket is closed if a client sends a message that does not follow the [JSON specification](https://json.org/).
-- `4005 - Websocket message is not an Array.`: All websocket messages must be a stringified array. That array includes individual message objects.
-- `4006 - Websocket message array includes non-Object elements.`: All elements of the JSON array must be objects. If they are not, the socket is closed.
-- `4007 - Exceeded x messages per y seconds.`: There is a cap on how many individual message objects can be sent in a period of time. If this cap is exceeded the socket is closed.
-- `4008 - Bot detected.`: The client was detected as a bot during the handshake. Make sure you're using a valid bot token.
-- `4009 - Client limit reached.`: There is a limit on how many clients can be connected at a time per user. Contact the owner if you need to connect more clients.
+- `4000` - `Server closing.`: The server is closing, probably due to an update. Reconnect in a few seconds.
+- `4001` - `Message is in binary instead of a string.`: Websocket messages can be either binary, or strings. The server does not handle binary messages, so make sure you're sending messages as strings.
+- `4002` - `Exceeded x bytes per y seconds.`: There is a cap on how much data clients can send in a given period. This quota may change later, and the owner can manually increase it. Make sure you aren't sending extremely large messages.
+- `4003` - `Message buffer length exceeded x.`: Internally, the server buffers messages so that things always get done in the right order, even if a message runs asynchronous code. Clients can hit this limit if they send too many messages too quickly, or if the server has an error. Errors in the server are rare and shouldn't happen. The owner is able to see if one happened.
+- `4004` - `Websocket message is not valid JSON.`: All websocket messages must be valid JSON. The socket is closed if a client sends a message that does not follow the [JSON specification](https://json.org/).
+- `4005` - `Websocket message is not an Array.`: All websocket messages must be a stringified array. That array includes individual message objects.
+- `4006` - `Websocket message array includes non-Object elements.`: All elements of the JSON array must be objects. If they are not, the socket is closed.
+- `4007` - `Exceeded x messages per y seconds.`: There is a cap on how many individual message objects can be sent in a period of time. If this cap is exceeded the socket is closed.
+- `4008` - `Bot detected.`: The client was detected as a bot during the handshake. Make sure you're using a valid bot token.
+- `4009` - `Client limit reached.`: There is a limit on how many clients can be connected at a time per user. Contact the owner if you need to connect more clients.
 
 ## Important concepts
 ### Colors
