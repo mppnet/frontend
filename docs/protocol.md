@@ -30,7 +30,7 @@
   - [-custom](#-custom)
   - [-ls](#-ls)
   - [n](#n-server-bound)
-  - [+custom](#custom-1)
+  - [+custom](#custom)
   - [+ls](#ls)
   - [T](#t-server-bound)
   - [Unban](#unban)
@@ -551,7 +551,7 @@ This is sent to subscribe to channel list updates.
 }
 ```
 
-### B (client-bound)
+### B
 A "b" message is sent immediately when a connection opens. It's used by the anti-bot system to keep bot spam out.
 #### Properties
 - `"code"`: A string used by the anti-bot system.
