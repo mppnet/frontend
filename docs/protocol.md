@@ -855,7 +855,7 @@ Notification messages are sent when someone gets kickbanned from the channel you
 - `?"title"`: The title for the notification. Default is a blank string.
 - `?"text"`: The inner text for the notification. Default is a blank string.
 - `?"html"`: The inner html for the notification. Default is a blank string.
-- `?"target"`: Where the notification should be displayed as a jQuery selector. Default is `"#piano"`
+- `?"target"`: Where the notification should be displayed as a jQuery selector. Default is `"#piano"`.
 #### Example
 ```json
 {
