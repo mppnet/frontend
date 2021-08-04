@@ -77,7 +77,7 @@ All websocket close codes have a code (number) and a reason (string).
 - `4007` - `Exceeded x messages per y seconds.`: There is a cap on how many individual message objects can be sent in a period of time. If this cap is exceeded the socket is closed.
 - `4008` - `Bot detected.`: The client was detected as a bot during the handshake. Make sure you're using a valid bot token.
 - `4009` - `Client limit reached.`: There is a limit on how many clients can be connected at a time per user. Contact the owner if you need to connect more clients.
-- Between `4500` and `4999` - `Hit volation limit. Your IP is temporarily banned. Last violation reason: x`: A different client on the same IP address received a violation. Your IP hit the volation quota and that caused a temporary IP address ban. Subtract 500 from the code to see the original violation code.
+- Between `4500` and `4999` - `Another client caused your IP to hit volation limit. Your IP is temporarily banned. Last violation reason: x`: A different client on the same IP address received a violation. Your IP hit the volation quota and that caused a temporary IP address ban. Subtract 500 from the code to see the original violation code.
 
 ## Important concepts
 ### Colors
