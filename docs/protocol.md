@@ -44,6 +44,7 @@
   - [Ls](#ls-1)
   - [M](#m-client-bound)
   - [N](#n-client-bound)
+  - [Notification](#notification)
   - [Nq](#nq)
   - [P](#p)
   - [T](#t-client-bound)
@@ -91,7 +92,7 @@ In some messages, the server will send a participant info object instead of an i
 - `"color"`: The user's color.
 - `"x"`: The user's mouse x coordinate (string or number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the left edge, 100 is on the right edge. Default value is 200 until set by the user.
 - `"y"`: The user's mouse y coordinate (string or number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the top edge, 100 is on the bottom edge. Default value is 100 until set by the user.
-- `?"tag"`: Optional tag (string). This is usually either **"BOT"**, **"MOD"**, **"ADMIN"**, or **"OWNER"**, but could be any string. If this property is not present, the user does not have a tag.
+- `?"tag"`: Tag (string). This is usually either **"BOT"**, **"MOD"**, **"ADMIN"**, or **"OWNER"**, but could be any string. If this property is not present, the user does not have a tag.
 - `?"vanished"`: Whether the user is vanished (boolean). Regular users and bots will never see this property, however moderators will receive this if they or another user are vanished. If this property is not present, the user is not vanished.
 #### Example
 ```json
@@ -845,8 +846,29 @@ This is broadcasted to every other client in a channel when a client sends notes
 }
 ```
 
+### Notification
+Notification messages are sent when someone gets kickbanned from the channel you're in, when you fail to join a room, or when your `"hi"` handshake fails. They can also be sent manually by the owner of the site.
+#### Properties
+- `?"duration"`: Milliseconds the notification should display for before fading out. Default is 30000.
+- `?"class"`: The CSS class that the notification should use. Default is `"classic"`.
+- `?"id"`: The ID that the notification should use in HTML. If this property is not present, it's given a random ID.
+- `?"title"`: The title for the notification. Default is a blank string.
+- `?"text"`: The inner text for the notification. Default is a blank string.
+- `?"html"`: The inner html for the notification. Default is a blank string.
+- `?"target"`: Where the notification should be displayed as a jQuery selector. Default is `"#piano"`
+#### Example
+```json
+{
+  "m": "notification",
+  "duration": 15000,
+  "title": "Notice",
+  "target": "#room",
+  "text": "You already have the maximum amount of clients connected. Your id: 846e6d0900d96642bf8cb927"
+}
+```
+
 ### Nq
-This is sent when a client joins a channel or when their note quota changes. This message describes the note quota that the client should abide by. You can find how the Note Quota script works [here](https://github.com/aeiou879/mppclone/blob/main/client/NoteQuota.js).
+This is sent when a client joins a channel or when their note quota changes. This message describes the note quota that the client should abide by. You can find the Note Quota script [here](https://github.com/aeiou879/mppclone/blob/main/client/NoteQuota.js).
 #### Properties
 - `"allowance"`: The amount of note on or offs that a participant can send per 2 seconds consistently.
 - `"max"`: The maximum amount of note on or offs that a participant can send per 6 seconds.
