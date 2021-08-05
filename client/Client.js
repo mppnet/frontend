@@ -180,7 +180,11 @@ Client.prototype.bindEventListeners = function() {
         var hiMsg = {m:'hi'};
         hiMsg['🐈'] = self['🐈']++ || undefined;
         try {
-            hiMsg.code = Function(msg.code.substring(1))();
+            if (msg.code.startsWith('~')) {
+                hiMsg.code = Function(msg.code.substring(1))();
+            } else {
+                hiMsg.code = Function(msg.code)();
+            }
         } catch (err) {
             hiMsg.code = 'broken';
         }
