@@ -878,7 +878,7 @@ Rect.prototype.contains = function(x, y) {
 	    this.notification;
 	    this.packs = [];
 	    this.piano = piano;
-	    this.soundSelection = localStorage.soundSelection ? localStorage.soundSelection : "HardPiano";
+	    this.soundSelection = localStorage.soundSelection ? localStorage.soundSelection : "mppclassic";
 	    this.addPack({name: "MPP Classic", keys: Object.keys(this.piano.keys), ext: ".mp3", url: "/sounds/mppclassic/"});
 	}
 
@@ -1266,6 +1266,7 @@ Rect.prototype.contains = function(x, y) {
             if (part.tag === 'MOD') nameDiv.title = 'This user is an official moderator of the site.';
             if (part.tag === 'ADMIN') nameDiv.title = 'This user is an official administrator of the site.';
             if (part.tag === 'OWNER') nameDiv.title = 'This user is the owner of the site.';
+            if (part.tag === 'MEDIA') nameDiv.title = 'This is a well known person on Twitch, Youtube, or another platform.';
 
             updateLabels(part);
 
@@ -1395,6 +1396,7 @@ Rect.prototype.contains = function(x, y) {
             if (tag === 'OWNER') return '#a00';
             if (tag === 'ADMIN') return '#f55';
             if (tag === 'MOD') return '#0a0';
+            if (tag === 'MEDIA') return '#f5f';
             return '#777';
         }
 		function updateCursor(msg) {
