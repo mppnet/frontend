@@ -74,6 +74,7 @@ All websocket close codes have a code (number) and a reason (string).
 - `4003` - `Message buffer length exceeded x.`: Internally, the server buffers messages so that things always get done in the right order, even if a message runs asynchronous code. Clients can hit this limit if they send too many messages too quickly, or if the server has an error. Errors in the server are rare and shouldn't happen. The owner is able to see if one happened.
 - `4004` - `Timed out.`: Clients must send [t](#t-server-bound) messages every 20 seconds. They will get kicked if it has been longer than 30 seconds since the last time sync message was received. Time sync messages will not work before [hi](#hi-server-bound) has been sent.
 - `4005` - `Invalid proof-of-work value.`: The client sent a [proof of work](#proof-of-work) value where the first 22 bits weren't 0, or sent values that weren't incrementing.
+- `4006` - `Insufficient proof-of-work work.`: The user was not doing enough proof of work and received a 5 minute ban.
 - `4007` - `Exceeded x messages per y seconds.`: There is a cap on how many individual message objects can be sent in a period of time. If this cap is exceeded the socket is closed.
 - `4008` - `Bot detected.`: The client was detected as a bot during the handshake. Make sure you're using a valid bot token.
 - `4009` - `Client limit reached.`: There is a limit on how many clients can be connected at a time per user. Contact the owner if you need to connect more clients.
