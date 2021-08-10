@@ -267,7 +267,7 @@ Assuming the salt from the server is `"uWSSEutoxLwG2qOq"`:
 ### A (server-bound)
 "a" messages are sent to chat in the current channel.
 #### Properties
-- `"message"`: String to send in chat for everyone in your channel. Must be less 512 characters or less and must follow [string validation](#string-validation).
+- `"message"`: String to send in chat for everyone in your channel. Must be 512 characters or less and must follow [string validation](#string-validation).
 #### Example
 ```json
 {
