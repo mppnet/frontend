@@ -1,45 +1,84 @@
 # mppclone.com Protocol
 
 ## Navigation
-- [Message Format](#message-format)
-- [Important concepts](#important-concepts)
+- [Websocket Information](#websocket-information)
+  - [Connecting](#connecting)
+  - [Messages](#messages)
+  - [Close Reasons](#close-reasons)
+- [Important Concepts](#important-concepts)
   - [Colors](#colors)
   - [Times](#times)
   - [String validation](#string-validation)
   - [Participant info](#participant-info)
+  - [Channel info](#channel-info)
   - [Channel settings](#channel-settings)
   - [Crown](#crown)
   - [Target](#target)
   - [Note](#note)
+  - [Proof of work](#proof-of-work)
 - [Client -> Server Messages](#client---server-messages)
-  - [A](#a)
-  - [Bye](#bye)
-  - [Ch](#ch)
+  - [A](#a-server-bound)
+  - [Bye](#bye-server-bound)
+  - [Ch](#ch-server-bound)
   - [Chown](#chown)
   - [Chset](#chset)
-  - [Custom](#custom)
+  - [Custom](#custom-server-bound)
   - [Devices](#devices)
-  - [Dm](#dm)
-  - [Hi](#hi)
+  - [Dm](#dm-server-bound)
+  - [Hi](#hi-server-bound)
   - [Kickban](#kickban)
-  - [M](#m)
+  - [M](#m-server-bound)
   - [-custom](#-custom)
   - [-ls](#-ls)
-  - [n](#n)
-  - [+custom](#custom-1)
+  - [n](#n-server-bound)
+  - [+custom](#custom)
   - [+ls](#ls)
-  - [T](#t)
+  - [T](#t-server-bound)
   - [Unban](#unban)
   - [Userset](#userset)
-- [Server -> Client Messages](#server---client-messages-coming-soon)
-  - Coming soon
+- [Server -> Client Messages](#server---client-messages)
+  - [A](#a-client-bound)
+  - [B](#b)
+  - [Bye](#bye-client-bound)
+  - [C](#c)
+  - [Ch](#ch-client-bound)
+  - [Custom](#custom-client-bound)
+  - [Dm](#dm-client-bound)
+  - [Hi](#hi-client-bound)
+  - [Ls](#ls-1)
+  - [M](#m-client-bound)
+  - [N](#n-client-bound)
+  - [Notification](#notification)
+  - [Nq](#nq)
+  - [P](#p)
+  - [T](#t-client-bound)
 
-## Message Format
+## Websocket Information
+### Connecting
+The websocket server is on (wss://mppclone.com:8443). Any non-websocket requests to that port will be rejected.
+### Messages
 All messages sent by the client and the server are JSON arrays. Socket messages are strings, not binary. Each array can contain one or more individual message objects. Each individual message object has a "m" property where its value is a string signaling which message type it is.
 #### Example socket message:
 ```json
 [{"m":"hi","token":"abcdef"}]
 ```
+### Close Reasons
+#### HTTP Response Codes
+- `400 Bad Request`: A non-websocket connection was made to the websocket port.
+- `429 Too Many Requests`: Too many clients tried to connect from the same IP address in a short period of time. Slow down connection rates, and make sure handshakes aren't failing.
+#### Websocket Close Codes
+All websocket close codes have a code (number) and a reason (string).
+- `4000` - `Server closing.`: The server is closing, probably due to an update. Reconnect in a few seconds.
+- `4001` - `Message is in binary instead of a string.`: Websocket messages can be either binary, or strings. The server does not handle binary messages, so make sure you're sending messages as strings.
+- `4002` - `Exceeded x bytes per y seconds.`: There is a cap on how much data clients can send in a given period. This quota may change later, and the owner can manually increase it. Make sure you aren't sending extremely large messages.
+- `4003` - `Message buffer length exceeded x.`: Internally, the server buffers messages so that things always get done in the right order, even if a message runs asynchronous code. Clients can hit this limit if they send too many messages too quickly, or if the server has an error. Errors in the server are rare and shouldn't happen. The owner is able to see if one happened.
+- `4004` - `Timed out.`: Clients must send [t](#t-server-bound) messages every 20 seconds. They will get kicked if it has been longer than 30 seconds since the last time sync message was received. Time sync messages will not work before [hi](#hi-server-bound) has been sent.
+- `4005` - `Invalid proof-of-work value.`: The client sent a [proof of work](#proof-of-work) value where the first 22 bits weren't 0, or sent values that weren't incrementing.
+- `4006` - `Insufficient proof-of-work work.`: The user was not doing enough proof of work and received a 5 minute ban.
+- `4007` - `Exceeded x messages per y seconds.`: There is a cap on how many individual message objects can be sent in a period of time. If this cap is exceeded the socket is closed.
+- `4008` - `Bot detected.`: The client was detected as a bot during the handshake. Make sure you're using a valid bot token.
+- `4009` - `Client limit reached.`: There is a limit on how many clients can be connected at a time per user. Contact the owner if you need to connect more clients.
+- Between `4500` and `4999` - `Another client caused your IP to hit volation limit. Your IP is temporarily banned. Last violation reason: x`: A different client on the same IP address received a violation. Your IP hit the volation quota and that caused a temporary IP address ban. Subtract 500 from the code to see the original violation code.
 
 ## Important concepts
 ### Colors
@@ -72,13 +111,13 @@ For most messages that get sent to other clients, strings are checked to make su
 In some messages, the server will send a participant info object instead of an id.
 #### Properties
 - `"id"`: The user's id (string).
-- `"\_id"`: The user's id (string). This is identical to the above field but is sent to keep backwards compatibility.
+- `"_id"`: The user's id (string). This is identical to the above field but is sent to keep backwards compatibility.
 - `"name"`: The user's name.
 - `"color"`: The user's color.
-- `"x"`: The user's mouse x coordinate (number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the left edge, 100 is on the right edge. Mouse will start as (200, 100) for users who haven't sent a mouse position.
-- `"y"`: The user's mouse y coordinate (number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the top edge, 100 is on the bottom edge.
-- `?"tag"`: Optional tag (string). This is usually either **"BOT"**, **"MOD"**, **"ADMIN"**, or **"OWNER"**, but could be any string. If this property is not present, the user does not have a tag.
-- `?"vanished"`: Whether the user is vanished (boolean). Regular users and bots will never see this property, however moderators will receive this if they or another user are vanished. If this property is not present, the user is not vanished.\
+- `"x"`: The user's mouse x coordinate (string or number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the left edge, 100 is on the right edge. Default value is 200 until set by the user.
+- `"y"`: The user's mouse y coordinate (string or number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the top edge, 100 is on the bottom edge. Default value is 100 until set by the user.
+- `?"tag"`: Tag (string). This is usually either **"BOT"**, **"MOD"**, **"ADMIN"**, or **"OWNER"**, but could be any string. If this property is not present, the user does not have a tag.
+- `?"vanished"`: Whether the user is vanished (boolean). Regular users and bots will never see this property, however moderators will receive this if they or another user are vanished. If this property is not present, the user is not vanished.
 #### Example
 ```json
 {
@@ -89,6 +128,46 @@ In some messages, the server will send a participant info object instead of an i
   "tag":"OWNER",
   "x":50,
   "y":50
+}
+```
+
+### Channel info
+Contains information about a channel.
+#### Properties
+- `"count"`: The number of users currently in the channel.
+- `"id"`: The name of this channel.
+- `"_id"`: The name of this channel. Identical to `"id"`.
+- `?"crown"`: The [crown](#crown) in this channel. This property is not present in lobbies because lobbies don't have crowns.
+- `"settings"`: This channel's [settings](#channel-settings).
+#### Example
+```json
+{
+  "settings": {
+    "chat": true,
+    "color": "#440c09",
+    "visible": true,
+    "limit": "50",
+    "crownsolo": false,
+    "no cussing": false,
+    "minOnlineTime": 3600000,
+    "color2": "#000000"
+  },
+  "_id": "✧𝓓𝓔𝓥 𝓡𝓸𝓸𝓶✧",
+  "id": "✧𝓓𝓔𝓥 𝓡𝓸𝓸𝓶✧",
+  "count": 16,
+  "crown": {
+    "endPos": {
+      "x": 90,
+      "y": 74.7223883077421
+    },
+    "startPos": {
+      "x": 200,
+      "y": 100
+    },
+    "userId": "b40df99cc2ca6f503fba77cb",
+    "time": 1627974260906,
+    "participantId": "b40df99cc2ca6f503fba77cb"
+  }
 }
 ```
 
@@ -142,11 +221,12 @@ This is an object containing information about the crown in that channel.
 ```
 
 ### Target
-This is an object describing who something should be sent to. Currently this is only used in "custom" messages. If mode is "subscribed", it targets everyone in the channel who is subscribed to custom messages. If mode is "id", it targets a single participant. If mode is "ids", it targets all of the listed participants. Targeting will **never** target the sender.
+This is an object describing who something should be sent to. Currently this is only used in "custom" messages. If mode is "subscribed", it targets everyone in the channel who is subscribed to custom messages. Clients can subscribe or unsubscribe with [+custom](#custom) and [-custom](#-custom) If mode is "id", it targets a single participant. If mode is "ids", it targets all of the listed participants. Targeting will **never** target the sender.
 #### Properties
 - `"mode"`: This can either be **"subscribed"**, **"id"**, or **"ids"**.
 - `"id"`: If "mode" is "id", this is sent with a string user id.
-- `"ids"`: If "mode" is "ids", this is sent with an array of user ids.
+- `"ids"`: If "mode" is "ids", this is sent with an array of user ids. The array cannot be longer than 32.
+- `"global"`: Whether the message should be broadcasted outside of the channel (boolean). If false, the message is only sent to clients within a single channel.
 #### Example
 ```json
 {
@@ -174,12 +254,21 @@ Notes can either be a note start, or a note stop. Note starts have a "v" propert
 }
 ```
 
+### Proof of work
+This MPP server uses a proof of work scheme. The purpose of this is to make it more difficult for users to mass-bot the server if they bypassed the anti-bot system, or if they are using tens (or hundreds) of browser tabs on proxies. Proof of work will only be required for suspicious clients, the server aims to make sure regular users are affected as little as possible. Authorized bots are never required to do proof of work.
+#### How it works
+If a client is required to do proof of work, it will receive a salt in ["hi"](#hi-client-bound). A Web Worker will be started on the client to begin checking SHA-256 hashes. It will check as many hashes as it can on that thread starting from `salt + "0"`, and incrementing the number. If in a resulting hash, the first 22 bits are 0, that ending value gets sent back to the client and saved in an internal buffer. The next time the client sends ["t"](#t-server-bound), it will include an array with all of those bufferred values. The server validates those values and checks to make sure clients are doing enough work. Exactly what qualifies as "enough work" is private.
+#### Example
+Assuming the salt from the server is `"uWSSEutoxLwG2qOq"`:
+- The value starts at 0. The Web Worker calculates the SHA-256 hash of `"uWSSEutoxLwG2qOq0"` which is c591a9aa25cde8dfee968136e5b00b102fc3ca9574189242056329a0d138a3ea. The first 22 bits aren't 0, so the value increments and the worker continues.
+- When the value is at 5124706, the worker calculates the SHA-256 hash of `"uWSSEutoxLwG2qOq5124706"` which is 0000034e2938bd3c52bf58e9c1d781331adf5273e7385f790d682f435e0f9ef1. In this case, the first 22 bits are 0, so the worker sends `5124706` back to the client and the client sends it along with the next ping message.
+
 ## Client -> Server Messages
 
-### A
+### A (server-bound)
 "a" messages are sent to chat in the current channel.
 #### Properties
-- `"message"`: String to send in chat for everyone in your channel. Must be less 512 characters or less and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
+- `"message"`: String to send in chat for everyone in your channel. Must be 512 characters or less and must follow [string validation](#string-validation).
 #### Example
 ```json
 {
@@ -187,7 +276,7 @@ Notes can either be a note start, or a note stop. Note starts have a "v" propert
   "message":"Hello :D"
 }
 ```
-### Bye
+### Bye (server-bound)
 A "bye" message can be sent to close the client's socket. No more messages will be handled after the server receives "bye". Standard browser clients don't send this.
 #### Example
 ```json
@@ -195,10 +284,10 @@ A "bye" message can be sent to close the client's socket. No more messages will 
   "m":"bye"
 }
 ```
-### Ch
+### Ch (server-bound)
 A "ch" message can be sent to attempt to change the client's channel. If the specified channel does not exist, it will be created.
 #### Properties
-- `"\_id"`: Channel name. Must be less than 512 characters and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
+- `"_id"`: Channel name. Must be less than 512 characters and must follow [string validation](#string-validation).
 - `?"set"`: Optional settings to initialize the channel with if it doesn't exist. See channel settings. If a property isn't sent in this object, the server will use the default value.
 #### Example
 ```json
@@ -236,11 +325,11 @@ Clients can send this to change a channel's settings if they have the crown.
   }
 }
 ```
-### Custom
-Clients can send custom data using this message. This is meant for developers to create addons for multiple people without being restricted to the standard protocol. A participant can only send 16384 bytes of custom data per 10 seconds. This is measured by the stringified value in the "data" property. If the "data" property is not present, it is treated as null. Make sure you have lots of type checking for receiving custom messages, because someone could craft a malicious message to try to break your scripts.
+### Custom (server-bound)
+Clients can send custom data using this message. This is meant for developers to create addons for multiple people without being restricted to the standard protocol. A user can only send 16384 bytes of custom data per 10 seconds. This is measured by the stringified value in the "data" property. If the "data" property is not present, it is treated as null. Make sure you have lots of type checking for receiving custom messages, because someone could craft a malicious message to try to break your scripts.
 #### Properties
 - `"data"`: Data to send to other clients. This can be any valid JSON. It could be an array, an object, a string, a number, or boolean, or null. Object nesting is acceptable to any depth (within the data quota).
-- `"target"`: Object representing who this should get sent to. See [target](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#target).
+- `"target"`: Object representing who this should get sent to. See [target](#target).
 #### Example
 ```json
 {
@@ -267,7 +356,7 @@ Clients can send custom data using this message. This is meant for developers to
 ```
 
 ### Devices
-Browser clients send a list of connected midi inputs and outputs with this. Bots don't need to send this.
+Browser clients send a list of connected midi inputs and outputs with this when the socket opens and whenever it changes. Bots don't need to send this.
 #### Properties
 - `"list"`: An array of device infos.
 #### Example
@@ -294,11 +383,11 @@ Browser clients send a list of connected midi inputs and outputs with this. Bots
 }
 ```
 
-### Dm
+### Dm (server-bound)
 "dm" messages are sent to direct message another participant in the channel.
 #### Properties
-- `"message"`: String to send in chat to the target user. Must be 512 characters or less and must follow [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
-- `"\_id"`: User id to send the message to (string).
+- `"message"`: String to send in chat to the target user. Must be 512 characters or less and must follow [string validation](#string-validation).
+- `"_id"`: User id to send the message to (string).
 #### Example
 ```json
 {
@@ -308,8 +397,8 @@ Browser clients send a list of connected midi inputs and outputs with this. Bots
 }
 ```
 
-### Hi
-A "hi" message is sent when the client first connects to the server. This must be done before doing anything else.
+### Hi (server-bound)
+A "hi" message is sent when the client first connects to the server. This must be sent before sending anything else (except [devices](#devices)).
 #### Properties
 - `?"token"`: A token to use (string). Valid tokens will assign the client a specific user when they join. If this property is not present, the client will get the default user for their IP address.
 - `?"code"`: Response generated by the anti-bot system. Bots can ignore this, valid bot tokens will bypass the anti-bot system.
@@ -324,7 +413,7 @@ A "hi" message is sent when the client first connects to the server. This must b
 ### Kickban
 This is sent to ban a user from the channel.
 #### Properties
-- `"\_id"`: The user id to ban (string).
+- `"_id"`: The user id to ban (string).
 - `"ms"`: The amount of milliseconds to ban the user for. Between 0 and 3600000.
 #### Example
 ```json
@@ -335,11 +424,11 @@ This is sent to ban a user from the channel.
 }
 ```
 
-### M
+### M (server-bound)
 This is sent to move the participant's mouse.
 #### Properties
-- `"x"`: x position to move to (number). Can be any valid JSON number except NaN, even if it's out of the normal range.
-- `"y"`: y position to move to (number). Can be any valid JSON number except NaN, even if it's out of the normal range.
+- `"x"`: x position to move to (number). Can be any valid JSON number, even if it's out of the normal range.
+- `"y"`: y position to move to (number). Can be any valid JSON number, even if it's out of the normal range.
 #### Example
 ```json
 {
@@ -367,11 +456,11 @@ This is sent to unsubscribe from channel list updates.
 }
 ```
 
-### N
+### N (server-bound)
 This sends notes to other clients in the channel.
 #### Properties
 - `"t"`: The time at which the notes should play.
-- `"n"`: An array of notes. See [note](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#note).
+- `"n"`: An array of notes. See [note](#note).
 #### Example
 ```json
 {
@@ -409,22 +498,24 @@ This is sent to subscribe to channel list updates.
 }
 ```
 
-### T
+### T (server-bound)
 "t" is for pinging. This must be sent every 20 seconds, because the server will disconnect your client if it's not sent for more than 30 seconds.
 #### Properties
 - `?"e"`: The client's time.
+- `?"pow"`: Array of values from [proof of work](#proof-of-work).
 #### Example
 ```json
 {
   "m":"t",
-  "e":1627972519126
+  "e":1627972519126,
+  "pow":[665782, 1134816, 2041213, 3440733, 4232765]
 }
 ```
 
 ### Unban
 "unban" is sent to unban a user from the client's channel.
 #### Properties
-- `"\_id"`: The user id to unban.
+- `"_id"`: The user id to unban.
 #### Example
 ```json
 {
@@ -436,7 +527,7 @@ This is sent to subscribe to channel list updates.
 ### Userset
 "userset" changes the name or color of the client's user.
 #### Properties
-- `"set"`: An object containing "name" and or "color" properties. "color" must be a valid color, and "name" must be 40 characters or less and fit [string validation](https://github.com/aeiou879/mppclone/blob/main/docs/protocol.md#string-validation).
+- `"set"`: An object containing "name" and or "color" properties. "color" must be a valid color, and "name" must be 40 characters or less and fit [string validation](#string-validation).
 #### Example
 ```json
 {
@@ -448,4 +539,414 @@ This is sent to subscribe to channel list updates.
 }
 ```
 
-## Server -> Client Messages (coming soon)
+## Server -> Client Messages
+
+### A (client-bound)
+"a" messages are sent to every client in a room when someone chats.
+#### Properties
+- `"t"`: The server's time when it handled the chat message.
+- `"a"`: The text sent in chat.
+- `"p"`: Participant info of the user who sent the chat message.
+#### Example
+```json
+{
+  "m":"a",
+  "t":1628015260531,
+  "a":"test",
+  "p":{
+    "_id":"514df042c61528f566530313",
+    "name":"Lapis",
+    "color":"#ff8ff9",
+    "tag":"OWNER",
+    "id":"514df042c61528f566530313"
+  }
+}
+```
+
+### B
+A "b" message is sent immediately when a connection opens. It's used by the anti-bot system to keep bot spam out.
+#### Properties
+- `"code"`: A string used by the anti-bot system.
+#### Example
+```json
+{
+  "m":"b",
+  "code":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+}
+```
+
+### Bye (client-bound)
+A "bye" message is usually sent when a participant is removed from the client's channel. Sometimes participant removals are sent with [Ch](#ch-client-bound) messages instead.
+#### Properties
+- `"p"`: The id of the user who left.
+#### Example
+```json
+{
+  "m":"bye",
+  "p":"64578b5417566bcd4fa2fdbb"
+}
+```
+
+### C
+A "c" message is sent whenever a client joins a channel, or when chat is cleared by moderators. It contains up to 32 messages of chat history for the current channel, including DMs.
+#### Properties
+- `"c"`: An array containing between 0 and 32 complete [A](#a-client-bound) or [Dm](#dm-client-bound) messages, including the `"m"` property.
+#### Example
+```json
+{
+  "m": "c",
+  "c": [
+    {
+      "m": "a",
+      "t": 1628017539781,
+      "a": "Anonygold#9668: add stealwatches in k44 now",
+      "p": {
+        "_id": "141777bd0f408111c5fc7ad9",
+        "name": "[discord.gg/k44Eqha]",
+        "color": "#f140ae",
+        "tag": "BOT",
+        "id": "141777bd0f408111c5fc7ad9"
+      }
+    },
+    {
+      "m": "a",
+      "t": 1628017546207,
+      "a": "Retroplateau#1995: and deathwatches",
+      "p": {
+        "_id": "141777bd0f408111c5fc7ad9",
+        "name": "[discord.gg/k44Eqha]",
+        "color": "#f140ae",
+        "tag": "BOT",
+        "id": "141777bd0f408111c5fc7ad9"
+      }
+    },
+    {
+      "m": "a",
+      "t": 1628017551011,
+      "a": "Retroplateau#1995: and annoywatches",
+      "p": {
+        "_id": "141777bd0f408111c5fc7ad9",
+        "name": "[discord.gg/k44Eqha]",
+        "color": "#f140ae",
+        "tag": "BOT",
+        "id": "141777bd0f408111c5fc7ad9"
+      }
+    },
+    {
+      "m": "a",
+      "t": 1628017555817,
+      "a": "Anonygold#9668: add anonywatches",
+      "p": {
+        "_id": "141777bd0f408111c5fc7ad9",
+        "name": "[discord.gg/k44Eqha]",
+        "color": "#f140ae",
+        "tag": "BOT",
+        "id": "141777bd0f408111c5fc7ad9"
+      }
+    }
+  ]
+}
+```
+
+### Ch (client-bound)
+This is sent with all the information about a channel. It's broadcasted to everyone in a channel whenever channel settings change, the crown is dropped or given to a user, or sometimes when a participant is added or removed. It's also sent to a client when they join a channel.
+#### Properties
+- `"p"`: The client's user id.
+- `"ppl"`: An array of [participant info](#participant-info)s for every user in the channel.
+- `"ch"`: A [channel info](#channel-info) object.
+#### Example
+```json
+{
+  "m": "ch",
+  "ch": {
+    "settings": {
+      "chat": true,
+      "color": "#440c09",
+      "visible": true,
+      "limit": "50",
+      "crownsolo": false,
+      "no cussing": false,
+      "minOnlineTime": 3600000,
+      "color2": "#000000"
+    },
+    "_id": "✧𝓓𝓔𝓥 𝓡𝓸𝓸𝓶✧",
+    "id": "✧𝓓𝓔𝓥 𝓡𝓸𝓸𝓶✧",
+    "count": 16,
+    "crown": {
+      "endPos": {
+        "x": 90,
+        "y": 74.7223883077421
+      },
+      "startPos": {
+        "x": 200,
+        "y": 100
+      },
+      "userId": "b40df99cc2ca6f503fba77cb",
+      "time": 1627974260906,
+      "participantId": "b40df99cc2ca6f503fba77cb"
+    }
+  },
+  "ppl": [
+    {
+      "_id": "b40df99cc2ca6f503fba77cb",
+      "name": "Bouncer [//help]",
+      "color": "#2524a5",
+      "tag": "BOT",
+      "id": "b40df99cc2ca6f503fba77cb",
+      "x": 200,
+      "y": 100
+    },
+    {
+      "_id": "78a11a25c966d62d0231a135",
+      "name": "Yoshino ( y!help )",
+      "color": "#f97d87",
+      "tag": "BOT",
+      "id": "78a11a25c966d62d0231a135",
+      "x": 200,
+      "y": 100
+    },
+    {
+      "_id": "4d354eaddf02eedc6211034c",
+      "name": "Theta [=help]",
+      "color": "#e51c8d",
+      "tag": "BOT",
+      "id": "4d354eaddf02eedc6211034c",
+      "x": "86.20",
+      "y": "76.40"
+    }
+  ],
+  "p": "514df042c61528f566530313"
+}
+```
+
+### Custom (client-bound)
+This is sent when a client sends a [custom](#custom-server-bound) message.
+#### Properties
+- `"data"`: The data sent in this custom message. Can be any valid JSON.
+- `"p"`: The user id of the client who sent this custom message.
+#### Example
+```json
+{
+  "m":"custom",
+  "data":[
+    "hi",
+    "hello",
+    "how are you"
+  ],
+  "p":"1dbe9eb24f0f4668cc72ac79"
+}
+```
+
+### Dm (client-bound)
+This is sent to the recipient when a client direct messages another participant.
+#### Properties
+- `"t"`: The server's time when the DM was handled.
+- `"a"`: The message's text.
+- `"sender"`: [Participant info](#participant-info) for the user who sent the DM.
+- `"recipient"`: [Participant info](#participant-info) for the user who is receiving the DM. This will usually be a client's own participant, unless the user is a moderator and can see other user's DMs.
+#### Example
+```json
+{
+  "m": "dm",
+  "t": 1628019628643,
+  "a": "this direct message is going in the protocol documentation as an example",
+  "sender": {
+    "_id": "514df042c61528f566530313",
+    "name": "Lapis",
+    "color": "#ff8ff9",
+    "tag": "OWNER",
+    "id": "514df042c61528f566530313"
+  },
+  "recipient": {
+    "_id": "fd4365210b7f25b6cb0ed683",
+    "name": "͏͏͏͏A͏͏͏n͏͏͏o͏͏n͏y͏͏͏͏g͏͏͏͏͏o͏l͏d͏͏",
+    "color": "#ffd700",
+    "id": "fd4365210b7f25b6cb0ed683"
+  }
+}
+```
+
+### Hi (client-bound)
+This is sent as a response when the client first sends `"hi"`.
+#### Properties
+- `"t"`: The server's time when it handled the `"hi"` message.
+- `"u"`: The client's [participant info](#participant info) except without `"id"`.
+- `"permissions"`: An object containing the client's permissions. This is usually empty and can be ignored by most bots.
+- `"token"`: A string token that the client can send back in the future to keep the same user. Bots should have their token hard coded and can ignore this.
+- `?"pow"`: A salt used for [proof of work](#proof-of-work). Bots won't be required to do proof of work and won't receive this.
+#### Example
+```json
+  "m": "hi",
+  "t": 1628019780663,
+  "u": {
+    "_id": "514df042c61528f566530313",
+    "name": "Lapis",
+    "color": "#ff8ff9",
+    "tag": "OWNER"
+  },
+  "token": "514df042c61528f566530313.9d26e1c7-1161-4621-8dc7-3f2c74fc661b",
+  "permissions": {}
+}
+```
+
+### Ls
+This is sent when a client subscribes to the channel list, or when a channel updates while they are subscribed.
+#### Properties
+- `"c"`: Whether this is a complete list of channels (boolean). If true, `"u"` is an array with every channel. If false, `"u"` is an array with channels to update information for.
+- `"u"`: Array of [channel info](#channel-info)s.
+#### Example
+```json
+{
+  "m": "ls",
+  "c": false,
+  "u": [
+    {
+      "settings": {
+        "chat": true,
+        "color": "#800080",
+        "color2": "#000000",
+        "visible": true,
+        "limit": 50,
+        "crownsolo": false,
+        "no cussing": false
+      },
+      "_id": "The Roleplay Room",
+      "id": "The Roleplay Room",
+      "count": 16,
+      "crown": {
+        "endPos": {
+          "x": 90,
+          "y": 82.31281739206041
+        },
+        "startPos": {
+          "x": "99.95",
+          "y": "0.70"
+        },
+        "userId": "b40df99cc2ca6f503fba77cb",
+        "time": 1627974260906,
+        "participantId": "b40df99cc2ca6f503fba77cb"
+      }
+    }
+  ]
+}
+```
+
+### M (client-bound)
+This is broadcasted to every other client in a channel when a client sends a mouse movement.
+#### Properties
+- `"id"`: The user id of the participant who moved their mouse.
+- `"x"`: The participant's new mouse x position (string).
+- `"y"`: The participant's new mouse y position (string).
+#### Example
+```json
+{
+  "m": "m",
+  "x": "50.30",
+  "y": "26.49",
+  "id": "c649910153f09f5087685ba2"
+}
+```
+
+### N (client-bound)
+This is broadcasted to every other client in a channel when a client sends notes.
+#### Properties
+- `"t"`: The base time of this message. Notes with `"d"` properties are offset from this time by their `"d"` value.
+- `"p"`: The user id who sent the notes.
+- `"n"`: An array of [notes](#note).
+#### Example
+```json
+{
+  "m": "n",
+  "t": 1628020489306.2944,
+  "n": [
+    {
+      "n": "a1",
+      "s": 1
+    },
+    {
+      "n": "e1",
+      "s": 1,
+      "d": 0
+    },
+    {
+      "n": "a0",
+      "s": 1,
+      "d": 0
+    },
+    {
+      "n": "a1",
+      "v": 0.7874015748031497,
+      "d": 0
+    },
+  ],
+  "p": "514df042c61528f566530313"
+}
+```
+
+### Notification
+Notification messages are sent when someone gets kickbanned from the channel you're in, when you fail to join a room, or when your `"hi"` handshake fails. They can also be sent manually by the owner of the site.
+#### Properties
+- `?"duration"`: Milliseconds the notification should display for before fading out. Default is 30000.
+- `?"class"`: The CSS class that the notification should use. Default is `"classic"`.
+- `?"id"`: The ID that the notification should use in HTML. If this property is not present, it's given a random ID.
+- `?"title"`: The title for the notification. Default is a blank string.
+- `?"text"`: The inner text for the notification. Default is a blank string.
+- `?"html"`: The inner html for the notification. Default is a blank string.
+- `?"target"`: Where the notification should be displayed as a jQuery selector. Default is `"#piano"`.
+#### Example
+```json
+{
+  "m": "notification",
+  "duration": 15000,
+  "title": "Notice",
+  "target": "#room",
+  "text": "You already have the maximum amount of clients connected. Your id: 846e6d0900d96642bf8cb927"
+}
+```
+
+### Nq
+This is sent when a client joins a channel or when their note quota changes. This message describes the note quota that the client should abide by. You can find the Note Quota script [here](https://github.com/aeiou879/mppclone/blob/main/client/NoteQuota.js).
+#### Properties
+- `"allowance"`: The amount of note on or offs that a participant can send per 2 seconds consistently.
+- `"max"`: The maximum amount of note on or offs that a participant can send per 6 seconds.
+- `"maxHistLen"`: How many periods of 2 seconds should be buffered. This is always 3.
+#### Example
+```json
+{
+    "m": "nq",
+    "maxHistLen": 3,
+    "max": 1200,
+    "allowance": 400
+}
+```
+
+### P
+A "p" message is usually sent when a participant is added from the client's channel. Sometimes participant additions sent with [Ch](#ch-client-bound) messages instead.
+#### Properties
+All of the properties for that user's [participant info](#participant-info).
+#### Example
+```json
+{
+  "m": "p",
+  "_id": "f05631ee009fce4d53fb0c79",
+  "name": "Anonymous",
+  "color": "#c50116",
+  "id": "f05631ee009fce4d53fb0c79",
+  "x": 200,
+  "y": 100
+}
+```
+
+### T (client-bound)
+This is sent in response to a client's ping message.
+#### Properties
+- `"t"`: The server's time when it received the client's ping.
+- `?"e"`: An echo of the time the client sent with their ping message. If the client didn't send their time, this property won't be present.
+#### Example
+```json
+{
+    "m": "t",
+    "t": 1628020444326,
+    "e": 1628020443009
+}
+```

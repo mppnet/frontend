@@ -37,6 +37,7 @@ function Client(uri) {
     this.permissions = {};
     this.noQuota = false;
     this['🐈'] = 0;
+    this.setupPowWorker();
 
     this.bindEventListeners();
 
@@ -87,6 +88,7 @@ Client.prototype.connect = function() {
         self.user = undefined;
         self.participantId = undefined;
         self.channel = undefined;
+        self.stopPow();
         self.setParticipants([]);
         clearInterval(self.pingInterval);
         clearInterval(self.noteFlushInterval);
@@ -113,9 +115,8 @@ Client.prototype.connect = function() {
     });
     this.ws.addEventListener("open", function(evt) {
         self.pingInterval = setInterval(function() {
-            self.sendArray([{m: "t", e: Date.now()}]);
+            self.sendPing();
         }, 20000);
-        //self.sendArray([{m: "t", e: Date.now()}]);
         self.noteBuffer = [];
         self.noteBufferTime = 0;
         self.noteFlushInterval = setInterval(function() {
@@ -153,6 +154,7 @@ Client.prototype.bindEventListeners = function() {
         } else {
             self.permissions = {};
         }
+        if (msg.pow) this.startPow(msg.pow);
     });
     this.on("t", function(msg) {
         self.receiveServerTime(msg.t, msg.e || undefined);
@@ -180,7 +182,11 @@ Client.prototype.bindEventListeners = function() {
         var hiMsg = {m:'hi'};
         hiMsg['🐈'] = self['🐈']++ || undefined;
         try {
-            hiMsg.code = Function(msg.code.substring(1))();
+            if (msg.code.startsWith('~')) {
+                hiMsg.code = Function(msg.code.substring(1))();
+            } else {
+                hiMsg.code = Function(msg.code)();
+            }
         } catch (err) {
             hiMsg.code = 'broken';
         }
@@ -362,4 +368,81 @@ Client.prototype.stopNote = function(note) {
             this.noteBuffer.push({d: Date.now() - this.noteBufferTime, n: note, s: 1});
         }
     }
+};
+
+Client.prototype.sendPing = function() {
+    var msg = {m: "t", e: Date.now()};
+    if (this.powBuffer && this.powBuffer.length > 0) {
+        msg.pow = this.powBuffer;
+        this.powBuffer = [];
+    }
+    this.sendArray([msg]);
+};
+
+Client.prototype.setupPowWorker = function() {
+    var self = this;
+
+    //slightly ugly way to run a webworker with cross-origin support. I could have used a large string in this file containing all the code, but I figured it would be cleaner to have it in a separate file.
+
+    function XHRWorker(url, ready, scope) {
+        var oReq = new XMLHttpRequest();
+        oReq.addEventListener('load', function() {
+            var worker = new Worker(window.URL.createObjectURL(new Blob([this.responseText])));
+            if (ready) {
+                ready.call(scope, worker);
+            }
+        }, oReq);
+        oReq.open('get', url, true);
+        oReq.send();
+    }
+  
+    function WorkerStart() {
+        var workerUrl = location.host === '10.0.0.24' ? 'http://10.0.0.24/powWorker.js' : 'https://mppclone.com/powWorker.js';
+        XHRWorker(workerUrl, function(worker) {
+            self.powWorker.setWorker(worker);
+        }, this);
+    }
+  
+    WorkerStart();
+
+    //worker proxy so we can do normal stuff with it before the request is complete
+    this.powWorker = {
+        messageBuffer: [],
+        set onmessage(func) {
+            this.messageHandler = func;
+        },
+        postMessage(message) {
+            if (this.worker) {
+                this.worker.postMessage(message);
+            } else {
+                this.messageBuffer.push(message);
+            }
+        },
+        setWorker(worker) {
+            this.worker = worker;
+            worker.onmessage = this.messageHandler;
+            this.messageBuffer.forEach(message => this.worker.postMessage(message));
+            delete this.messageBuffer;
+        },
+    }
+    
+    this.powWorker.onmessage = function(msg) {
+        msg = msg.data;
+        if (msg.m === 'result') {
+            if (msg.salt !== self.powSalt) return;
+            self.powBuffer.push(msg.value);
+        }
+    };
+};
+
+Client.prototype.startPow = function(salt) {
+    this.powSalt = salt;
+    this.powBuffer = [];
+    this.powWorker.postMessage({m:'start', salt});
+};
+
+Client.prototype.stopPow = function() {
+    this.powSalt = undefined;
+    this.powBuffer = undefined;
+    this.powWorker.postMessage({m:'stop'});
 };
