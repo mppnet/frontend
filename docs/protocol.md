@@ -69,7 +69,6 @@ All messages sent by the client and the server are JSON arrays. Socket messages 
 #### Websocket Close Codes
 All websocket close codes have a code (number) and a reason (string).
 - `4000` - `Server closing.`: The server is closing, probably due to an update. Reconnect in a few seconds.
-- `4001` - `Message is in binary instead of a string.`: Websocket messages can be either binary, or strings. The server does not handle binary messages, so make sure you're sending messages as strings.
 - `4002` - `Exceeded x bytes per y seconds.`: There is a cap on how much data clients can send in a given period. This quota may change later, and the owner can manually increase it. Make sure you aren't sending extremely large messages.
 - `4003` - `Message buffer length exceeded x.`: Internally, the server buffers messages so that things always get done in the right order, even if a message runs asynchronous code. Clients can hit this limit if they send too many messages too quickly, or if the server has an error. Errors in the server are rare and shouldn't happen. The owner is able to see if one happened.
 - `4004` - `Timed out.`: Clients must send [t](#t-server-bound) messages every 20 seconds. They will get kicked if it has been longer than 30 seconds since the last time sync message was received. Time sync messages will not work before [hi](#hi-server-bound) has been sent.
