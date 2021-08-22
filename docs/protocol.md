@@ -254,7 +254,7 @@ Notes can either be a note start, or a note stop. Note starts have a "v" propert
 ```
 
 ### Proof of work
-This MPP server uses a proof of work scheme. The purpose of this is to make it more difficult for users to mass-bot the server if they bypassed the anti-bot system, or if they are using tens (or hundreds) of browser tabs on proxies. Proof of work will only be required for suspicious clients, the server aims to make sure regular users are affected as little as possible. Authorized bots are never required to do proof of work.
+This MPP server uses a proof of work scheme. The purpose of this is to make it more difficult for users to mass-bot the server if they bypassed the anti-bot system, or if they are using tens (or hundreds) of browser tabs on proxies. Authorized bots are never required to do proof of work.
 #### How it works
 If a client is required to do proof of work, it will receive a salt in ["hi"](#hi-client-bound). A Web Worker will be started on the client to begin checking SHA-256 hashes. It will check as many hashes as it can on that thread starting from `salt + "0"`, and incrementing the number. If in a resulting hash, the first 22 bits are 0, that ending value gets sent back to the client and saved in an internal buffer. The next time the client sends ["t"](#t-server-bound), it will include an array with all of those bufferred values. The server validates those values and checks to make sure clients are doing enough work. Exactly what qualifies as "enough work" is private.
 #### Example
