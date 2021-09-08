@@ -376,7 +376,7 @@ Browser clients send a list of connected midi inputs and outputs with this when 
       "type": "output",
       "manufacturer": "",
       "name": "OmniMIDI",
-      "version": "0.6",
+      "version": "14.5.1",
       "volume": 1
     }
   ]
