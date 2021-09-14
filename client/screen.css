@@ -1029,6 +1029,17 @@ input[type="range"]:hover {
     color: #789922
 }
 
+#chat li .mention {
+    color: white;
+    padding: 4px;
+    margin: 2px;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    line-height: 15px;
+    text-shadow: #444 1px 1px;
+}
+
 #chat input {
     margin: 4px;
     width: 99%;

@@ -1208,6 +1208,25 @@ Rect.prototype.contains = function(x, y) {
 		console.log(evt);
 	});
 
+
+	var tabIsActive = true;
+	var youreMentioned = false;
+
+	window.addEventListener('focus', function (event) {
+	    tabIsActive = true;
+	    youreMentioned = false;
+	    var count = Object.keys(MPP.client.ppl).length;
+	    if(count > 0) {
+			document.title = "Piano (" + count + ")";
+		} else {
+			document.title = "Multiplayer Piano";
+		}
+	});
+
+	window.addEventListener('blur', function (event) {
+	    tabIsActive = false;
+	});
+
 	// Setting status
 	(function() {
 		gClient.on("status", function(status) {
@@ -1216,6 +1235,7 @@ Rect.prototype.contains = function(x, y) {
 		gClient.on("count", function(count) {
 			if(count > 0) {
 				$("#status").html('<span class="number">'+count+'</span> '+(count==1? 'person is' : 'people are')+' playing');
+				if (!tabIsActive && youreMentioned) return;
 				document.title = "Piano (" + count + ")";
 			} else {
 				document.title = "Multiplayer Piano";
@@ -2203,6 +2223,15 @@ Rect.prototype.contains = function(x, y) {
                     $('#chat-input')[0].placeholder = 'Direct messaging ' + part.name + '.';
                 });
             }
+
+            $('<div class="menu-item">Mention</div>').appendTo(menu)
+            .on("mousedown touchstart", function(evt) {
+                $('#chat-input')[0].value += '@' + part.id + ' ';
+                setTimeout(() => {
+                	$('#chat-input').focus();
+                }, 1);
+            });
+
 			if(gClient.isOwner() || gClient.permissions.chownAnywhere) {
                 if (!gClient.channel.settings.lobby) {
                     $('<div class="menu-item give-crown">Give Crown</div>').appendTo(menu)
@@ -2896,8 +2925,23 @@ Rect.prototype.contains = function(x, y) {
                     li.find(".timestamp").text(new Date(msg.t).toLocaleTimeString());
                 }
 
+                var message = $('<div>').text(msg.a).html().replace(/@([\da-f]{24})/g, (match, id) => {
+                	var user = gClient.ppl[id];
+                    if (user) {
+                    	if (user.id === gClient.getOwnParticipant().id) {
+                    		if (!tabIsActive) {
+                    			youreMentioned = true;
+                    			document.title = "You were mentioned!";
+                    		}
+                    		return `<span class="mention" style="background-color: ${user.color};">${user.name}</span>`;
+                    	}
+                    	else return  "@" + user.name;
+                    } 
+                    else return match; 
+                });
+
                 //apply names, colors, ids
-				li.find(".message").text(msg.a);
+				li.find(".message").html(message);
 
                 if (msg.m === 'dm') {
                     if (!gNoChatColors) li.find(".message").css("color", msg.sender.color || "white");
