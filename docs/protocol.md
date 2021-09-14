@@ -69,7 +69,7 @@ All messages sent by the client and the server are JSON arrays. Socket messages 
 #### Websocket Close Codes
 All websocket close codes have a code (number) and a reason (string).
 - `4000` - `Server closing.`: The server is closing, probably due to an update. Reconnect in a few seconds.
-- `4001` - `Message is in binary instead of a string.`: Websocket messages can be either binary, or strings. The server does not handle binary messages, so make sure you're sending messages as strings.
+- `4001` - `Too many unique users per IP per hour.`: Each IP address can only use 3 unique non-bot tokens per hour. This is to discourage people from using so-called "proxy tokens" which let them evade mutes or bans without actually using a proxy.
 - `4002` - `Exceeded x bytes per y seconds.`: There is a cap on how much data clients can send in a given period. This quota may change later, and the owner can manually increase it. Make sure you aren't sending extremely large messages.
 - `4003` - `Message buffer length exceeded x.`: Internally, the server buffers messages so that things always get done in the right order, even if a message runs asynchronous code. Clients can hit this limit if they send too many messages too quickly, or if the server has an error. Errors in the server are rare and shouldn't happen. The owner is able to see if one happened.
 - `4004` - `Timed out.`: Clients must send [t](#t-server-bound) messages every 20 seconds. They will get kicked if it has been longer than 30 seconds since the last time sync message was received. Time sync messages will not work before [hi](#hi-server-bound) has been sent.
@@ -255,7 +255,7 @@ Notes can either be a note start, or a note stop. Note starts have a "v" propert
 ```
 
 ### Proof of work
-This MPP server uses a proof of work scheme. The purpose of this is to make it more difficult for users to mass-bot the server if they bypassed the anti-bot system, or if they are using tens (or hundreds) of browser tabs on proxies. Proof of work will only be required for suspicious clients, the server aims to make sure regular users are affected as little as possible. Authorized bots are never required to do proof of work.
+This MPP server uses a proof of work scheme. The purpose of this is to make it more difficult for users to mass-bot the server if they bypassed the anti-bot system, or if they are using tens (or hundreds) of browser tabs on proxies. Authorized bots are never required to do proof of work.
 #### How it works
 If a client is required to do proof of work, it will receive a salt in ["hi"](#hi-client-bound). A Web Worker will be started on the client to begin checking SHA-256 hashes. It will check as many hashes as it can on that thread starting from `salt + "0"`, and incrementing the number. If in a resulting hash, the first 22 bits are 0, that ending value gets sent back to the client and saved in an internal buffer. The next time the client sends ["t"](#t-server-bound), it will include an array with all of those bufferred values. The server validates those values and checks to make sure clients are doing enough work. Exactly what qualifies as "enough work" is private.
 #### Example
@@ -376,7 +376,7 @@ Browser clients send a list of connected midi inputs and outputs with this when 
       "type": "output",
       "manufacturer": "",
       "name": "OmniMIDI",
-      "version": "0.6",
+      "version": "14.5.1",
       "volume": 1
     }
   ]

@@ -1262,11 +1262,12 @@ Rect.prototype.contains = function(x, y) {
             }
             nameDiv.style.backgroundColor = part.color || "#777";
             if (part.veteran) nameDiv.title = 'This user is a veteran of Multiplayer Piano';
-            if (part.tag === 'BOT') nameDiv.title = 'This is an authorized bot.';
-            if (part.tag === 'MOD') nameDiv.title = 'This user is an official moderator of the site.';
-            if (part.tag === 'ADMIN') nameDiv.title = 'This user is an official administrator of the site.';
-            if (part.tag === 'OWNER') nameDiv.title = 'This user is the owner of the site.';
-            if (part.tag === 'MEDIA') nameDiv.title = 'This is a well known person on Twitch, Youtube, or another platform.';
+            var tagText = typeof part.tag === 'object' ? part.tag.text : part.tag;
+            if (tagText === 'BOT') nameDiv.title = 'This is an authorized bot.';
+            if (tagText === 'MOD') nameDiv.title = 'This user is an official moderator of the site.';
+            if (tagText === 'ADMIN') nameDiv.title = 'This user is an official administrator of the site.';
+            if (tagText === 'OWNER') nameDiv.title = 'This user is the owner of the site.';
+            if (tagText === 'MEDIA') nameDiv.title = 'This is a well known person on Twitch, Youtube, or another platform.';
 
             updateLabels(part);
 
@@ -1284,7 +1285,7 @@ Rect.prototype.contains = function(x, y) {
                 hasOtherDiv = true;
                 var tagDiv = document.createElement("div");
 			    tagDiv.className = "nametag";
-			    tagDiv.textContent = part.tag || "";
+			    tagDiv.textContent = tagText || "";
                 tagDiv.style.backgroundColor = tagColor(part.tag);
                 tagDiv.id = 'nametag-' + part._id;
 			    part.nameDiv.appendChild(tagDiv);
@@ -1392,6 +1393,7 @@ Rect.prototype.contains = function(x, y) {
             }
         }
         function tagColor(tag) {
+            if (typeof tag === 'object') return tag.color;
             if (tag === 'BOT') return '#55f';
             if (tag === 'OWNER') return '#a00';
             if (tag === 'ADMIN') return '#f55';
