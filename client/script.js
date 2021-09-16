@@ -2928,14 +2928,15 @@ Rect.prototype.contains = function(x, y) {
                 var message = $('<div>').text(msg.a).html().replace(/@([\da-f]{24})/g, (match, id) => {
                 	var user = gClient.ppl[id];
                     if (user) {
+                    	var nick = $('<div>').text(user.name).html();
                     	if (user.id === gClient.getOwnParticipant().id) {
                     		if (!tabIsActive) {
                     			youreMentioned = true;
                     			document.title = "You were mentioned!";
                     		}
-                    		return `<span class="mention" style="background-color: ${user.color};">${user.name}</span>`;
+                    		return `<span class="mention" style="background-color: ${user.color};">${nick}</span>`;
                     	}
-                    	else return  "@" + user.name;
+                    	else return  "@" + nick;
                     } 
                     else return match; 
                 });
