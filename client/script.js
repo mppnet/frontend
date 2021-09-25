@@ -1682,6 +1682,7 @@ Rect.prototype.contains = function(x, y) {
 	var gNoBackgroundColor = localStorage.noBackgroundColor == "true";
 	var gOutputOwnNotes = localStorage.outputOwnNotes ? localStorage.outputOwnNotes == "true" : true;
 	var gVirtualPianoLayout = localStorage.virtualPianoLayout == "true";
+	//var gWarnOnLinks = localStorage.warnOnLinks ? localStorage.warnOnLinks == "true" : true;
 
 
 
@@ -2738,6 +2739,47 @@ Rect.prototype.contains = function(x, y) {
 ////////////////////////////////////////////////////////////////
 
 	var chat = (function() {
+		var url_regex = new RegExp(
+			// protocol identifier (optional)
+			// short syntax // still required
+			"(?:(?:(?:https?|ftp):)?\\/\\/)" +
+			// user:pass BasicAuth (optional)
+			"(?:\\S+(?::\\S*)?@)?" +
+			"(?:" +
+				// IP address exclusion
+				// private & local networks
+				"(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
+				"(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
+				"(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +
+				// IP address dotted notation octets
+				// excludes loopback network 0.0.0.0
+				// excludes reserved space >= 224.0.0.0
+				// excludes network & broadcast addresses
+				// (first & last IP address of each class)
+				"(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
+				"(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
+				"(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
+			"|" +
+				// host & domain names, may end with dot
+				// can be replaced by a shortest alternative
+				// (?![-_])(?:[-\\w\\u00a1-\\uffff]{0,63}[^-_]\\.)+
+				"(?:" +
+				"(?:" +
+					"[a-z0-9\\u00a1-\\uffff]" +
+					"[a-z0-9\\u00a1-\\uffff_-]{0,62}" +
+				")?" +
+				"[a-z0-9\\u00a1-\\uffff]\\." +
+				")+" +
+				// TLD identifier name, may end with dot
+				"(?:[a-z\\u00a1-\\uffff]{2,}\\.?)" +
+			")" +
+			// port number (optional)
+			"(?::\\d{2,5})?" +
+			// resource path (optional)
+			"(?:[/?#]\\S*)?",
+			"i"
+		  );
+
 		gClient.on("ch", function(msg) {
 			if(msg.ch.settings.chat) {
 				chat.show();
@@ -2830,6 +2872,28 @@ Rect.prototype.contains = function(x, y) {
 				evt.stopPropagation();
 			}
 		});
+
+		// Optionally show a warning when clicking links
+		/*$("#chat ul").on("click", ".chatLink", function(ev) {
+			var $s = $(this);
+
+			if(gWarnOnLinks) {
+				if(!$s.hasClass("clickedOnce")) {
+					$s.addClass("clickedOnce");
+					var id = setTimeout(() => $s.removeClass("clickedOnce"), 2000);
+					$s.data("clickTimeout", id)
+					return false;
+				} else {
+					console.log("a")
+					$s.removeClass("clickedOnce");
+					var id = $s.data("clickTimeout")
+					if(id !== void 0) {
+						clearTimeout(id)
+						$s.removeData("clickTimeout")
+					}
+				}
+			}
+		});*/
 
 		return {
 			show: function() {
@@ -2940,6 +3004,12 @@ Rect.prototype.contains = function(x, y) {
                     } 
                     else return match; 
                 });
+
+				// link formatting
+				message = message.replace(url_regex, match => {
+					var safe = $("<div>").text(match).html();
+					return `<a rel="noreferer noopener" target="_blank" class="chatLink" href="${safe}">${safe}</a>`;
+				});
 
                 //apply names, colors, ids
 				li.find(".message").html(message);
@@ -3736,6 +3806,22 @@ Rect.prototype.contains = function(x, y) {
 				html.appendChild(setting);
 			})();
 
+
+			// warn on links
+			/*(function() {
+				var setting = document.createElement("div");
+			    setting.classList = "setting";
+			    setting.innerText = "Warn when clicking links";
+			    if (gWarnOnLinks) {
+                    setting.classList.toggle("enabled");
+			    }
+			    setting.onclick = function() {
+			    	setting.classList.toggle("enabled");
+			    	localStorage.warnOnLinks = setting.classList.contains("enabled");
+			    	gWarnOnLinks = setting.classList.contains("enabled");
+			    };
+				html.appendChild(setting);
+			})();*/
 
 
 			//useless blank space
