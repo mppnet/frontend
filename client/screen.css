@@ -1,16 +1,16 @@
 * {
-    image-rendering: pixelated
+    image-rendering: pixelated;
 }
 
 * {
-    margin: 0
+    margin: 0;
 }
 
 * {
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
-    -ms-user-select: none
+    -ms-user-select: none;
 }
 
 body,html {
@@ -19,11 +19,11 @@ body,html {
     overflow: hidden;
     font: 20pt verdana,"DejaVu Sans",sans-serif;
     color: #fff;
-    text-shadow: #444 1px 1px
+    text-shadow: #444 1px 1px;
 }
 
 body {
-    position: absolute
+    position: absolute;
 }
 
 body {
@@ -34,30 +34,30 @@ body {
     background: -o-radial-gradient(center,ellipse cover,#ecfafd 0,#c5d5d8 100%);
     background: -ms-radial-gradient(center,ellipse cover,#ecfafd 0,#c5d5d8 100%);
     background: radial-gradient(ellipse at center,#ecfafd 0,#c5d5d8 100%);
-    -webkit-transition: background 1s linear
+    -webkit-transition: background 1s linear;
 }
 
 a {
     cursor: pointer;
     color: #f46;
-    transition: color .25s
+    transition: color .25s;
 }
 
 a:hover {
     color: #e05;
-    transition: color .25s
+    transition: color .25s;
 }
 
 .link {
     text-decoration: underline;
     cursor: pointer;
-    color: #fe0
+    color: #fe0;
 }
 
 table {
     border: 0;
     padding: 0;
-    margin: 0
+    margin: 0;
 }
 
 #names {
@@ -65,7 +65,7 @@ table {
     top: 4px;
     left: 4px;
     font-size: 12px;
-    width: 95%
+    width: 95%;
 }
 
 #names .name {
@@ -80,7 +80,7 @@ table {
     text-align: center;
     cursor: pointer;
     height: 15px;
-    line-height: 15px
+    line-height: 15px;
 }
 
 #names .name.me:after {
@@ -88,7 +88,7 @@ table {
     position: absolute;
     top: -4px;
     right: 50%;
-    font-size: 10px
+    font-size: 10px;
 }
 
 #names .name.owner:before {
@@ -100,11 +100,11 @@ table {
 
 #names .name.play {
     transform: translateY(-4px);
-    -webkit-transform: translateY(-4px)
+    -webkit-transform: translateY(-4px);
 }
 
 #names .name.muted-notes {
-    color: #f88
+    color: #f88;
 }
 
 #names .name.muted-notes:after {
@@ -112,11 +112,11 @@ table {
     position: absolute;
     top: -4px;
     right: 50%;
-    font-size: 8px
+    font-size: 8px;
 }
 
 #names .name.muted-chat {
-    color: #f88
+    color: #f88;
 }
 
 #names .name.muted-chat:after {
@@ -124,7 +124,7 @@ table {
     position: absolute;
     top: -4px;
     right: 50%;
-    font-size: 8px
+    font-size: 8px;
 }
 
 .nametag {
@@ -138,7 +138,7 @@ table {
     text-align: center;
     cursor: pointer;
     font-size: 10px;
-    line-height: 7px
+    line-height: 7px;
 }
 
 .nametext {
@@ -202,8 +202,7 @@ input[type="range"]::-webkit-slider-thumb {
                 rgba(0,0,0,.5) 0 8px 5px;
        
         -webkit-transform: translateY(-3px);
-        -webkit-box-reflect:    below 0px -webkit-gradient(linear, left top, left bottom,
-                                                        from(transparent), color-stop(0.6, transparent), to( rgba(255,255,255,0.15) ));
+        -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.6, transparent), to( rgba(255,255,255,0.15) ));
 }
  
 input[type="range"]:hover {
@@ -226,7 +225,7 @@ input[type="range"]:hover {
     margin: auto;
     position: relative;
     overflow: hidden;
-    padding-left: 1%
+    padding-left: 1%;
 }
 
 #piano .key {
@@ -248,11 +247,11 @@ input[type="range"]:hover {
     -moz-transition: background 4s ease-out;
     -o-transition: background 4s ease-out;
     padding: 0;
-    overflow: hidden
+    overflow: hidden;
 }
 
 #piano .key.c,#piano .key.f {
-    margin-left: 0
+    margin-left: 0;
 }
 
 #piano .key.sharp {
@@ -260,39 +259,39 @@ input[type="range"]:hover {
     height: 50%;
     background: #000;
     margin-left: -.9%;
-    position: relative
+    position: relative;
 }
 
 #piano .key.loading {
-    background: #888
+    background: #888;
 }
 
 #piano .key.play {
     transform: translateY(1%);
     -webkit-transform: translateY(1%);
-    -webkit-box-shadow: 0 1px 2px #000
+    -webkit-box-shadow: 0 1px 2px #000;
 }
 
 .ease-out {
     transition: left .1s ease-out;
     -webkit-transition: left .1s ease-out;
     -moz-transition: left .1s ease-out;
-    -o-transition: left .1s ease-out
+    -o-transition: left .1s ease-out;
 }
 
 .ease-in {
     transition: left .1s ease-in;
     -webkit-transition: left .1s ease-in;
     -moz-transition: left .1s ease-in;
-    -o-transition: left .1s ease-in
+    -o-transition: left .1s ease-in;
 }
 
 .slide-left {
-    left: -100%
+    left: -100%;
 }
 
 .slide-right {
-    left: 100%
+    left: 100%;
 }
 
 .cursor {
@@ -304,7 +303,7 @@ input[type="range"]:hover {
     margin-left: -2px;
     margin-top: -2px;
     left: 200%;
-    top: 100%
+    top: 100%;
 }
 
 .cursor .name {
@@ -320,22 +319,22 @@ input[type="range"]:hover {
     -moz-border-radius: 2px;
     white-space: nowrap;
     padding: 1px;
-    font-size: 10px
+    font-size: 10px;
 }
 
 .cursor.owner .name:after {
     content: url(/crown.png);
     position: relative;
     top: -8px;
-    left: 0
+    left: 0;
 }
 
 .cursor .name {
-    display: inline-block
+    display: inline-block;
 }
 
 .cursor {
-    transition: top .1s,left .1s
+    transition: top .1s,left .1s;
 }
 
 .participant-menu {
@@ -346,12 +345,12 @@ input[type="range"]:hover {
     font-size: 12px;
     padding: 0;
     margin: 0;
-    border-radius: 2px
+    border-radius: 2px;
 }
 
 .participant-menu:last-child .menu-item:hover {
     border-bottom-left-radius: inherit;
-    border-bottom-right-radius: inherit
+    border-bottom-right-radius: inherit;
 }
 
 .participant-menu .info {
@@ -363,27 +362,27 @@ input[type="range"]:hover {
     overflow: hidden;
     opacity: 0;
     transition: opacity .2s ease-out;
-    user-select: text
+    user-select: text;
 }
 
 .participant-menu .info:hover {
     opacity: 1;
-    transition: opacity .2s ease-out
+    transition: opacity .2s ease-out;
 }
 
 .participant-menu .menu-item {
     cursor: pointer;
     margin: 0;
     padding: 15px 5px;
-    border-top: 1px solid rgba(255,255,255,.3)
+    border-top: 1px solid rgba(255,255,255,.3);
 }
 
 .participant-menu .menu-item:hover {
-    background: rgba(255,255,255,.4)
+    background: rgba(255,255,255,.4);
 }
 
 .participant-menu .menu-item.clicked {
-    background: rgba(255,255,255,.5)
+    background: rgba(255,255,255,.5);
 }
 
 #crown {
@@ -392,12 +391,12 @@ input[type="range"]:hover {
     height: 16px;
     background: url(/crown.png) no-repeat;
     cursor: pointer;
-    font-size: 10px
+    font-size: 10px;
 }
 
 #crown span {
     margin-left: 16px;
-    margin-top: 2px
+    margin-top: 2px;
 }
 
 #room-notice {
@@ -408,11 +407,11 @@ input[type="range"]:hover {
     opacity: .5;
     font-size: 20px;
     pointer-events: none;
-    display: none
+    display: none;
 }
 
 #room-notice p {
-    margin: 1em
+    margin: 1em;
 }
 
 #bottom {
@@ -422,11 +421,11 @@ input[type="range"]:hover {
     width: 100%;
     height: 60px;
     background: #9a9;
-    margin-bottom: 3px
+    margin-bottom: 3px;
 }
 
 #room,#room * {
-    cursor: pointer
+    cursor: pointer;
 }
 
 #room {
@@ -440,26 +439,26 @@ input[type="range"]:hover {
     border: 1px solid #ccc;
     cursor: pointer;
     margin: 4px 24px;
-    font-size: 12px
+    font-size: 12px;
 }
 
 #room .info {
     white-space: nowrap;
     line-height: 12px;
     overflow: hidden;
-    height: 20px
+    height: 20px;
 }
 
 #room .info.lobby {
-    color: #efb
+    color: #efb;
 }
 
 #room .info.not-visible {
-    color: #8cf
+    color: #8cf;
 }
 
 #room .info.banned {
-    color: #f88
+    color: #f88;
 }
 
 #room .info.crownsolo:after {
@@ -480,7 +479,7 @@ input[type="range"]:hover {
     position: absolute;
     right: 0;
     top: 0;
-    background: #777 url(/arrow.png) no-repeat center 0
+    background: #777 url(/arrow.png) no-repeat center 0;
 }
 
 #room .more {
@@ -493,26 +492,26 @@ input[type="range"]:hover {
     overflow-y: scroll;
     background: #444;
     border: 1px solid #ccc;
-    max-height: 600px
+    max-height: 600px;
 }
 
 #room .more>div {
     margin: 0;
     padding: 3px 6px 0 6px;
     width: 100%;
-    height: 20px
+    height: 20px;
 }
 
 #room .more .info:hover {
-    background: #666
+    background: #666;
 }
 
 #room .more .new {
-    background: #111
+    background: #111;
 }
 
 #room .more .new:hover {
-    background: #333
+    background: #333;
 }
 
 .ugly-button {
@@ -528,78 +527,78 @@ input[type="range"]:hover {
     -moz-border-radius: 2px;
     width: 100px;
     overflow: hidden;
-    white-space: nowrap
+    white-space: nowrap;
 }
 
 .ugly-button:hover {
-    background: #222
+    background: #222;
 }
 
 .ugly-button.stuck {
-    background: rgba(204,187,170,.35)
+    background: rgba(204,187,170,.35);
 }
 
 #new-room-btn {
     position: absolute;
     left: 300px;
-    top: 4px
+    top: 4px;
 }
 
 #play-alone-btn {
     position: absolute;
     left: 420px;
-    top: 4px
+    top: 4px;
 }
 
 #sound-btn {
     position: absolute;
     left: 540px;
-    top: 4px
+    top: 4px;
 }
 
 #room-settings-btn {
     position: absolute;
     left: 660px;
     top: 4px;
-    display: none
+    display: none;
 }
 
 #midi-btn {
     position: absolute;
     left: 300px;
-    top: 32px
+    top: 32px;
 }
 
 #record-btn {
     position: absolute;
     left: 420px;
-    top: 32px
+    top: 32px;
 }
 
 #synth-btn {
     position: absolute;
     left: 540px;
-    top: 32px
+    top: 32px;
 }
 #client-settings-btn {
     position: absolute;
     left: 660px;
-    top: 32px
+    top: 32px;
 }
 #clearchat-btn {
     position: absolute;
     left: 780px;
-    top: 32px
+    top: 32px;
 }
 #getcrown-btn {
     position: absolute;
     left: 900px;
-    top: 32px
+    top: 32px;
 }
 #vanish-btn {
     position: absolute;
     left: 780px;
-    top: 4px
+    top: 4px;
 }
 
 #tooltip {
@@ -607,15 +606,15 @@ input[type="range"]:hover {
     pointer-events: none;
     background: #000;
     color: #fff;
-    font-size: 10px
+    font-size: 10px;
 }
 
 .knob {
-    cursor: pointer
+    cursor: pointer;
 }
 
 .switched-on {
-    background: #ff8
+    background: #ff8;
 }
 
 #status {
@@ -628,11 +627,11 @@ input[type="range"]:hover {
     font-size: 20px;
     font-weight: 800;
     line-height: 20px;
-    pointer-events: none
+    pointer-events: none;
 }
 
 #status .number {
-    font-size: 35px
+    font-size: 35px;
 }
 
 #volume {
@@ -641,7 +640,7 @@ input[type="range"]:hover {
     top: 0;
     width: 100px;
     height: 40px;
-    margin: 10px
+    margin: 10px;
 }
  
 #volume-slider {
@@ -661,7 +660,7 @@ input[type="range"]:hover {
     right: 30px;
     bottom: 10px;
     font-size: 10px;
-    color: #ccc
+    color: #ccc;
 }
 
 #banner {
@@ -671,11 +670,11 @@ input[type="range"]:hover {
     right: 0;
     top: 0;
     font-size: 18px;
-    display: none
+    display: none;
 }
 
 #banner a {
-    color: #fd0
+    color: #fd0;
 }
 
 #quota {
@@ -684,24 +683,24 @@ input[type="range"]:hover {
     position: fixed;
     bottom: 0;
     left: 0;
-    background: #f80
+    background: #f80;
 }
 
 #quota .value {
     width: 100%;
     height: 100%;
     display: block;
-    background: #fd0
+    background: #fd0;
 }
 
 .relative {
     position: relative;
     width: 100%;
-    height: 100%
+    height: 100%;
 }
 
 .notification {
-    position: absolute
+    position: absolute;
 }
 
 .notification-body {
@@ -715,7 +714,7 @@ input[type="range"]:hover {
     font-size: 12px;
     text-shadow: #444 1px 1px;
     border-radius: 6px;
-    box-shadow: 2px 2px 5px rgba(0,0,0,.25)
+    box-shadow: 2px 2px 5px rgba(0,0,0,.25);
 }
 
 .notification-body:after {
@@ -727,7 +726,7 @@ input[type="range"]:hover {
     border-top: 10px solid transparent;
     border-top-color: inherit;
     border-left: 6px solid transparent;
-    border-right: 6px solid transparent
+    border-right: 6px solid transparent;
 }
 
 .title {
@@ -735,7 +734,7 @@ input[type="range"]:hover {
     font-size: 16px;
     font-weight: 700;
     padding-bottom: 5px;
-    margin-bottom: 8px
+    margin-bottom: 8px;
 }
 
 .notification .x {
@@ -745,21 +744,21 @@ input[type="range"]:hover {
     cursor: pointer;
     font-size: 20px;
     color: #d55;
-    text-shadow: none
+    text-shadow: none;
 }
 
 .notification .x:hover {
-    color: #f66
+    color: #f66;
 }
 
 .notification.classic .notification-body {
     width: 400px;
     background: #222;
-    border-color: #555
+    border-color: #555;
 }
 
 .notification.short .title {
-    display: none
+    display: none;
 }
 
 .notification h1 {
@@ -767,7 +766,7 @@ input[type="range"]:hover {
     font-weight: 700;
     padding-top: 8px;
     padding-bottom: 8px;
-    text-decoration: underline
+    text-decoration: underline;
 }
 
 .notification .connection {
@@ -776,33 +775,33 @@ input[type="range"]:hover {
     background: #fed;
     border: 1px solid #f84;
     cursor: pointer;
-    font-family: monospace
+    font-family: monospace;
 }
 
 .notification .connection.enabled {
-    background: #dfd
+    background: #dfd;
 }
 
 .notification .connection:after {
     content: "OFF";
     font-size: 10px;
     color: #a44;
-    float: right
+    float: right;
 }
 
 .notification .connection.enabled:after {
     content: "ON";
     font-size: 10px;
     color: #4a4;
-    float: right
+    float: right;
 }
 
 .notification .connection:hover {
-    font-weight: 700
+    font-weight: 700;
 }
 
 .notification ul {
-    list-style-type: upper-roman
+    list-style-type: upper-roman;
 }
 
 .notification .setting {
@@ -812,11 +811,11 @@ input[type="range"]:hover {
     border: 1px solid #555;
     border-radius: 4px;
     cursor: pointer;
-    font-family: monospace
+    font-family: monospace;
 }
 .notification .setting.enabled {
     background: #2b562b;
-    font-weight: bolder
+    font-weight: bolder;
 }
 
 .notification .pack {
@@ -826,31 +825,31 @@ input[type="range"]:hover {
     border: 1px solid #555;
     border-radius: 4px;
     cursor: pointer;
-    font-family: monospace
+    font-family: monospace;
 }
 
 .notification .pack.enabled {
     background: #2b562b;
     cursor: not-allowed;
-    font-weight: bolder
+    font-weight: bolder;
 }
 
 .notification .pack:after {
     content: "";
     font-size: 10px;
     color: #a44;
-    float: right
+    float: right;
 }
 
 .notification .pack.enabled:after {
     content: "Selected";
     font-size: 10px;
     color: #fff;
-    float: right
+    float: right;
 }
 
 .notification .pack:hover {
-    font-weight: 700
+    font-weight: 700;
 }
 
 #modal {
@@ -859,7 +858,7 @@ input[type="range"]:hover {
     position: fixed;
     left: 0;
     top: 0;
-    display: none
+    display: none;
 }
 
 #modal .bg {
@@ -869,14 +868,14 @@ input[type="range"]:hover {
     opacity: .5;
     position: absolute;
     left: 0;
-    top: 0
+    top: 0;
 }
 
 #modal,#modal * {
     user-select: text;
     -webkit-user-select: text;
     -moz-user-select: text;
-    -ms-user-select: text
+    -ms-user-select: text;
 }
 
 .dialog {
@@ -896,22 +895,22 @@ input[type="range"]:hover {
     -moz-border-radius: 4px;
     box-shadow: 0 0 8px #000;
     -webkit-box-shadow: 0 0 8px #000;
-    -moz-box-shadow: 0 0 8px #000
+    -moz-box-shadow: 0 0 8px #000;
 }
 
 .dialog p {
     margin: 10px;
-    font-size: 20px
+    font-size: 20px;
 }
 
 .dialog input.text {
     font-size: 20px;
     height: 20px;
-    width: 75%
+    width: 75%;
 }
 
 .dialog input.checkbox {
-    margin: 0 5px
+    margin: 0 5px;
 }
 
 .dialog .submit {
@@ -933,7 +932,7 @@ input[type="range"]:hover {
     -o-transition: all .25s;
     position: absolute;
     bottom: -10px;
-    right: -10px
+    right: -10px;
 }
 
 .dialog .submit:hover {
@@ -941,17 +940,17 @@ input[type="range"]:hover {
     transition: all .25s;
     -webkit-transition: all .25s;
     -moz-transition: all .25s;
-    -o-transition: all .25s
+    -o-transition: all .25s;
 }
 
 #room-settings {
     height: 400px;
-    margin-top: -200px
+    margin-top: -200px;
 }
 
 #chat {
     display: none;
-    opacity: 1
+    opacity: 1;
 }
 
 #chat {
@@ -962,71 +961,71 @@ input[type="range"]:hover {
     vertical-align: bottom;
     font-size: 13px;
     color: #fff;
-    text-shadow: #888 1px 1px
+    text-shadow: #888 1px 1px;
 }
 
 #chat,#chat * {
     user-select: text;
     -webkit-user-select: text;
     -moz-user-select: text;
-    -ms-user-select: text
+    -ms-user-select: text;
 }
 
 #chat ul {
     list-style: none;
     margin: 4px;
     padding: 0;
-    background-attachment: local
+    background-attachment: local;
 }
 
 #chat li {
     padding: 2px;
-    opacity: 0
+    opacity: 0;
 }
 
 #chat li .receivedDm {
-    margin-right: 8px
+    margin-right: 8px;
 }
 
 #chat li .sentDm {
-    margin-right: 8px
+    margin-right: 8px;
 }
 
 #chat li .otherDm {
-    margin-right: 8px
+    margin-right: 8px;
 }
 
 #chat li .dmArrow {
-    margin-right: 8px
+    margin-right: 8px;
 }
 
 #chat li .timestamp {
-    margin-right: 8px
+    margin-right: 8px;
 }
 
 #chat li .id {
-    margin-right: 8px
+    margin-right: 8px;
 }
 
 #chat li .id2 {
-    margin-right: 8px
+    margin-right: 8px;
 }
 
 #chat li .name {
     font-weight: 700;
-    margin-right: 8px
+    margin-right: 8px;
 }
 #chat li .name2 {
     font-weight: 700;
-    margin-right: 8px
+    margin-right: 8px;
 }
 
 #chat li .message {
-    margin-right: 6px
+    margin-right: 6px;
 }
 
 #chat li .quote {
-    color: #789922
+    color: #789922;
 }
 
 #chat li .mention {
@@ -1049,40 +1048,40 @@ input[type="range"]:hover {
     color: #fff;
     border-radius: 4px;
     -webkit-border-radius: 4px;
-    -moz-border-radius: 4px
+    -moz-border-radius: 4px;
 }
 
 #chat input::-webkit-input-placeholder {
-    color: #ccc
+    color: #ccc;
 }
 
 #chat input:-moz-placeholder {
-    color: #ccc
+    color: #ccc;
 }
 
 #chat input:focus {
     outline: 0;
-    border: 1px solid #ff8
+    border: 1px solid #ff8;
 }
 
 #chat.chatting {
     background: rgba(64,80,80,.75);
     border-radius: 5px;
     box-shadow: 1px 1px 5px #888;
-    transition: all .1s
+    transition: all .1s;
 }
 
 #chat.chatting li {
     display: list-item!important;
     opacity: 1!important;
-    text-shadow: #aaa 1px 1px
+    text-shadow: #aaa 1px 1px;
 }
 
 #chat.chatting ul {
     max-height: 50em;
     overflow-y: scroll;
     overflow-x: hidden;
-    word-wrap: break-word
+    word-wrap: break-word;
 }
 
 #social {
@@ -1090,7 +1089,7 @@ input[type="range"]:hover {
     top: 4px;
     right: 6px;
     width: 80px;
-    font-size: 12px
+    font-size: 12px;
 }
 
 #social #more-button {
@@ -1105,23 +1104,23 @@ input[type="range"]:hover {
     color: #788;
     text-shadow: none;
     background: url(kitten1.png) 0 4px no-repeat;
-    background-color: #dee
+    background-color: #dee;
 }
 
 #social #more-button:hover {
     color: #899;
     background-color: #e8f8f0;
-    transition: background-color .25s
+    transition: background-color .25s;
 }
 
 #social .fb-like {
     position: absolute;
-    right: 0
+    right: 0;
 }
 
 #social #inclinations {
     margin-top: 50px;
-    margin-bottom: 20px
+    margin-bottom: 20px;
 }
 
 #more {
@@ -1138,123 +1137,123 @@ input[type="range"]:hover {
     position: fixed;
     top: 50px;
     right: 50px;
-    text-shadow: none
+    text-shadow: none;
 }
 
 #more div {
     margin: 0;
-    padding: 0
+    padding: 0;
 }
 
 #more .items {
-    margin-left: 1%
+    margin-left: 1%;
 }
 
 #more .items .item {
     width: 33%;
     float: left;
     background: #cdd;
-    transition: background .25s
+    transition: background .25s;
 }
 
 #more .items .item:hover {
     background: #d0e0e0;
-    transition: background .25s
+    transition: background .25s;
 }
 
 #more .items .item .content {
     height: 200px;
     padding: 10px;
     border-right: 1px solid #bcc;
-    border-bottom: 1px solid #bcc
+    border-bottom: 1px solid #bcc;
 }
 
 #more .items .item .content p {
     margin-top: 1em;
-    margin-bottom: 1em
+    margin-bottom: 1em;
 }
 
 #more .header {
-    padding: 5px 10px
+    padding: 5px 10px;
 }
 
 #more .footer {
     clear: both;
     padding: 5px 10px;
-    font-size: 12px
+    font-size: 12px;
 }
 
 #email:before {
     content: url(envelope.png);
-    margin: 4px
+    margin: 4px;
 }
 
 #room-notice {
-    z-index: 1
+    z-index: 1;
 }
 
 #cursors {
-    z-index: 2
+    z-index: 2;
 }
 
 #chat {
-    z-index: 100
+    z-index: 100;
 }
 
 #social {
-    z-index: 200
+    z-index: 200;
 }
 
 #names {
-    z-index: 300
+    z-index: 300;
 }
 
 #piano {
-    z-index: 400
+    z-index: 400;
 }
 
 #piano .key {
-    z-index: 401
+    z-index: 401;
 }
 
 #piano .key.sharp {
-    z-index: 402
+    z-index: 402;
 }
 
 #bottom {
-    z-index: 500
+    z-index: 500;
 }
 
 #crown {
-    z-index: 600
+    z-index: 600;
 }
 
 .notification {
-    z-index: 700
+    z-index: 700;
 }
 
 #cursors .cursor {
-    z-index: 800
+    z-index: 800;
 }
 
 #chat.chatting {
-    z-index: 900
+    z-index: 900;
 }
 
 .participant-menu {
-    z-index: 1000
+    z-index: 1000;
 }
 
 #modal {
-    z-index: 10000
+    z-index: 10000;
 }
 
 #tooltip {
-    z-index: 20000
+    z-index: 20000;
 }
 
 .clear {
-    clear: both
+    clear: both;
 }
 
 .spin {
@@ -1262,45 +1261,45 @@ input[type="range"]:hover {
     -webkit-animation: spin 1s linear infinite;
     -moz-animation: spin 1s linear infinite;
     -o-animation: spin 1s linear infinite;
-    -ms-animation: spin 1s linear infinite
+    -ms-animation: spin 1s linear infinite;
 }
 
 @-webkit-keyframes spin {
     0% {
-        -webkit-transform: rotate(0)
+        -webkit-transform: rotate(0);
     }
 
     100% {
-        -webkit-transform: rotate(360deg)
+        -webkit-transform: rotate(360deg);
     }
 }
 
 @-moz-keyframes spin {
     0% {
-        -moz-transform: rotate(0)
+        -moz-transform: rotate(0);
     }
 
     100% {
-        -moz-transform: rotate(360deg)
+        -moz-transform: rotate(360deg);
     }
 }
 
 @-o-keyframes spin {
     0% {
-        -o-transform: rotate(0)
+        -o-transform: rotate(0);
     }
 
     100% {
-        -o-transform: rotate(360deg)
+        -o-transform: rotate(360deg);
     }
 }
 
 @-ms-keyframes spin {
     0% {
-        -ms-transform: rotate(0)
+        -ms-transform: rotate(0);
     }
 
     100% {
-        -ms-transform: rotate(360deg)
+        -ms-transform: rotate(360deg);
     }
 }
