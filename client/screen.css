@@ -1265,6 +1265,14 @@ input[type="range"]:hover {
     -ms-animation: spin 1s linear infinite
 }
 
+.mppcommunity-button {
+    position: fixed;
+    right: 6px;
+    top: 6px;
+    z-index: 200;
+    cursor: pointer;
+}
+
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0)
