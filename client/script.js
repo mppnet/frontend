@@ -1682,6 +1682,7 @@ Rect.prototype.contains = function(x, y) {
 	var gNoBackgroundColor = localStorage.noBackgroundColor == "true";
 	var gOutputOwnNotes = localStorage.outputOwnNotes ? localStorage.outputOwnNotes == "true" : true;
 	var gVirtualPianoLayout = localStorage.virtualPianoLayout == "true";
+	var gShowChatTooltips = localStorage.showChatTooltips ? localStorage.showChatTooltips == "true" : true;
 	//var gWarnOnLinks = localStorage.warnOnLinks ? localStorage.warnOnLinks == "true" : true;
 
 
@@ -3021,12 +3022,12 @@ Rect.prototype.contains = function(x, y) {
                     if (msg.sender._id === gClient.user._id) { //sent dm
                         if (!gNoChatColors) li.find(".name").css("color", msg.recipient.color || "white");
                         li.find(".name").text(msg.recipient.name + ":");
-                        li[0].title = msg.recipient._id;
+                        if (gShowChatTooltips) li[0].title = msg.recipient._id;
                     } else if (msg.recipient._id === gClient.user._id) { //received dm
                         if (!gNoChatColors) li.find(".name").css("color", msg.sender.color || "white");
                         li.find(".name").text(msg.sender.name + ":");
 
-                        li[0].title = msg.sender._id;
+                        if (gShowChatTooltips) li[0].title = msg.sender._id;
                     } else { //someone else's dm
                         if (!gNoChatColors) li.find(".name").css("color", msg.sender.color || "white");
                         if (!gNoChatColors) li.find(".name2").css("color", msg.recipient.color || "white");
@@ -3036,7 +3037,7 @@ Rect.prototype.contains = function(x, y) {
                         if (gShowIdsInChat) li.find(".id").text(msg.sender._id.substring(0, 6));
                         if (gShowIdsInChat) li.find(".id2").text(msg.recipient._id.substring(0, 6));
 
-                        li[0].title = msg.sender._id;
+                        if (gShowChatTooltips) li[0].title = msg.sender._id;
                     }
                 } else {
                     if (!gNoChatColors) li.find(".message").css("color", msg.p.color || "white");
@@ -3047,7 +3048,7 @@ Rect.prototype.contains = function(x, y) {
                     if (!gNoChatColors) li.find(".message").css("color", msg.p.color || "white");
                     if (gShowIdsInChat) li.find(".id").text(msg.p._id.substring(0, 6));
 
-                    li[0].title = msg.p._id;
+                    if (gShowChatTooltips) li[0].title = msg.p._id;
                 }
 
                 //put list element in chat
@@ -3805,7 +3806,23 @@ Rect.prototype.contains = function(x, y) {
 			    };
 				html.appendChild(setting);
 			})();
-
+			
+// 			gShowChatTooltips
+            // Show chat tooltips for _ids.
+			(function() {
+				var setting = document.createElement("div");
+			    setting.classList = "setting";
+			    setting.innerText = "Show _id tooltips";
+			    if (gShowChatTooltips) {
+                    setting.classList.toggle("enabled");
+			    }
+			    setting.onclick = function() {
+			    	setting.classList.toggle("enabled");
+			    	localStorage.showChatTooltips = setting.classList.contains("enabled");
+			    	gShowChatTooltips = setting.classList.contains("enabled");
+			    };
+				html.appendChild(setting);
+			})();
 
 			// warn on links
 			/*(function() {
