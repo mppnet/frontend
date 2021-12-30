@@ -15,7 +15,6 @@
   - [Crown](#crown)
   - [Target](#target)
   - [Note](#note)
-  - [Proof of work](#proof-of-work)
 - [Client -> Server Messages](#client---server-messages)
   - [A](#a-server-bound)
   - [Bye](#bye-server-bound)
@@ -73,8 +72,6 @@ All websocket close codes have a code (number) and a reason (string).
 - `4002` - `Exceeded x bytes per y seconds.`: There is a cap on how much data clients can send in a given period. This quota may change later, and the owner can manually increase it. Make sure you aren't sending extremely large messages.
 - `4003` - `Message buffer length exceeded x.`: Internally, the server buffers messages so that things always get done in the right order, even if a message runs asynchronous code. Clients can hit this limit if they send too many messages too quickly, or if the server has an error. Errors in the server are rare and shouldn't happen. The owner is able to see if one happened.
 - `4004` - `Timed out.`: Clients must send [t](#t-server-bound) messages every 20 seconds. They will get kicked if it has been longer than 30 seconds since the last time sync message was received. Time sync messages will not work before [hi](#hi-server-bound) has been sent.
-- `4005` - `Invalid proof-of-work value.`: The client sent a [proof of work](#proof-of-work) value where the first 22 bits weren't 0, or sent values that weren't incrementing.
-- `4006` - `Insufficient proof-of-work work.`: The user was not doing enough proof of work and received a 5 minute ban.
 - `4007` - `Exceeded x messages per y seconds.`: There is a cap on how many individual message objects can be sent in a period of time. If this cap is exceeded the socket is closed.
 - `4008` - `Bot detected.`: The client was detected as a bot during the handshake. Make sure you're using a valid bot token.
 - `4009` - `Client limit reached.`: There is a limit on how many clients can be connected at a time per user. Contact the owner if you need to connect more clients.
@@ -253,15 +250,6 @@ Notes can either be a note start, or a note stop. Note starts have a "v" propert
   "v":0.32
 }
 ```
-
-### Proof of work
-This MPP server uses a proof of work scheme. The purpose of this is to make it more difficult for users to mass-bot the server if they bypassed the anti-bot system, or if they are using tens (or hundreds) of browser tabs on proxies. Authorized bots are never required to do proof of work.
-#### How it works
-If a client is required to do proof of work, it will receive a salt in ["hi"](#hi-client-bound). A Web Worker will be started on the client to begin checking SHA-256 hashes. It will check as many hashes as it can on that thread starting from `salt + "0"`, and incrementing the number. If in a resulting hash, the first 22 bits are 0, that ending value gets sent back to the client and saved in an internal buffer. The next time the client sends ["t"](#t-server-bound), it will include an array with all of those bufferred values. The server validates those values and checks to make sure clients are doing enough work. Exactly what qualifies as "enough work" is private.
-#### Example
-Assuming the salt from the server is `"uWSSEutoxLwG2qOq"`:
-- The value starts at 0. The Web Worker calculates the SHA-256 hash of `"uWSSEutoxLwG2qOq0"` which is c591a9aa25cde8dfee968136e5b00b102fc3ca9574189242056329a0d138a3ea. The first 22 bits aren't 0, so the value increments and the worker continues.
-- When the value is at 5124706, the worker calculates the SHA-256 hash of `"uWSSEutoxLwG2qOq5124706"` which is 0000034e2938bd3c52bf58e9c1d781331adf5273e7385f790d682f435e0f9ef1. In this case, the first 22 bits are 0, so the worker sends `5124706` back to the client and the client sends it along with the next ping message.
 
 ## Client -> Server Messages
 
@@ -502,13 +490,11 @@ This is sent to subscribe to channel list updates.
 "t" is for pinging. This must be sent every 20 seconds, because the server will disconnect your client if it's not sent for more than 30 seconds.
 #### Properties
 - `?"e"`: The client's time.
-- `?"pow"`: Array of values from [proof of work](#proof-of-work).
 #### Example
 ```json
 {
   "m":"t",
-  "e":1627972519126,
-  "pow":[665782, 1134816, 2041213, 3440733, 4232765]
+  "e":1627972519126
 }
 ```
 
@@ -773,7 +759,6 @@ This is sent as a response when the client first sends `"hi"`.
 - `"u"`: The client's [participant info](#participant info) except without `"id"`.
 - `"permissions"`: An object containing the client's permissions. This is usually empty and can be ignored by most bots.
 - `"token"`: A string token that the client can send back in the future to keep the same user. Bots should have their token hard coded and can ignore this.
-- `?"pow"`: A salt used for [proof of work](#proof-of-work). Bots won't be required to do proof of work and won't receive this.
 #### Example
 ```json
   "m": "hi",
