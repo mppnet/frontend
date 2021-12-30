@@ -2051,18 +2051,10 @@ Rect.prototype.contains = function(x, y) {
 		});
 	})();
 	gClient.on("nq", function(nq_params) {
-        if (gClient.noQuota) {
-            gNoteQuota.setParams(NoteQuota.PARAMS_UNLIMITED);
-        } else {
-            gNoteQuota.setParams(nq_params);
-        }
+        gNoteQuota.setParams(nq_params);
 	});
 	gClient.on("disconnect", function() {
-		if (gClient.noQuota) {
-            gNoteQuota.setParams(NoteQuota.PARAMS_UNLIMITED);
-        } else {
-            gNoteQuota.setParams(NoteQuota.PARAMS_OFFLINE);
-        }
+        gNoteQuota.setParams(NoteQuota.PARAMS_OFFLINE);
 	});
 
     //DMs

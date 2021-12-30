@@ -19,7 +19,6 @@ class Client extends EventEmitter {
         this.noteBufferTime = 0;
         this.noteFlushInterval = undefined;
         this.permissions = {};
-        this.noQuota = false;
         this['🐈'] = 0;
         this.setupPowWorker();
 
