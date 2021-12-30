@@ -15,6 +15,7 @@
   - [Crown](#crown)
   - [Target](#target)
   - [Note](#note)
+  - [Tag](#tag)
 - [Client -> Server Messages](#client---server-messages)
   - [A](#a-server-bound)
   - [Bye](#bye-server-bound)
@@ -113,7 +114,7 @@ In some messages, the server will send a participant info object instead of an i
 - `"color"`: The user's color.
 - `"x"`: The user's mouse x coordinate (string or number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the left edge, 100 is on the right edge. Default value is 200 until set by the user.
 - `"y"`: The user's mouse y coordinate (string or number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the top edge, 100 is on the bottom edge. Default value is 100 until set by the user.
-- `?"tag"`: Tag (string). This is usually either **"BOT"**, **"MOD"**, **"ADMIN"**, or **"OWNER"**, but could be any string. If this property is not present, the user does not have a tag.
+- `?"tag"`: The user's [Tag](#tag) object.
 - `?"vanished"`: Whether the user is vanished (boolean). Regular users and bots will never see this property, however moderators will receive this if they or another user are vanished. If this property is not present, the user is not vanished.
 #### Example
 ```json
@@ -122,7 +123,10 @@ In some messages, the server will send a participant info object instead of an i
   "id":"514df042c61528f566530313",
   "name":"Lapis",
   "color":"#ff8ff9",
-  "tag":"OWNER",
+  "tag":{
+    "text":"OWNER",
+    "color":"#a00"
+  },
   "x":50,
   "y":50
 }
@@ -248,6 +252,19 @@ Notes can either be a note start, or a note stop. Note starts have a "v" propert
   "n":"b2",
   "d":150,
   "v":0.32
+}
+```
+
+### Tag
+Tags are official and identify either approved bots or server staff. They have text and a color and are displayed next to someone's name.
+#### Properties
+- `"text"`: This is the text that will display on the tag (string).
+- `"color"`: A hexadecimal color of the tag (string). This color may be shortened to 3 hexadecimal characters, with one for each component.
+#### Example
+```json
+{
+  "text":"BOT",
+  "color":"#55f"
 }
 ```
 
@@ -543,7 +560,10 @@ This is sent to subscribe to channel list updates.
     "_id":"514df042c61528f566530313",
     "name":"Lapis",
     "color":"#ff8ff9",
-    "tag":"OWNER",
+    "tag":{
+      "text":"OWNER",
+      "color":"#a00"
+    },
     "id":"514df042c61528f566530313"
   }
 }
@@ -590,7 +610,10 @@ A "c" message is sent whenever a client joins a channel, or when chat is cleared
         "_id": "141777bd0f408111c5fc7ad9",
         "name": "[discord.gg/k44Eqha]",
         "color": "#f140ae",
-        "tag": "BOT",
+        "tag": {
+          "text": "BOT",
+          "color": "#55f"
+        },
         "id": "141777bd0f408111c5fc7ad9"
       }
     },
@@ -602,7 +625,10 @@ A "c" message is sent whenever a client joins a channel, or when chat is cleared
         "_id": "141777bd0f408111c5fc7ad9",
         "name": "[discord.gg/k44Eqha]",
         "color": "#f140ae",
-        "tag": "BOT",
+        "tag": {
+          "text": "BOT",
+          "color": "#55f"
+        },
         "id": "141777bd0f408111c5fc7ad9"
       }
     },
@@ -614,7 +640,10 @@ A "c" message is sent whenever a client joins a channel, or when chat is cleared
         "_id": "141777bd0f408111c5fc7ad9",
         "name": "[discord.gg/k44Eqha]",
         "color": "#f140ae",
-        "tag": "BOT",
+        "tag": {
+          "text": "BOT",
+          "color": "#55f"
+        },
         "id": "141777bd0f408111c5fc7ad9"
       }
     },
@@ -626,7 +655,10 @@ A "c" message is sent whenever a client joins a channel, or when chat is cleared
         "_id": "141777bd0f408111c5fc7ad9",
         "name": "[discord.gg/k44Eqha]",
         "color": "#f140ae",
-        "tag": "BOT",
+        "tag": {
+          "text": "BOT",
+          "color": "#55f"
+        },
         "id": "141777bd0f408111c5fc7ad9"
       }
     }
@@ -677,7 +709,10 @@ This is sent with all the information about a channel. It's broadcasted to every
       "_id": "b40df99cc2ca6f503fba77cb",
       "name": "Bouncer [//help]",
       "color": "#2524a5",
-      "tag": "BOT",
+      "tag": {
+        "text": "BOT",
+        "color": "#55f"
+      },
       "id": "b40df99cc2ca6f503fba77cb",
       "x": 200,
       "y": 100
@@ -686,7 +721,10 @@ This is sent with all the information about a channel. It's broadcasted to every
       "_id": "78a11a25c966d62d0231a135",
       "name": "Yoshino ( y!help )",
       "color": "#f97d87",
-      "tag": "BOT",
+      "tag": {
+        "text": "BOT",
+        "color": "#55f"
+      },
       "id": "78a11a25c966d62d0231a135",
       "x": 200,
       "y": 100
@@ -695,7 +733,10 @@ This is sent with all the information about a channel. It's broadcasted to every
       "_id": "4d354eaddf02eedc6211034c",
       "name": "Theta [=help]",
       "color": "#e51c8d",
-      "tag": "BOT",
+      "tag": {
+        "text": "BOT",
+        "color": "#55f"
+      },
       "id": "4d354eaddf02eedc6211034c",
       "x": "86.20",
       "y": "76.40"
@@ -740,7 +781,10 @@ This is sent to the recipient when a client direct messages another participant.
     "_id": "514df042c61528f566530313",
     "name": "Lapis",
     "color": "#ff8ff9",
-    "tag": "OWNER",
+    "tag": {
+      "text": "OWNER",
+      "color": "#a00"
+    },
     "id": "514df042c61528f566530313"
   },
   "recipient": {
@@ -767,7 +811,10 @@ This is sent as a response when the client first sends `"hi"`.
     "_id": "514df042c61528f566530313",
     "name": "Lapis",
     "color": "#ff8ff9",
-    "tag": "OWNER"
+    "tag": {
+      "text": "OWNER",
+      "color": "#a00"
+    }
   },
   "token": "514df042c61528f566530313.9d26e1c7-1161-4621-8dc7-3f2c74fc661b",
   "permissions": {}
