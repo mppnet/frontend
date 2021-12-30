@@ -20,7 +20,6 @@ class Client extends EventEmitter {
         this.noteFlushInterval = undefined;
         this.permissions = {};
         this['🐈'] = 0;
-        this.setupPowWorker();
 
         this.bindEventListeners();
 
@@ -67,7 +66,6 @@ class Client extends EventEmitter {
             self.user = undefined;
             self.participantId = undefined;
             self.channel = undefined;
-            self.stopPow();
             self.setParticipants([]);
             clearInterval(self.pingInterval);
             clearInterval(self.noteFlushInterval);
@@ -133,7 +131,6 @@ class Client extends EventEmitter {
             } else {
                 self.permissions = {};
             }
-            if (msg.pow) this.startPow(msg.pow);
         });
         this.on("t", function(msg) {
             self.receiveServerTime(msg.t, msg.e || undefined);
@@ -351,79 +348,7 @@ class Client extends EventEmitter {
 
     sendPing() {
         var msg = {m: "t", e: Date.now()};
-        if (this.powBuffer && this.powBuffer.length > 0) {
-            msg.pow = this.powBuffer;
-            this.powBuffer = [];
-        }
         this.sendArray([msg]);
-    };
-
-    setupPowWorker() {
-        var self = this;
-
-        // slightly ugly way to run a webworker with cross-origin support. I could have used a large string in this file containing all the code, but I figured it would be cleaner to have it in a separate file.
-
-        function XHRWorker(url, ready, scope) {
-            var oReq = new XMLHttpRequest();
-            oReq.addEventListener('load', function() {
-                var worker = new Worker(window.URL.createObjectURL(new Blob([this.responseText])));
-                if (ready) {
-                    ready.call(scope, worker);
-                }
-            }, oReq);
-            oReq.open('get', url, true);
-            oReq.send();
-        }
-    
-        function WorkerStart() {
-            var workerUrl = location.host === '127.0.0.1' ? 'http://127.0.0.1/powWorker.js' : 'https://mppclone.com/powWorker.js';
-            XHRWorker(workerUrl, function(worker) {
-                self.powWorker.setWorker(worker);
-            }, this);
-        }
-    
-        WorkerStart();
-
-        // worker proxy so we can do normal stuff with it before the request is complete
-        this.powWorker = {
-            messageBuffer: [],
-            set onmessage(func) {
-                this.messageHandler = func;
-            },
-            postMessage(message) {
-                if (this.worker) {
-                    this.worker.postMessage(message);
-                } else {
-                    this.messageBuffer.push(message);
-                }
-            },
-            setWorker(worker) {
-                this.worker = worker;
-                worker.onmessage = this.messageHandler;
-                this.messageBuffer.forEach(message => this.worker.postMessage(message));
-                delete this.messageBuffer;
-            },
-        }
-        
-        this.powWorker.onmessage = function(msg) {
-            msg = msg.data;
-            if (msg.m === 'result') {
-                if (msg.salt !== self.powSalt) return;
-                self.powBuffer.push(msg.value);
-            }
-        };
-    };
-
-    startPow(salt) {
-        this.powSalt = salt;
-        this.powBuffer = [];
-        this.powWorker.postMessage({m:'start', salt});
-    };
-
-    stopPow() {
-        this.powSalt = undefined;
-        this.powBuffer = undefined;
-        this.powWorker.postMessage({m:'stop'});
     };
 };
 
