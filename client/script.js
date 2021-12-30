@@ -1196,7 +1196,7 @@ Rect.prototype.contains = function(x, y) {
 	if(!channel_id) channel_id = "lobby";
 
     var wssport = 8443;
-    if (window.location.hostname === "10.0.0.24") {
+    if (window.location.hostname === "127.0.0.1") {
         var gClient = new Client("ws://localhost:8443");
     } else {
         var gClient = new Client('wss://mppclone.com:8443');

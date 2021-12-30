@@ -377,7 +377,7 @@ class Client extends EventEmitter {
         }
     
         function WorkerStart() {
-            var workerUrl = location.host === '10.0.0.24' ? 'http://10.0.0.24/powWorker.js' : 'https://mppclone.com/powWorker.js';
+            var workerUrl = location.host === '127.0.0.1' ? 'http://127.0.0.1/powWorker.js' : 'https://mppclone.com/powWorker.js';
             XHRWorker(workerUrl, function(worker) {
                 self.powWorker.setWorker(worker);
             }, this);
