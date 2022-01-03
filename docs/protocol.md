@@ -74,7 +74,7 @@ All websocket close codes have a code (number) and a reason (string).
 - `4003` - `Message buffer length exceeded x.`: Internally, the server buffers messages so that things always get done in the right order, even if a message runs asynchronous code. Clients can hit this limit if they send too many messages too quickly, or if the server has an error. Errors in the server are rare and shouldn't happen. The owner is able to see if one happened.
 - `4004` - `Timed out.`: Clients must send [t](#t-server-bound) messages every 20 seconds. They will get kicked if it has been longer than 30 seconds since the last time sync message was received. Time sync messages will not work before [hi](#hi-server-bound) has been sent.
 - `4007` - `Exceeded x messages per y seconds.`: There is a cap on how many individual message objects can be sent in a period of time. If this cap is exceeded the socket is closed.
-- `4008` - `Bot detected.`: The client was detected as a bot during the handshake. Make sure you're using a valid bot token.
+- `4008` - `Banned.`: The user is banned from the server. A notification should show a reason and amount of time remaining.
 - `4009` - `Client limit reached.`: There is a limit on how many clients can be connected at a time per user. Contact the owner if you need to connect more clients.
 - Between `4500` and `4999` - `Another client caused your IP to hit volation limit. Your IP is temporarily banned. Last violation reason: x`: A different client on the same IP address received a violation. Your IP hit the volation quota and that caused a temporary IP address ban. Subtract 500 from the code to see the original violation code.
 
