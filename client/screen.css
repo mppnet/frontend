@@ -948,6 +948,11 @@ input[type="range"]:hover {
     margin-top: -200px;
 }
 
+#siteban {
+    height: 400px;
+    margin-top: -200px;
+}
+
 #chat {
     display: none;
     opacity: 1;

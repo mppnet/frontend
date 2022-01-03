@@ -1,116 +1,167 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-		<title>Multiplayer Piano</title>
-		<meta name="description" content="An online piano you can play alone or with others in real-time. MIDI support, 88 keys, velocity sensitive.  You can show off your skill or chat while listening to others play."/>
-		<link rel="stylesheet" href="/screen.css"/>
-	</head>
-	<body>
 
-		<div id="chat">
-			<ul></ul>
-			<input id="chat-input" placeholder="You can chat with this thing." class="translate" maxlength="512" autocomplete="off"/>
-		</div>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Multiplayer Piano</title>
+  <meta name="description"
+    content="An online piano you can play alone or with others in real-time. MIDI support, 88 keys, velocity sensitive.  You can show off your skill or chat while listening to others play." />
+  <link rel="stylesheet" href="/screen.css" />
+</head>
 
-		<div id="room-notice"></div>
+<body>
 
-		<div id="names"></div>
+  <div id="chat">
+    <ul></ul>
+    <input id="chat-input" placeholder="You can chat with this thing." class="translate" maxlength="512"
+      autocomplete="off" />
+  </div>
 
-		<div id="piano"></div>
+  <div id="room-notice"></div>
 
-		<div id="cursors"></div>
+  <div id="names"></div>
 
-		<a href="https://mpp.community/" title="MPPClone Community Forum" target="_blank" class="mppcommunity-button">
-			<button>
-				<img src="/mppcommunity.ico" style="vertical-align: middle;">
-			</button>
-		</a>
+  <div id="piano"></div>
 
-		<noscript>
-			<center>
-				<p>
-					Multiplayer Piano is an online, full 88-key piano you can play alone or with others in real-time.  Plug up your MIDI keyboard, MIDI in and out are supported.  You should be able to hear some seriously talented piano players performing here!  Join in or just chat and listen.
-				</p>
-				<p>
-					For good performance, Chrome is highly recommended.  Firefox also supports the requisite Web Audio API, but performance may not be as good.  Chrome has Web MIDI.
-				</p>
-				<p>
-					Of course, first you need to <a href="http://www.enable-javascript.com/" class="link">Enable Javascript</a> or it won't do anything...!
-				</p>
-			</center>
-		</noscript>
+  <div id="cursors"></div>
 
-		<div id="bottom">
-			<div class="relative">
-				<div id="room">
-					<div class="info"></div>
-					<div class="expand"></div>
-					<div class="more">
-						<div class="new translate">New Room...</div>
-					</div>
-				</div>
-				<div id="new-room-btn" class="ugly-button translate">New Room...</div>
-				<div id="play-alone-btn" class="ugly-button">Play Alone</div>
-				<div id="room-settings-btn" class="ugly-button">Room Settings</div>
-				<div id="midi-btn" class="ugly-button translate">MIDI In/Out</div>
-				<div id="record-btn" class="ugly-button translate">Record MP3</div>
-				<div id="synth-btn" class="ugly-button translate">Synth</div>
-				<div id="sound-btn" class="ugly-button sound-btn">Sound Select</div>
-				<div id="client-settings-btn" class="ugly-button client-settings-btn">Client Settings</div>
-				<div id="clearchat-btn" class="ugly-button clearchat-btn" style="display: none;">Clear Chat</div>
-				<div id="getcrown-btn" class="ugly-button getcrown-btn" style="display: none;">Get Crown</div>
-				<div id="vanish-btn" class="ugly-button vanish-btn" style="display: none;">Vanish</div>
-				<div id="status"></div>
-				<div id="volume">
-					<input type="range" id="volume-slider" min="0.0" max="1.0" step="0.01">
-				</div>
-				<div id="volume-label">volume</div>
-				<div id="quota">
-					<div class="value"></div>
-				</div>
-			</div>
-		</div>
+  <a href="https://mpp.community/" title="MPPClone Community Forum" target="_blank" class="mppcommunity-button">
+    <button>
+      <img src="/mppcommunity.ico" style="vertical-align: middle;">
+    </button>
+  </a>
 
-		<div id="modal">
-			<div class="bg"></div>
-			<div id="modals">
-				<div id="sound-warning" class="dialog">
-					<p>This site makes a lot of sound! You may want to adjust the volume before continuing.</p>
-					<button class="submit">PLAY</button>
-				</div>
-				<div id="new-room" class="dialog">
-					<p><input type="text" name="name" placeholder="room name" class="text translate" maxlength="512"/></p>
-					<p><label><input type="checkbox" name="visible" class="checkbox translate" checked>Visible (open to everyone)</label></p>
-					</label></p>
-					<button class="submit">go</button>
-				</div>
-				<div id="room-settings" class="dialog">
-					<p><div class="ugly-button drop-crown">Drop crown</div></p>
-					<p><label><input type="checkbox" name="visible" class="checkbox translate" checked>Visible (open to everyone)</label></p>
-					</label></p>
-					<p><label><input type="checkbox" name="chat" class="checkbox translate" checked>Enable Chat</label></p>
-					<p><label><input type="checkbox" name="crownsolo" class="checkbox">Only Owner can Play<button class="submit">APPLY</button>
-					<p><label><input type="checkbox" name="nocussing" class="checkbox">No Cussing</label></p>
-					<p><label>Inner color:  &nbsp;<input type="color" name="color" placeholder="" maxlength="7" class="color"></label></p>
-					<p><label>Outer color:  &nbsp;<input type="color" name="color2" placeholder="" maxlength="7" class="color"></label></p>
-					<p><label>Player limit:  &nbsp;<input type="text" name="limit" maxlength="2" value="50"></label></p>
-				</div>
-				<div id="rename" class="dialog">
-					<p><input type="text" name="name" placeholder="My Fancy New Name" maxlength="40" class="text"/>
-					<input type="color" name="color" placeholder="" maxlength="7" class="color"/></p>
-					<button class="submit">USER SET</button>
-				</div>
-			</div>
-		</div>
+  <noscript>
+    <center>
+      <p>
+        Multiplayer Piano is an online, full 88-key piano you can play alone or with others in real-time. Plug up your
+        MIDI keyboard, MIDI in and out are supported. You should be able to hear some seriously talented piano players
+        performing here! Join in or just chat and listen.
+      </p>
+      <p>
+        For good performance, Chrome is highly recommended. Firefox also supports the requisite Web Audio API, but
+        performance may not be as good. Chrome has Web MIDI.
+      </p>
+      <p>
+        Of course, first you need to <a href="http://www.enable-javascript.com/" class="link">Enable Javascript</a> or
+        it won't do anything...!
+      </p>
+    </center>
+  </noscript>
 
-		<script src="/jquery.min.js"></script>
-		<script src="/util.js"></script>
-		<script src="/Client.js"></script>
-		<script src="/NoteQuota.js"></script>
-		<script src="/lame.min.js"></script>
-		<script src="/Color.js"></script>
-		<!--<script src="/ebsprite.js"></script>-->
-		<script src="/script.js"></script>
-	</body>
+  <div id="bottom">
+    <div class="relative">
+      <div id="room">
+        <div class="info"></div>
+        <div class="expand"></div>
+        <div class="more">
+          <div class="new translate">New Room...</div>
+        </div>
+      </div>
+      <div id="new-room-btn" class="ugly-button translate">New Room...</div>
+      <div id="play-alone-btn" class="ugly-button">Play Alone</div>
+      <div id="room-settings-btn" class="ugly-button">Room Settings</div>
+      <div id="midi-btn" class="ugly-button translate">MIDI In/Out</div>
+      <div id="record-btn" class="ugly-button translate">Record MP3</div>
+      <div id="synth-btn" class="ugly-button translate">Synth</div>
+      <div id="sound-btn" class="ugly-button sound-btn">Sound Select</div>
+      <div id="client-settings-btn" class="ugly-button client-settings-btn">Client Settings</div>
+      <div id="clearchat-btn" class="ugly-button clearchat-btn" style="display: none;">Clear Chat</div>
+      <div id="getcrown-btn" class="ugly-button getcrown-btn" style="display: none;">Get Crown</div>
+      <div id="vanish-btn" class="ugly-button vanish-btn" style="display: none;">Vanish</div>
+      <div id="status"></div>
+      <div id="volume">
+        <input type="range" id="volume-slider" min="0.0" max="1.0" step="0.01">
+      </div>
+      <div id="volume-label">volume</div>
+      <div id="quota">
+        <div class="value"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal">
+    <div class="bg"></div>
+    <div id="modals">
+      <div id="sound-warning" class="dialog">
+        <p>This site makes a lot of sound! You may want to adjust the volume before continuing.</p>
+        <button class="submit">PLAY</button>
+      </div>
+      <div id="new-room" class="dialog">
+        <p><input type="text" name="name" placeholder="room name" class="text translate" maxlength="512" /></p>
+        <p><label><input type="checkbox" name="visible" class="checkbox translate" checked>Visible (open to everyone)</label></p>
+        <button class="submit">go</button>
+      </div>
+      <div id="room-settings" class="dialog">
+        <p>
+        <div class="ugly-button drop-crown">Drop crown</div>
+        </p>
+        <p><label><input type="checkbox" name="visible" class="checkbox translate" checked>Visible (open to everyone)</label></p>
+        <p><label><input type="checkbox" name="chat" class="checkbox translate" checked>Enable Chat</label></p>
+        <p><label><input type="checkbox" name="crownsolo" class="checkbox">Only Owner can Play</label></p>
+        <p><label><input type="checkbox" name="nocussing" class="checkbox">No Cussing</label></p>
+        <p><label>Inner color: &nbsp;<input type="color" name="color" placeholder="" maxlength="7" class="color"></label></p>
+        <p><label>Outer color: &nbsp;<input type="color" name="color2" placeholder="" maxlength="7" class="color"></label></p>
+        <p><label>Player limit: &nbsp;<input type="text" name="limit" maxlength="2" value="50"></label></p>
+        <button class="submit">APPLY</button>
+      </div>
+      <div id="rename" class="dialog">
+        <p><input type="text" name="name" placeholder="My Fancy New Name" maxlength="40" class="text" />
+          <input type="color" name="color" placeholder="" maxlength="7" class="color" />
+        </p>
+        <button class="submit">USER SET</button>
+      </div>
+      <div id="siteban" class="dialog">
+        <p><label>User ID: <input type="text" name="id" placeholder="User's ID" maxlength="24" class="text" /></label></p>
+        <p><label>Reason: <select name="reasonSelect">
+              <option value="Evading site-wide punishments with VPNs, proxies, or multiple accounts">Evading site punishments</option>
+              <option value="Evading user's mutes or kickbans with VPNs, proxies, or multiple accounts">Evading mutes/kickbans</option>
+              <option value="Excessive piano spam in lobbies">Piano spam in lobbies</option>
+              <option value="Excessive chat spam in lobbies">Chat spam in lobbies</option>
+              <option value="Promoting or involvement in sexual content with minors">Pedophilia</option>
+              <option value="Abusing bots or scripts in a way that worsens the site for others">Abusing bots/scripts</option>
+              <option value="Sending offensive or very disrespectful messages through chat or names">Offensive messages</option>
+              <option value="Targeted harrassment of one or more users on the site">Targeted harrassment</option>
+              <option value="Promoting illegal content or activities">Promoting illegal activities</option>
+              <option value="Spreading dangerous or inccorrect information">Spreading dangerous/false information</option>
+              <option
+                value="Attempting to gain sensitive information about users on the site through phishing, IP-grabbers, or other methods">
+                IP grabbers/phishing</option>
+              <option value="Excessive chat spam or advertising throughout multiple rooms">Disruptive in multiple rooms
+              </option>
+              <option value="custom">Custom...</option>
+            </select>
+            <input type="text" name="reasonText" placeholder="Ban reason..." maxlength="512" class="text" style="width: 100%;" /></label>
+          </label></p>
+        <p><label>Duration: <br><input type="number" name="durationNumber" placeholder="Amount of unit..." value="5" class="text" style="width: 60%" />
+            <select name="durationUnit">
+              <option value="seconds">Seconds</option>
+              <option value="minutes">Minutes</option>
+              <option value="hours">Hours</option>
+              <option value="days">Days</option>
+              <option value="weeks">Weeks</option>
+              <option value="months">Months</option>
+              <option value="years">Years</option>
+              <option value="permanent">Permanent</option>
+            </select>
+          </label>
+          </label>
+        </p>
+        <p><label>Note: <textarea name="note" cols="49" rows="5" maxlength="512" placeholder="Optional note for staff..."></textarea></label></p>
+        <p name="errorText" style="color:red; font-size: 16px;"></p>
+        <button class="submit">BAN</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/jquery.min.js"></script>
+  <script src="/util.js"></script>
+  <script src="/Client.js"></script>
+  <script src="/NoteQuota.js"></script>
+  <script src="/lame.min.js"></script>
+  <script src="/Color.js"></script>
+  <!--<script src="/ebsprite.js"></script>-->
+  <script src="/script.js"></script>
+</body>
+
 </html>
