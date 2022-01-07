@@ -585,10 +585,15 @@ input[type="range"]:hover {
     left: 660px;
     top: 32px;
 }
-#clearchat-btn {
+#account-btn {
     position: absolute;
     left: 780px;
     top: 32px;
+}
+#clearchat-btn {
+    position: absolute;
+    left: 780px;
+    top: 4px;
 }
 #getcrown-btn {
     position: absolute;
@@ -597,8 +602,14 @@ input[type="range"]:hover {
 }
 #vanish-btn {
     position: absolute;
-    left: 780px;
+    left: 900px;
     top: 4px;
+}
+
+#logout-btn {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
 }
 
 #tooltip {
@@ -715,6 +726,13 @@ input[type="range"]:hover {
     text-shadow: #444 1px 1px;
     border-radius: 6px;
     box-shadow: 2px 2px 5px rgba(0,0,0,.25);
+}
+
+.notification-body .text {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
 }
 
 .notification-body:after {
@@ -951,6 +969,28 @@ input[type="range"]:hover {
 #siteban {
     height: 400px;
     margin-top: -200px;
+}
+
+#account {
+    height: 300px;
+    margin-top: -150px;
+}
+
+#account-info {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.logged-in-text {
+    font-size: 20px;
+}
+
+.logged-in-user-text {
+    font-size: 20px;
+    position: absolute;
+    top: 160px;
+    right: 8px;
 }
 
 #chat {

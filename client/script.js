@@ -1193,11 +1193,28 @@ $(function () {
   if (window.location.hostname === 'multiplayerpiano.com') channel_id = getParameterByName('c');
   if (!channel_id) channel_id = "lobby";
 
+  var loginInfo;
+  if (location.pathname === "/callback/discord") {
+    var searchParams = new URLSearchParams(location.search);
+    var code = searchParams.get("code");
+    if (code) {
+      loginInfo = {
+        type: "discord",
+        code
+      };
+    }
+    history.pushState({ "name": "lobby" }, "Piano > lobby", "/");
+  }
+
   var wssport = 8443;
   if (window.location.hostname === "127.0.0.1") {
     var gClient = new Client("ws://localhost:8443");
   } else {
     var gClient = new Client('wss://mppclone.com:8443');
+  }
+  if (loginInfo) {
+    gClient.setLoginInfo(loginInfo);
+    channel_id = "lobby";
   }
   gClient.setChannel(channel_id);
   gClient.start();
@@ -2542,6 +2559,27 @@ $(function () {
 
 
 
+
+
+  //Account button
+  $("#account-btn").on("click", function (evt) {
+    evt.stopPropagation();
+    openModal("#account");
+    if (gClient.accountInfo) {
+      $("#account #account-info").show()
+      if (gClient.accountInfo.type === "discord") {
+        $("#account #avatar-image").prop("src", gClient.accountInfo.avatar)
+        $("#account #logged-in-user-text").text(gClient.accountInfo.username + "#" + gClient.accountInfo.discriminator)
+      }
+    } else {
+      $("#account #account-info").hide()
+    }
+  });
+
+
+
+
+
   var gModal;
 
   function modalHandleEsc(evt) {
@@ -2816,6 +2854,34 @@ $(function () {
       evt.stopPropagation();
       return false;
     }
+  })();
+
+
+
+
+
+
+
+
+  //Accounts
+
+  (function () {
+    function logout() {
+      delete localStorage.token;
+      gClient.stop();
+      gClient.start();
+      closeModal();
+    }
+    $("#account .logout-btn").click(function (evt) {
+      logout();
+    });
+    $("#account .login-discord").click(function (evt) {
+      if (location.hostname === "127.0.0.1") {
+        location.replace("https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=http%3A%2F%2F127.0.0.1%2Fcallback%2Fdiscord&response_type=code&scope=identify");
+      } else {
+        location.replace("https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=https%3A%2F%2Fmppclone.com%2Fcallback%2Fdiscord&response_type=code&scope=identify");
+      }
+    });
   })();
 
 

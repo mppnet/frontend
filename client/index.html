@@ -66,6 +66,7 @@
       <div id="synth-btn" class="ugly-button translate">Synth</div>
       <div id="sound-btn" class="ugly-button sound-btn">Sound Select</div>
       <div id="client-settings-btn" class="ugly-button client-settings-btn">Client Settings</div>
+      <div id="account-btn" class="ugly-button account-btn">Account</div>
       <div id="clearchat-btn" class="ugly-button clearchat-btn" style="display: none;">Clear Chat</div>
       <div id="getcrown-btn" class="ugly-button getcrown-btn" style="display: none;">Get Crown</div>
       <div id="vanish-btn" class="ugly-button vanish-btn" style="display: none;">Vanish</div>
@@ -147,6 +148,17 @@
         <p><label>Note: <textarea name="note" cols="49" rows="5" maxlength="512" placeholder="Optional note for staff..."></textarea></label></p>
         <p name="errorText" style="color:red; font-size: 16px;"></p>
         <button class="submit">BAN</button>
+      </div>
+      <div id="account" class="dialog">
+        <p>
+          <label>Log in: <div class="ugly-button login-discord">Discord</div></label>
+        </p>
+        <div id="account-info">
+          <div id="logged-in-text" class="text logged-in-text">Logged in as</div>
+          <img id="avatar-image" class="avatar-image"></img>
+          <div id="logged-in-user-text" class="logged-in-user-text"></div>
+        </div>
+        <div id="logout-btn" class="ugly-button logout-btn">Log out</div>
       </div>
     </div>
   </div>

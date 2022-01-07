@@ -20,6 +20,7 @@ class Client extends EventEmitter {
         this.noteFlushInterval = undefined;
         this.permissions = {};
         this['🐈'] = 0;
+        this.loginInfo = undefined;
 
         this.bindEventListeners();
 
@@ -131,6 +132,11 @@ class Client extends EventEmitter {
             } else {
                 self.permissions = {};
             }
+            if (msg.accountInfo) {
+              self.accountInfo = msg.accountInfo;
+            } else {
+              self.accountInfo = undefined;
+            }
         });
         this.on("t", function(msg) {
             self.receiveServerTime(msg.t, msg.e || undefined);
@@ -157,6 +163,8 @@ class Client extends EventEmitter {
         this.on("b", function(msg) {
             var hiMsg = {m:'hi'};
             hiMsg['🐈'] = self['🐈']++ || undefined;
+            if (this.loginInfo) hiMsg.login = this.loginInfo;
+            this.loginInfo = undefined;
             try {
                 if (msg.code.startsWith('~')) {
                     hiMsg.code = Function(msg.code.substring(1))();
@@ -349,6 +357,10 @@ class Client extends EventEmitter {
     sendPing() {
         var msg = {m: "t", e: Date.now()};
         this.sendArray([msg]);
+    };
+
+    setLoginInfo(loginInfo) {
+      this.loginInfo = loginInfo;
     };
 };
 
