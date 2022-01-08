@@ -1204,6 +1204,7 @@ $(function () {
       };
     }
     history.pushState({ "name": "lobby" }, "Piano > lobby", "/");
+    channel_id = "lobby";
   }
 
   var wssport = 8443;
@@ -1214,7 +1215,6 @@ $(function () {
   }
   if (loginInfo) {
     gClient.setLoginInfo(loginInfo);
-    channel_id = "lobby";
   }
   gClient.setChannel(channel_id);
   gClient.start();
