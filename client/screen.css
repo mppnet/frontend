@@ -334,12 +334,13 @@ input[type="range"]:hover {
 }
 
 .cursor {
-    transition: top .1s, left .1s, transform .1s linear;
+    transition: top .1s, left .1s;
 }
 
 #cursors[smooth-cursors] .cursor {
     top: 0;
     left: 0;
+    transition: transform .1s linear;
 }
 
 .participant-menu {
