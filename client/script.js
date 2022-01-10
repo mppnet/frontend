@@ -1439,8 +1439,12 @@ $(function () {
     function updateCursor(msg) {
       const part = gClient.ppl[msg.id];
       if (part && part.cursorDiv) {
-        part.cursorDiv.style.left = msg.x + "%";
-        part.cursorDiv.style.top = msg.y + "%";
+        if (gSmoothCursor) {
+          part.cursorDiv.style.transform = 'translate3d(' + msg.x + 'vw, ' + msg.y + 'vh, 0)';
+        } else {
+          part.cursorDiv.style.left = msg.x + "%";
+          part.cursorDiv.style.top = msg.y + "%";
+        }
       }
     }
     gClient.on("m", updateCursor);
@@ -1697,6 +1701,7 @@ $(function () {
   var gNoBackgroundColor = localStorage.noBackgroundColor == "true";
   var gOutputOwnNotes = localStorage.outputOwnNotes ? localStorage.outputOwnNotes == "true" : true;
   var gVirtualPianoLayout = localStorage.virtualPianoLayout == "true";
+  var gSmoothCursor = localStorage.smoothCursor == "true";
   var gShowChatTooltips = localStorage.showChatTooltips ? localStorage.showChatTooltips == "true" : true;
   //var gWarnOnLinks = localStorage.warnOnLinks ? localStorage.warnOnLinks == "true" : true;
 
@@ -1705,7 +1710,13 @@ $(function () {
 
 
 
-
+  // smooth cursor attribute
+  
+  if (gSmoothCursor) {
+    $("#cursors").attr('smooth-cursors', '');
+  } else {
+    $("#cursors").removeAttr('smooth-cursors');
+  }
 
 
   // Background color
@@ -3983,6 +3994,44 @@ $(function () {
           setting.classList.toggle("enabled");
           localStorage.showChatTooltips = setting.classList.contains("enabled");
           gShowChatTooltips = setting.classList.contains("enabled");
+        };
+        html.appendChild(setting);
+      })();
+
+      // Enable smooth cursors.
+      (function () {
+        var setting = document.createElement("div");
+        setting.classList = "setting";
+        setting.innerText = "Enable smooth cursors";
+        if (gSmoothCursor) {
+          setting.classList.toggle("enabled");
+        }
+        setting.onclick = function () {
+          setting.classList.toggle("enabled");
+          localStorage.smoothCursor = setting.classList.contains("enabled");
+          gSmoothCursor = setting.classList.contains("enabled");
+          if (gSmoothCursor) {
+            $("#cursors").attr('smooth-cursors', '');
+          } else {
+            $("#cursors").removeAttr('smooth-cursors');
+          }
+          if (gSmoothCursor) {
+            Object.values(gClient.ppl).forEach(function (participant) {
+              if (participant.cursorDiv) {
+                participant.cursorDiv.style.left = '';
+                participant.cursorDiv.style.top = '';
+                participant.cursorDiv.style.transform = 'translate3d(' + participant.x + 'vw, ' + participant.y + 'vh, 0)';
+              }
+            });
+          } else {
+            Object.values(gClient.ppl).forEach(function (participant) {
+              if (participant.cursorDiv) {
+                participant.cursorDiv.style.left = participant.x + "%";
+                participant.cursorDiv.style.top = participant.y + "%";
+                participant.cursorDiv.style.transform = '';
+              }
+            });
+          }
         };
         html.appendChild(setting);
       })();
