@@ -834,6 +834,7 @@ This is sent as a response when the client first sends `"hi"`.
 - `"accountInfo"`: An [account info](#account-info) object.
 #### Example
 ```json
+{
   "m": "hi",
   "t": 1628019780663,
   "u": {
