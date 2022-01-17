@@ -293,10 +293,10 @@ Information about a user's account. This is displayed in clients so they can see
 #### Example
 ```json
 {
-  "type": "discord",
-  "username": "NotARealUser",
-  "discriminator", "0001",
-  "avatar", "https://cdn.discordapp.com/avatars/926633278100877393/82dd16b896d6fce421532b0e8a4244f9.png"
+  "type":"discord",
+  "username":"NotARealUser",
+  "discriminator":"0001",
+  "avatar":"https://cdn.discordapp.com/avatars/926633278100877393/82dd16b896d6fce421532b0e8a4244f9.png"
 }
 ```
 
