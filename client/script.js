@@ -1217,7 +1217,6 @@ $(function () {
     gClient.setLoginInfo(loginInfo);
   }
   gClient.setChannel(channel_id);
-  gClient.start();
 
   gClient.on("disconnect", function (evt) {
     console.log(evt);
@@ -4083,7 +4082,7 @@ $(function () {
 
 
 
-
+  gClient.start();
 });
 
 
