@@ -290,6 +290,15 @@ Information about a user's account. This is displayed in clients so they can see
 - `"username"`: The user's Discord username (string).
 - `"discriminator"`: The user's discriminator (string).
 - `"avatar"`: The user's avatar URL (string).
+#### Example
+```json
+{
+  "type": "discord",
+  "username": "NotARealUser",
+  "discriminator", "0001",
+  "avatar", "https://cdn.discordapp.com/avatars/926633278100877393/82dd16b896d6fce421532b0e8a4244f9.png"
+}
+```
 
 ## Client -> Server Messages
 
