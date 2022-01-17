@@ -1183,15 +1183,25 @@ $(function () {
     $('#chat-input')[0].autocomplete = 'off';
   }
 
+  function getRoomNameFromURL() {
+    var channel_id = decodeURIComponent(window.location.pathname);
+    if (channel_id.substr(0, 1) == "/") channel_id = channel_id.substr(1);
+    if (!channel_id) {
+      channel_id = getParameterByName('c');
+      //transitioning to use this for mppclone.com as well for 2 reasons:
+      //cloudflare's caching wasn't applying for new rooms because the pathname was different
+      //as I add more paths in the future such as /api, I don't want people to make rooms that conflict with those paths and cause issues
+    }
+    if (!channel_id) channel_id = "lobby";
+    return channel_id;
+  }
+
 
   // internet science
 
   ////////////////////////////////////////////////////////////////
 
-  var channel_id = decodeURIComponent(window.location.pathname);
-  if (channel_id.substr(0, 1) == "/") channel_id = channel_id.substr(1);
-  if (window.location.hostname === 'multiplayerpiano.com') channel_id = getParameterByName('c');
-  if (!channel_id) channel_id = "lobby";
+  var channel_id = getRoomNameFromURL();
 
   var loginInfo;
   if (location.pathname === "/callback/discord") {
@@ -1710,7 +1720,7 @@ $(function () {
 
 
   // smooth cursor attribute
-  
+
   if (gSmoothCursor) {
     $("#cursors").attr('smooth-cursors', '');
   } else {
@@ -2674,11 +2684,7 @@ $(function () {
     if (name == "") name = "lobby";
     if (gClient.channel && gClient.channel._id === name) return;
     if (push) {
-      if (window.location.hostname === 'multiplayerpiano.com') {
-        var url = "/?c=" + encodeURIComponent(name).replace("'", "%27");
-      } else {
-        var url = "/" + encodeURIComponent(name).replace("'", "%27");
-      }
+      var url = "/?c=" + encodeURIComponent(name).replace("'", "%27");
       if (window.history && history.pushState) {
         history.pushState({ "depth": gHistoryDepth += 1, "name": name }, "Piano > " + name, url);
       } else {
@@ -2705,13 +2711,13 @@ $(function () {
   var gHistoryDepth = 0;
   $(window).on("popstate", function (evt) {
     var depth = evt.state ? evt.state.depth : 0;
-    if (depth == gHistoryDepth) return; // <-- forgot why I did that though...
+    //if (depth == gHistoryDepth) return; // <-- forgot why I did that though...
+    //yeah brandon idk why you did that either, but it's stopping the back button from changing rooms after 1 click so I commented it out
 
     var direction = depth <= gHistoryDepth ? "left" : "right";
     gHistoryDepth = depth;
 
-    var name = decodeURIComponent(window.location.pathname);
-    if (name.substr(0, 1) == "/") name = name.substr(1);
+    var name = getRoomNameFromURL();
     changeRoom(name, direction, null, false);
   });
 
@@ -2776,8 +2782,8 @@ $(function () {
   //site-wide bans
   (function () {
     function submit() {
-      var msg = {m:"siteban"};
-      
+      var msg = { m: "siteban" };
+
       msg.id = $("#siteban .text[name=id]").val();
 
       var durationUnit = $("#siteban select[name=durationUnit]").val();
