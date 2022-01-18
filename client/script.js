@@ -867,7 +867,7 @@ $(function () {
 
   ////////////////////////////////////////////////////////////////
 
-  var soundDomain = location.hostname === 'www.mppclone.com' ? 'https://www.mppclone.com' : 'https://mppclone.com';
+  var soundDomain = 'https://mppclone.com';
 
   function SoundSelector(piano) {
     this.initialized = false;
@@ -1188,9 +1188,6 @@ $(function () {
     if (channel_id.substr(0, 1) == "/") channel_id = channel_id.substr(1);
     if (!channel_id) {
       channel_id = getParameterByName("c");
-      //transitioning to use this for mppclone.com as well for 2 reasons:
-      //cloudflare's caching wasn't applying for new rooms because the pathname was different
-      //as I add more paths in the future such as /api, I don't want people to make rooms that conflict with those paths and cause issues
     }
     if (!channel_id) channel_id = "lobby";
     return channel_id;
