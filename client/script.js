@@ -1225,7 +1225,7 @@ $(function () {
   gClient.setChannel(channel_id);
 
   gClient.on("disconnect", function (evt) {
-    console.log(evt);
+    //console.log(evt);
   });
 
 
@@ -3294,7 +3294,7 @@ $(function () {
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then(
         function (midi) {
-          console.log(midi);
+          //console.log(midi);
           function midimessagehandler(evt) {
             if (!evt.target.enabled) return;
             //console.log(evt);
@@ -3380,7 +3380,7 @@ $(function () {
                 if (typeof input.volume === "undefined") {
                   input.volume = 1.0;
                 }
-                console.log("input", input);
+                //console.log("input", input);
               }
             }
             if (midi.outputs.size > 0) {
@@ -3391,7 +3391,7 @@ $(function () {
                 if (typeof output.volume === "undefined") {
                   output.volume = 1.0;
                 }
-                console.log("output", output);
+                //console.log("output", output);
               }
               gMidiOutTest = function (note_name, vel, delay_ms, participantId) {
                 if (!gOutputOwnNotes && participantId === gClient.participantId) return;
@@ -3445,7 +3445,7 @@ $(function () {
                     if (input.id === evt.target.connectionId) {
                       input.enabled = !input.enabled;
                       evt.target.classList.toggle("enabled");
-                      console.log("click", input);
+                      //console.log("click", input);
                       updateDevices();
                       return;
                     }
@@ -3486,7 +3486,7 @@ $(function () {
                     if (output.id === evt.target.connectionId) {
                       output.enabled = !output.enabled;
                       evt.target.classList.toggle("enabled");
-                      console.log("click", output);
+                      //console.log("click", output);
                       updateDevices();
                       return;
                     }
@@ -3531,7 +3531,7 @@ $(function () {
           });
         },
         function (err) {
-          console.log(err);
+          //console.log(err);
         });
     }
   })();
