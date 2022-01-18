@@ -1187,7 +1187,7 @@ $(function () {
     var channel_id = decodeURIComponent(window.location.pathname);
     if (channel_id.substr(0, 1) == "/") channel_id = channel_id.substr(1);
     if (!channel_id) {
-      channel_id = getParameterByName('c');
+      channel_id = getParameterByName("c");
       //transitioning to use this for mppclone.com as well for 2 reasons:
       //cloudflare's caching wasn't applying for new rooms because the pathname was different
       //as I add more paths in the future such as /api, I don't want people to make rooms that conflict with those paths and cause issues
@@ -1204,9 +1204,8 @@ $(function () {
   var channel_id = getRoomNameFromURL();
 
   var loginInfo;
-  if (location.pathname === "/callback/discord") {
-    var searchParams = new URLSearchParams(location.search);
-    var code = searchParams.get("code");
+  if (getParameterByName("callback") === "discord") {
+    var code = getParameterByName("code");
     if (code) {
       loginInfo = {
         type: "discord",
@@ -1218,7 +1217,7 @@ $(function () {
   }
 
   var wssport = 8443;
-  if (window.location.hostname === "127.0.0.1") {
+  if (window.location.hostname === "localhost") {
     var gClient = new Client("ws://localhost:8443");
   } else {
     var gClient = new Client('wss://mppclone.com:8443');
@@ -2892,10 +2891,10 @@ $(function () {
       logout();
     });
     $("#account .login-discord").click(function (evt) {
-      if (location.hostname === "127.0.0.1") {
-        location.replace("https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=http%3A%2F%2F127.0.0.1%2Fcallback%2Fdiscord&response_type=code&scope=identify");
+      if (location.hostname === "localhost") {
+        location.replace("https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=http%3A%2F%2Flocalhost%2F%3Fcallback%3Ddiscord&response_type=code&scope=identify");
       } else {
-        location.replace("https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=https%3A%2F%2Fmppclone.com%2Fcallback%2Fdiscord&response_type=code&scope=identify");
+        location.replace("https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=https%3A%2F%2Fmppclone.com%2F%3Fcallback%3Ddiscord&response_type=code&scope=identify");
       }
     });
   })();
