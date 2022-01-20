@@ -1328,14 +1328,14 @@ input[type="range"]:hover {
     -moz-border-radius: 2px;
     overflow: hidden;
     white-space: nowrap;
-    color: #eee;
+    color: #fff;
 }
 
-.ugly-button:hover {
+.top-button:hover {
     background: #222;
 }
 
-.ugly-button.stuck {
+.top-button.stuck {
     background: rgba(204,187,170,.35);
 }
 
