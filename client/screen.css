@@ -1315,10 +1315,42 @@ input[type="range"]:hover {
     -ms-animation: spin 1s linear infinite;
 }
 
+.top-button {
+    height: 24px;
+    font-size: 12px;
+    background: #111;
+    border: 1px solid #444;
+    padding: 5px;
+    cursor: pointer;
+    line-height: 12px;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #eee;
+}
+
+.ugly-button:hover {
+    background: #222;
+}
+
+.ugly-button.stuck {
+    background: rgba(204,187,170,.35);
+}
+
 .mppcommunity-button {
     position: fixed;
     right: 6px;
     top: 6px;
+    z-index: 200;
+    cursor: pointer;
+}
+
+.mpp-rules-button {
+    position: fixed;
+    right: 6px;
+    top: 32px;
     z-index: 200;
     cursor: pointer;
 }

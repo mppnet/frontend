@@ -1,5 +1,8 @@
 class Client extends EventEmitter {
     constructor(uri) {
+        if (window.MPP && MPP.client) {
+            throw new Error("Running multiple clients in a single tab is not allowed due to abuse. Attempting to bypass this may result in an auto-ban!")
+        }
         super()
 
         this.uri = uri;

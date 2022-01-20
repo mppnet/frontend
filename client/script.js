@@ -3,6 +3,13 @@
 
 $(function () {
 
+  console.log("%cWelcome to MPP's developer console!", "color:blue; font-size:20px;");
+  console.log("%cCheck out the source code: https://github.com/LapisHusky/mppclone/tree/main/client\nGuide for coders and bot developers: https://docs.google.com/document/d/1OrxwdLD1l1TE8iau6ToETVmnLuLXyGBhA0VfAY1Lf14/edit?usp=sharing", "color:gray; font-size:12px;")
+
+
+
+
+
   var test_mode = (window.location.hash && window.location.hash.match(/^(?:#.+)*#test(?:#.+)*$/i));
 
   var gSeeOwnCursor = (window.location.hash && window.location.hash.match(/^(?:#.+)*#seeowncursor(?:#.+)*$/i));
@@ -1178,7 +1185,7 @@ $(function () {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
   }
 
-  //remove chat autocomplete
+  //html/css overrides for multiplayerpiano.com
   if (window.location.hostname === 'multiplayerpiano.com') {
     $('#chat-input')[0].autocomplete = 'off';
   }
