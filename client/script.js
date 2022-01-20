@@ -1195,7 +1195,7 @@ $(function () {
     aElement.title = "Multiplayer Piano Rules";
     aElement.target = "_blank";
     let buttonElement = document.createElement("button");
-    buttonElement.style = "height: 24px; font-size: 12px; background: #111; border: 1px solid #444; padding: 5px; cursor: pointer; line-height: 12px; border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; overflow: hidden; white-space: nowrap; color: #fff; position: absolute; right: 6px; top: 86px; z-index: 200;"
+    buttonElement.style = "height: 24px; font-size: 12px; background: #111; border: 1px solid #444; padding: 5px; cursor: pointer; line-height: 12px; border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; overflow: hidden; white-space: nowrap; color: #fff; position: absolute; right: 6px; top: 0px; z-index: 20001;"
     buttonElement.innerText = "Rules"
     aElement.appendChild(buttonElement);
     document.body.appendChild(aElement);
