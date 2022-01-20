@@ -1344,7 +1344,6 @@ input[type="range"]:hover {
     right: 6px;
     top: 6px;
     z-index: 200;
-    cursor: pointer;
 }
 
 .mpp-rules-button {
@@ -1352,7 +1351,6 @@ input[type="range"]:hover {
     right: 6px;
     top: 32px;
     z-index: 200;
-    cursor: pointer;
 }
 
 @-webkit-keyframes spin {
