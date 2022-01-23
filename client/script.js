@@ -874,7 +874,11 @@ $(function () {
 
   ////////////////////////////////////////////////////////////////
 
-  var soundDomain = 'https://mppclone.com';
+  if (window.location.hostname === "localhost") {
+    var soundDomain = 'http://localhost';
+  } else {
+    var soundDomain = 'https://mppclone.com';
+  }
 
   function SoundSelector(piano) {
     this.initialized = false;
