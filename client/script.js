@@ -2302,9 +2302,9 @@ $(function () {
             openModal("#siteban");
             setTimeout(function () {
               $("#siteban input[name=id]").val(part._id);
-              $("#siteban input[name=reasonText]").val("Evading site-wide punishments with VPNs, proxies, or multiple accounts");
+              $("#siteban input[name=reasonText]").val("Discrimination against others");
               $("#siteban input[name=reasonText]").attr("disabled", true);
-              $("#siteban select[name=reasonSelect]").val("Evading site-wide punishments with VPNs, proxies, or multiple accounts");
+              $("#siteban select[name=reasonSelect]").val("Discrimination against others");
               $("#siteban input[name=durationNumber]").val(5);
               $("#siteban input[name=durationNumber]").attr("disabled", false);
               $("#siteban select[name=durationUnit]").val("hours");
