@@ -777,7 +777,10 @@ $(function () {
           this.ctx.font = `${((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth)/2)}px Arial`;
           this.ctx.fillStyle = key.sharp ? "white" : "black";
           this.ctx.textAlign = "center";
-          this.ctx.fillText(key.note.replaceAll("s", "#").toUpperCase(), x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth)/2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 10 - this.ctx.lineWidth);
+          var text = key.baseNote[0].toUpperCase()
+          if (sharp) text += "#"
+          text += key.octave + 1
+          this.ctx.fillText(text, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth)/2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 10 - this.ctx.lineWidth);
         }
 
         // render blips
