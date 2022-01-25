@@ -773,6 +773,13 @@ $(function () {
         var image = key.sharp ? this.blackKeyRender : this.whiteKeyRender;
         this.ctx.drawImage(image, x, y);
 
+        if (gShowPianoNotes) {
+          this.ctx.font = `${((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth)/2)}px Arial`;
+          this.ctx.fillStyle = key.sharp ? "white" : "black";
+          this.ctx.textAlign = "center";
+          this.ctx.fillText(key.note.replaceAll("s", "#").toUpperCase(), x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth)/2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 10 - this.ctx.lineWidth);
+        }
+
         // render blips
         if (key.blips.length) {
           var alpha = this.ctx.globalAlpha;
@@ -1730,6 +1737,7 @@ $(function () {
   var gVirtualPianoLayout = localStorage.virtualPianoLayout == "true";
   var gSmoothCursor = localStorage.smoothCursor == "true";
   var gShowChatTooltips = localStorage.showChatTooltips ? localStorage.showChatTooltips == "true" : true;
+  var gShowPianoNotes = localStorage.showPianoNotes == "true";
   //var gWarnOnLinks = localStorage.warnOnLinks ? localStorage.warnOnLinks == "true" : true;
 
 
@@ -4017,6 +4025,21 @@ $(function () {
           setting.classList.toggle("enabled");
           localStorage.showChatTooltips = setting.classList.contains("enabled");
           gShowChatTooltips = setting.classList.contains("enabled");
+        };
+        html.appendChild(setting);
+      })();
+
+      (function () {
+        var setting = document.createElement("div");
+        setting.classList = "setting";
+        setting.innerText = "Show Piano Notes";
+        if (gShowPianoNotes) {
+          setting.classList.toggle("enabled");
+        }
+        setting.onclick = function () {
+          setting.classList.toggle("enabled");
+          localStorage.showPianoNotes = setting.classList.contains("enabled");
+          gShowPianoNotes = setting.classList.contains("enabled");
         };
         html.appendChild(setting);
       })();
