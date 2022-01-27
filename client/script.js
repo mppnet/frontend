@@ -777,10 +777,26 @@ $(function () {
           this.ctx.font = `${((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth)/2)}px Arial`;
           this.ctx.fillStyle = key.sharp ? "white" : "black";
           this.ctx.textAlign = "center";
-          var text = key.baseNote[0].toUpperCase()
-          if (sharp) text += "#"
-          text += key.octave + 1
-          this.ctx.fillText(text, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth)/2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 10 - this.ctx.lineWidth);
+
+          var keyName = key.baseNote[0].toUpperCase();
+          if (sharp) keyName += "#";
+          keyName += key.octave + 1;
+
+          if (keyName.includes('#')) { 
+            this.ctx.fillText(keyName, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth)/2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 30 - this.ctx.lineWidth);
+          }
+
+          keyName = keyName.replace("C#", "D♭");
+          keyName = keyName.replace("D#", "E♭");
+          keyName = keyName.replace("F#", "G♭");
+          keyName = keyName.replace("G#", "A♭");
+          keyName = keyName.replace("A#", "B♭");
+
+          if (keyName.includes('♭')) {
+            this.ctx.fillText(keyName, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth)/2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 10 - this.ctx.lineWidth);
+          } else {
+            this.ctx.fillText(keyName, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth)/2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 10 - this.ctx.lineWidth);
+          }
         }
 
         // render blips
