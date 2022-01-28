@@ -1319,7 +1319,6 @@ $(function () {
         part.nameDiv = nameDiv;
       }
       nameDiv.style.backgroundColor = part.color || "#777";
-      if (part.veteran) nameDiv.title = 'This user is a veteran of Multiplayer Piano';
       var tagText = typeof part.tag === 'object' ? part.tag.text : part.tag;
       if (tagText === 'BOT') nameDiv.title = 'This is an authorized bot.';
       if (tagText === 'MOD') nameDiv.title = 'This user is an official moderator of the site.';
@@ -1354,7 +1353,6 @@ $(function () {
       textDiv.textContent = part.name || "";
       textDiv.id = 'nametext-' + part._id;
       if (hasOtherDiv) textDiv.style.float = 'left';
-      if (part.veteran) textDiv.style.color = '#ffdf00';
       part.nameDiv.appendChild(textDiv);
 
       var arr = $("#names .name");
@@ -1387,7 +1385,6 @@ $(function () {
         div.className = "name";
         div.style.backgroundColor = part.color || "#777"
         div.textContent = part.name || "";
-        if (part.veteran) div.style.color = '#ffdf00';
         part.cursorDiv.appendChild(div);
 
       } else {
