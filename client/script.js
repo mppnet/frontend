@@ -4250,6 +4250,10 @@ $(function () {
         context.beginPath();
         context.lineWidth = particle.diameter;
         context.strokeStyle = particle.color;
+        context.shadowColor = 'rgba(0, 0, 0, .3)';
+        context.shadowBlur = 4;
+        context.shadowOffsetY = 2;
+        context.shadowOffsetX = 0;
         x = particle.x + particle.tilt;
         context.moveTo(x + particle.diameter / 2, particle.y);
         context.lineTo(x, particle.y + particle.tilt + particle.diameter / 2);
