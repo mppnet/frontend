@@ -773,6 +773,32 @@ $(function () {
         var image = key.sharp ? this.blackKeyRender : this.whiteKeyRender;
         this.ctx.drawImage(image, x, y);
 
+        if (gShowPianoNotes) {
+          this.ctx.font = `${((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2)}px Arial`;
+          this.ctx.fillStyle = key.sharp ? "white" : "black";
+          this.ctx.textAlign = "center";
+
+          var keyName = key.baseNote[0].toUpperCase();
+          if (sharp) keyName += "#";
+          keyName += key.octave + 1;
+
+          if (keyName.includes('#')) {
+            this.ctx.fillText(keyName, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 30 - this.ctx.lineWidth);
+          }
+
+          keyName = keyName.replace("C#", "D♭");
+          keyName = keyName.replace("D#", "E♭");
+          keyName = keyName.replace("F#", "G♭");
+          keyName = keyName.replace("G#", "A♭");
+          keyName = keyName.replace("A#", "B♭");
+
+          if (keyName.includes('♭')) {
+            this.ctx.fillText(keyName, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 10 - this.ctx.lineWidth);
+          } else {
+            this.ctx.fillText(keyName, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 10 - this.ctx.lineWidth);
+          }
+        }
+
         // render blips
         if (key.blips.length) {
           var alpha = this.ctx.globalAlpha;
@@ -874,7 +900,11 @@ $(function () {
 
   ////////////////////////////////////////////////////////////////
 
-  var soundDomain = 'https://mppclone.com';
+  if (window.location.hostname === "localhost") {
+    var soundDomain = 'http://localhost';
+  } else {
+    var soundDomain = 'https://mppclone.com';
+  }
 
   function SoundSelector(piano) {
     this.initialized = false;
@@ -1723,6 +1753,7 @@ $(function () {
   var gVirtualPianoLayout = localStorage.virtualPianoLayout == "true";
   var gSmoothCursor = localStorage.smoothCursor == "true";
   var gShowChatTooltips = localStorage.showChatTooltips ? localStorage.showChatTooltips == "true" : true;
+  var gShowPianoNotes = localStorage.showPianoNotes == "true";
   //var gWarnOnLinks = localStorage.warnOnLinks ? localStorage.warnOnLinks == "true" : true;
 
 
@@ -2295,9 +2326,9 @@ $(function () {
             openModal("#siteban");
             setTimeout(function () {
               $("#siteban input[name=id]").val(part._id);
-              $("#siteban input[name=reasonText]").val("Evading site-wide punishments with VPNs, proxies, or multiple accounts");
+              $("#siteban input[name=reasonText]").val("Discrimination against others");
               $("#siteban input[name=reasonText]").attr("disabled", true);
-              $("#siteban select[name=reasonSelect]").val("Evading site-wide punishments with VPNs, proxies, or multiple accounts");
+              $("#siteban select[name=reasonSelect]").val("Discrimination against others");
               $("#siteban input[name=durationNumber]").val(5);
               $("#siteban input[name=durationNumber]").attr("disabled", false);
               $("#siteban select[name=durationUnit]").val("hours");
@@ -3330,7 +3361,7 @@ $(function () {
               // CONTROL_CHANGE
               if (!gAutoSustain) {
                 if (note_number == 64) {
-                  if (vel > 0) {
+                  if (vel > 20) {
                     pressSustain();
                   } else {
                     releaseSustain();
@@ -4014,6 +4045,21 @@ $(function () {
         html.appendChild(setting);
       })();
 
+      (function () {
+        var setting = document.createElement("div");
+        setting.classList = "setting";
+        setting.innerText = "Show Piano Notes";
+        if (gShowPianoNotes) {
+          setting.classList.toggle("enabled");
+        }
+        setting.onclick = function () {
+          setting.classList.toggle("enabled");
+          localStorage.showPianoNotes = setting.classList.contains("enabled");
+          gShowPianoNotes = setting.classList.contains("enabled");
+        };
+        html.appendChild(setting);
+      })();
+
       // Enable smooth cursors.
       (function () {
         var setting = document.createElement("div");
@@ -4085,6 +4131,173 @@ $(function () {
       });
     }
   })();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //confetti, to be removed after the 10th anniversary
+  //source: https://www.cssscript.com/confetti-falling-animation/
+
+  var maxParticleCount = 500; //set max confetti count
+  var particleSpeed = 2; //set the particle animation speed
+  var startConfetti; //call to start confetti animation
+  var stopConfetti; //call to stop adding confetti
+  var toggleConfetti; //call to start or stop the confetti animation depending on whether it's already running
+  var removeConfetti; //call to stop the confetti animation and remove all confetti immediately
+
+  (function () {
+    startConfetti = startConfettiInner;
+    stopConfetti = stopConfettiInner;
+    toggleConfetti = toggleConfettiInner;
+    removeConfetti = removeConfettiInner;
+    var colors = ["DodgerBlue", "OliveDrab", "Gold", "Pink", "SlateBlue", "LightBlue", "Violet", "PaleGreen", "SteelBlue", "SandyBrown", "Chocolate", "Crimson"]
+    var streamingConfetti = false;
+    var animationTimer = null;
+    var particles = [];
+    var waveAngle = 0;
+
+    function resetParticle(particle, width, height) {
+      particle.color = colors[(Math.random() * colors.length) | 0];
+      particle.x = Math.random() * width;
+      particle.y = Math.random() * height - height;
+      particle.diameter = Math.random() * 10 + 5;
+      particle.tilt = Math.random() * 10 - 10;
+      particle.tiltAngleIncrement = Math.random() * 0.07 + 0.05;
+      particle.tiltAngle = 0;
+      return particle;
+    }
+
+    function startConfettiInner() {
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      window.requestAnimFrame = (function () {
+        return window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame ||
+          window.oRequestAnimationFrame ||
+          window.msRequestAnimationFrame ||
+          function (callback) {
+            return window.setTimeout(callback, 16.6666667);
+          };
+      })();
+      var canvas = document.getElementById("confetti-canvas");
+      if (canvas === null) {
+        canvas = document.createElement("canvas");
+        canvas.setAttribute("id", "confetti-canvas");
+        canvas.setAttribute("style", "display:block;z-index:999999;pointer-events:none;position:absolute;top:0;left:0");
+        document.body.appendChild(canvas);
+        canvas.width = width;
+        canvas.height = height;
+        window.addEventListener("resize", function () {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }, true);
+      }
+      var context = canvas.getContext("2d");
+      while (particles.length < maxParticleCount)
+        particles.push(resetParticle({}, width, height));
+      streamingConfetti = true;
+      if (animationTimer === null) {
+        (function runAnimation() {
+          context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+          if (particles.length === 0)
+            animationTimer = null;
+          else {
+            updateParticles();
+            drawParticles(context);
+            animationTimer = requestAnimFrame(runAnimation);
+          }
+        })();
+      }
+    }
+
+    function stopConfettiInner() {
+      streamingConfetti = false;
+    }
+
+    function removeConfettiInner() {
+      stopConfetti();
+      particles = [];
+    }
+
+    function toggleConfettiInner() {
+      if (streamingConfetti)
+        stopConfettiInner();
+      else
+        startConfettiInner();
+    }
+
+    function drawParticles(context) {
+      var particle;
+      var x;
+      for (var i = 0; i < particles.length; i++) {
+        particle = particles[i];
+        context.beginPath();
+        context.lineWidth = particle.diameter;
+        context.strokeStyle = particle.color;
+        context.shadowColor = 'rgba(0, 0, 0, .3)';
+        context.shadowBlur = 4;
+        context.shadowOffsetY = 2;
+        context.shadowOffsetX = 0;
+        x = particle.x + particle.tilt;
+        context.moveTo(x + particle.diameter / 2, particle.y);
+        context.lineTo(x, particle.y + particle.tilt + particle.diameter / 2);
+        context.stroke();
+      }
+    }
+
+    function updateParticles() {
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      var particle;
+      waveAngle += 0.01;
+      for (var i = 0; i < particles.length; i++) {
+        particle = particles[i];
+        if (!streamingConfetti && particle.y < -15)
+          particle.y = height + 100;
+        else {
+          particle.tiltAngle += particle.tiltAngleIncrement;
+          particle.x += Math.sin(waveAngle);
+          particle.y += (Math.cos(waveAngle) + particle.diameter + particleSpeed) * 0.5;
+          particle.tilt = Math.sin(particle.tiltAngle) * 15;
+        }
+        if (particle.x > width + 20 || particle.x < -20 || particle.y > height) {
+          if (streamingConfetti && particles.length <= maxParticleCount)
+            resetParticle(particle, width, height);
+          else {
+            particles.splice(i, 1);
+            i--;
+          }
+        }
+      }
+    }
+  })();
+
+  if (Date.now() > 1645142400000 && Date.now() < 1645228800000 && localStorage.seenAnniversary !== "true") { // 2/18/2022 12 AM UTC - 2/19/2022 12 AM UTC
+    localStorage.seenAnniversary = "true";
+    new Notification({
+      title: "Happy 10th Anniversary to Multiplayer Piano!",
+      text: "This site has had a long and interesting history over the last 10 years, with tons of people contributing to make it what it is today. Huge thanks to them and to everyone who was a part of the community.",
+      duration: 25000,
+      target: "#room"
+    });
+    startConfetti();
+    setTimeout(() => {
+      stopConfetti();
+    }, 4000);
+  }
 
 
 
