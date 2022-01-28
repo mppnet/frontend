@@ -3364,7 +3364,7 @@ $(function () {
               // CONTROL_CHANGE
               if (!gAutoSustain) {
                 if (note_number == 64) {
-                  if (vel > 0) {
+                  if (vel > 63) {
                     pressSustain();
                   } else {
                     releaseSustain();
