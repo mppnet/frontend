@@ -164,7 +164,7 @@ $(function () {
     "Highlight notes in G Major" : ["G", "A", "B", "C", "D", "E", "G♭", "G"],
     "Highlight notes in A Major" : ["A", "B", "D♭", "D", "E", "G♭", "A♭", "A"],
     "Highlight notes in B Major" : ["B", "D♭", "E♭", "E", "G♭", "A♭", "B♭", "B"],
-    "Highlight notes in C# / Db Major" : ["D♭", "E♭", "F", "Gb", "A♭", "B♭", "C", "D♭"],
+    "Highlight notes in C# / Db Major" : ["D♭", "E♭", "F", "G♭", "A♭", "B♭", "C", "D♭"],
     "Highlight notes in D# / Eb Major" : ["E♭", "F", "G", "A♭", "B♭", "C", "D", "E♭"],
     "Highlight notes in F# / Gb Major" : ["G♭", "A♭", "B♭", "B", "D♭", "E♭", "F", "G♭"],
     "Highlight notes in G# / Ab Major" : ["A♭", "B♭", "C", "D♭", "E♭", "F", "G", "A♭"],
