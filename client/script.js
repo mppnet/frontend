@@ -154,6 +154,35 @@ $(function () {
     return (x >= this.x && x <= this.x2 && y >= this.y && y <= this.y2);
   };
 
+  const BASIC_PIANO_SCALES = {
+    // ty https://www.pianoscales.org/
+    // major keys
+    "Highlight notes in C Major" : ["C", "D", "E", "F", "G", "A", "B", "C"],
+    "Highlight notes in D Major" : ["D", "E", "G♭", "G", "A", "B", "D♭", "D"],
+    "Highlight notes in E Major" : ["E", "G♭", "A♭", "A", "B", "D♭", "E♭", "E"],
+    "Highlight notes in F Major" : ["F", "G", "A", "B♭", "C", "D", "E", "F"],
+    "Highlight notes in G Major" : ["G", "A", "B", "C", "D", "E", "G♭", "G"],
+    "Highlight notes in A Major" : ["A", "B", "D♭", "D", "E", "G♭", "A♭", "A"],
+    "Highlight notes in B Major" : ["B", "D♭", "E♭", "E", "G♭", "A♭", "B♭", "B"],
+    "Highlight notes in C# / Db Major" : ["D♭", "E♭", "F", "Gb", "A♭", "B♭", "C", "D♭"],
+    "Highlight notes in D# / Eb Major" : ["E♭", "F", "G", "A♭", "B♭", "C", "D", "E♭"],
+    "Highlight notes in F# / Gb Major" : ["G♭", "A♭", "B♭", "B", "D♭", "E♭", "F", "G♭"],
+    "Highlight notes in G# / Ab Major" : ["A♭", "B♭", "C", "D♭", "E♭", "F", "G", "A♭"],
+    "Highlight notes in A# / Bb Major" : ["B♭", "C", "D", "E♭", "F", "G", "A", "B♭"],
+    // natural minor keys
+    "Highlight notes in A Minor" : ["A", "B", "C", "D", "E", "F", "G", "A"],
+    "Highlight notes in A# / Bb Minor" : ["B♭", "C", "D♭", "E♭", "F", "G♭", "A♭", "B♭"],
+    "Highlight notes in B Minor" : ["B", "D♭", "D", "E", "G♭", "G", "A", "B"],
+    "Highlight notes in C Minor" : ["C", "D", "E♭", "F", "G", "A♭", "B♭", "C"],
+    "Highlight notes in C# / Db Minor" : ["D♭", "E♭", "E", "G♭", "A♭", "A", "B", "D♭"],
+    "Highlight notes in D Minor" : ["D", "E", "F", "G", "A", "B♭", "C", "D"],
+    "Highlight notes in D# / Eb Minor" : ["E♭", "F", "G♭", "A♭", "B♭", "B", "D♭", "E♭"],
+    "Highlight notes in E Minor" : ["E", "G♭", "G", "A", "B", "C", "D", "E"],
+    "Highlight notes in F Minor" : ["F", "G", "A♭", "B♭", "C", "D♭", "E♭", "F"],
+    "Highlight notes in F# / Gb Minor" : ["G♭", "A♭", "A", "B", "D♭", "D", "E", "G♭"],
+    "Highlight notes in G Minor" : ["G", "A", "B♭", "C", "D", "E♭", "F", "G"],
+    "Highlight notes in G# / Ab Minor" : ["A♭", "B♭", "B", "D♭", "E♭", "E", "G♭", "A♭"],
+  };
 
 
 
@@ -773,15 +802,16 @@ $(function () {
         var image = key.sharp ? this.blackKeyRender : this.whiteKeyRender;
         this.ctx.drawImage(image, x, y);
 
+        var keyName = key.baseNote[0].toUpperCase();
+        if (sharp) keyName += "#";
+        keyName += key.octave + 1;
+
         if (gShowPianoNotes) {
           this.ctx.font = `${((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2)}px Arial`;
           this.ctx.fillStyle = key.sharp ? "white" : "black";
           this.ctx.textAlign = "center";
 
-          var keyName = key.baseNote[0].toUpperCase();
-          if (sharp) keyName += "#";
-          keyName += key.octave + 1;
-
+          // do two passes to render both sharps and flat names.
           if (keyName.includes('#')) {
             this.ctx.fillText(keyName, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 30 - this.ctx.lineWidth);
           }
@@ -791,11 +821,28 @@ $(function () {
           keyName = keyName.replace("F#", "G♭");
           keyName = keyName.replace("G#", "A♭");
           keyName = keyName.replace("A#", "B♭");
+  
+          this.ctx.fillText(keyName, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 10 - this.ctx.lineWidth);
+        }
 
-          if (keyName.includes('♭')) {
-            this.ctx.fillText(keyName, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 10 - this.ctx.lineWidth);
-          } else {
-            this.ctx.fillText(keyName, x + ((key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2), y + (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) - 10 - this.ctx.lineWidth);
+        const highlightScale = BASIC_PIANO_SCALES[gHighlightScaleNotes];
+        if (highlightScale && key.loaded) {
+          keyName = keyName.replace("C#", "D♭");
+          keyName = keyName.replace("D#", "E♭");
+          keyName = keyName.replace("F#", "G♭");
+          keyName = keyName.replace("G#", "A♭");
+          keyName = keyName.replace("A#", "B♭");
+          const keynameNoOctave = keyName.slice(0, -1);
+          if (highlightScale.includes(keynameNoOctave)) {
+              const prev = this.ctx.globalAlpha;
+              this.ctx.globalAlpha = 0.3;
+              this.ctx.fillStyle = "#0f0";
+              if (key.sharp) {
+                  this.ctx.fillRect(x, y, this.blackKeyWidth, this.blackKeyHeight);
+              } else {
+                  this.ctx.fillRect(x, y, this.whiteKeyWidth, this.whiteKeyHeight);
+              }
+              this.ctx.globalAlpha = prev;
           }
         }
 
@@ -1754,6 +1801,8 @@ $(function () {
   var gSmoothCursor = localStorage.smoothCursor == "true";
   var gShowChatTooltips = localStorage.showChatTooltips ? localStorage.showChatTooltips == "true" : true;
   var gShowPianoNotes = localStorage.showPianoNotes == "true";
+  var gHighlightScaleNotes = localStorage.highlightScaleNotes;
+
   //var gWarnOnLinks = localStorage.warnOnLinks ? localStorage.warnOnLinks == "true" : true;
 
 
@@ -4097,6 +4146,38 @@ $(function () {
         };
         html.appendChild(setting);
       })();
+
+      (function () {
+        var setting = document.createElement("select");
+        setting.classList = "setting";
+        setting.style = "color: inherit; width: calc(100% - 2px);"
+
+        const keys = Object.keys(BASIC_PIANO_SCALES); // lol
+        const option = document.createElement('option');
+        option.value = option.innerText = "No highlighted notes";
+        option.selected = !gHighlightScaleNotes;
+        setting.appendChild(option);
+
+        for (const key of keys) {
+          const option = document.createElement('option');
+          option.value = key;
+          option.innerText = key;
+          option.selected = key === gHighlightScaleNotes;
+          setting.appendChild(option);
+        }
+
+        if (gHighlightScaleNotes) {
+          setting.value = gHighlightScaleNotes;
+        }
+
+
+        setting.onchange = function () {
+          localStorage.highlightScaleNotes = setting.value;
+          gHighlightScaleNotes = setting.value;
+        };
+        html.appendChild(setting);
+      })();
+
 
       // warn on links
       /*(function() {
