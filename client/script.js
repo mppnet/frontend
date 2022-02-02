@@ -3287,7 +3287,13 @@ $(function () {
 
         if (msg.m === 'dm') {
           if (!gNoChatColors) li.find(".message").css("color", msg.sender.color || "white");
-          if (gShowIdsInChat) li.find(".id").text(msg.sender._id.substring(0, 6));
+          if (gShowIdsInChat) {
+            if (msg.sender._id === gClient.user._id) {
+              li.find(".id").text(msg.recipient._id.substring(0, 6));
+            } else {
+              li.find(".id").text(msg.sender._id.substring(0, 6));
+            }
+          }
 
           if (msg.sender._id === gClient.user._id) { //sent dm
             if (!gNoChatColors) li.find(".name").css("color", msg.recipient.color || "white");
