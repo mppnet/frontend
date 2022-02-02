@@ -2132,20 +2132,28 @@ $(function () {
     captureKeyboard();
   };
 
+  var capturingKeyboard = false;
+
   function captureKeyboard() {
-    $("#piano").off("mousedown", recapListener);
-    $("#piano").off("touchstart", recapListener);
-    $(document).on("keydown", handleKeyDown);
-    $(document).on("keyup", handleKeyUp);
-    $(window).on("keypress", handleKeyPress);
+    if (!capturingKeyboard) {
+      capturingKeyboard = true;
+      $("#piano").off("mousedown", recapListener);
+      $("#piano").off("touchstart", recapListener);
+      $(document).on("keydown", handleKeyDown);
+      $(document).on("keyup", handleKeyUp);
+      $(window).on("keypress", handleKeyPress);
+    }
   };
 
   function releaseKeyboard() {
-    $(document).off("keydown", handleKeyDown);
-    $(document).off("keyup", handleKeyUp);
-    $(window).off("keypress", handleKeyPress);
-    $("#piano").on("mousedown", recapListener);
-    $("#piano").on("touchstart", recapListener);
+    if (capturingKeyboard) {
+      capturingKeyboard = false;
+      $(document).off("keydown", handleKeyDown);
+      $(document).off("keyup", handleKeyUp);
+      $(window).off("keypress", handleKeyPress);
+      $("#piano").on("mousedown", recapListener);
+      $("#piano").on("touchstart", recapListener);
+    }
   };
 
   captureKeyboard();
@@ -2560,10 +2568,13 @@ $(function () {
 
   // warn user about loud noises before starting sound (no autoplay)
   openModal("#sound-warning");
+  $(document).off("keydown", modalHandleEsc);
   var user_interact = function (evt) {
+    if ((evt.path || (evt.composedPath && evt.composedPath())).includes(document.getElementById('sound-warning')) || evt.target === document.getElementById('sound-warning')) {
+      closeModal();
+    }
     document.removeEventListener("click", user_interact);
-    closeModal();
-    MPP.piano.audio.resume();
+    gPiano.audio.resume();
   }
   document.addEventListener("click", user_interact);
 
