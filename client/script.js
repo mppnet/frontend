@@ -219,7 +219,7 @@ $(function () {
       "New Room...": {
         "pt": "Nova Sala ...",
         "es": "Nueva sala de...",
-        "ru": "Новый номер...",
+        "ru": "Создать комнату...",
         "ja": "新しい部屋",
         "zh": "新房间",
         "nl": "nieuwe Kamer",
