@@ -3723,10 +3723,18 @@ $(function () {
 
   // API
   window.MPP = {
-    press: press,
-    release: release,
-    pressSustain: pressSustain,
-    releaseSustain: releaseSustain,
+    get press() { return press },
+    set press(func) { press = func },
+
+    get release() { return release },
+    set release(func) { release = func },
+
+    get pressSustain() { return pressSustain },
+    set pressSustain(func) { pressSustain = func },
+    
+    get releaseSustain() { return releaseSustain },
+    set releaseSustain(func) { releaseSustain = func },
+
     piano: gPiano,
     client: gClient,
     chat: chat,
