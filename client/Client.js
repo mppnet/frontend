@@ -44,7 +44,9 @@ class Client extends EventEmitter {
 
     start() {
         this.canConnect = true;
-        this.connect();
+        if (!this.connectionTime) {
+            this.connect();
+        }
     };
 
     stop() {
