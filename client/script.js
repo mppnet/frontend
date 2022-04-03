@@ -1451,7 +1451,7 @@ $(function () {
       setupParticipantDivs(part);
 
       // add cursorDiv
-      if (gClient.participantId !== part.id || gSeeOwnCursor) {
+      if ((gClient.participantId !== part.id || gSeeOwnCursor) && !gCursorHides.includes(part.id) && !gHideAllCursors) {
         var div = document.createElement("div");
         div.className = "cursor";
         div.style.display = "none";
