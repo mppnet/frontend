@@ -1802,6 +1802,8 @@ $(function () {
   var gShowChatTooltips = localStorage.showChatTooltips ? localStorage.showChatTooltips == "true" : true;
   var gShowPianoNotes = localStorage.showPianoNotes == "true";
   var gHighlightScaleNotes = localStorage.highlightScaleNotes;
+  var gCursorHides = (localStorage.cursorHides ? localStorage.cursorHides : "").split(',').filter(v => v);
+  var gHideAllCursors = localStorage.hideAllCursors == "true";
 
   //var gWarnOnLinks = localStorage.warnOnLinks ? localStorage.warnOnLinks == "true" : true;
 
@@ -2351,6 +2353,23 @@ $(function () {
             $('#chat-input')[0].placeholder = 'Direct messaging ' + part.name + '.';
           });
       }
+      if (gCursorHides.indexOf(part._id) == -1) {
+          $('<div class="menu-item">Hide Cursor</div>').appendTo(menu)
+            .on("mousedown touchstart", function (evt) {
+              gCursorHides.push(part._id);
+              if (localStorage) localStorage.cursorHides = gCursorHides.join(',');
+              $(part.cursorDiv).hide();
+            });
+        } else {
+          $('<div class="menu-item">Show Cursor</div>').appendTo(menu)
+            .on("mousedown touchstart", function (evt) {
+              var i;
+              while ((i = gCursorHides.indexOf(part._id)) != -1)
+              gCursorHides.splice(i, 1);
+              if (localStorage) localStorage.cursorHides = gCursorHides.join(',');
+              $(part.cursorDiv).show();
+            });
+        }
 
       $('<div class="menu-item">Mention</div>').appendTo(menu)
         .on("mousedown touchstart", function (evt) {
@@ -4191,6 +4210,26 @@ $(function () {
         setting.onchange = function () {
           localStorage.highlightScaleNotes = setting.value;
           gHighlightScaleNotes = setting.value;
+        };
+        html.appendChild(setting);
+      })();
+
+      (function () {
+          var setting = document.createElement("div");
+        setting.classList = "setting";
+        setting.innerText = "Hide all cursors";
+        if (gHideAllCursors) {
+          setting.classList.toggle("enabled");
+        }
+        setting.onclick = function () {
+          setting.classList.toggle("enabled");
+          localStorage.hideAllCursors = setting.classList.contains("enabled");
+          gHideAllCursors = setting.classList.contains("enabled");
+          if (gHideAllCursors) {
+              $("#cursors").hide();
+          } else {
+              $("#cursors").show();
+          }
         };
         html.appendChild(setting);
       })();
