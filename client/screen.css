@@ -1348,11 +1348,29 @@ input[type="range"]:hover {
     background: rgba(204,187,170,.35);
 }
 
-.mppcommunity-button {
+.icon-button img {
+    width: 16px;
+    height: 16px;
+}
+
+.icon-button {
     position: fixed;
-    right: 6px;
     top: 6px;
     z-index: 200;
+    width: 26px;
+    padding: 0;
+}
+
+.mppcommunity-button {
+    right: 6px;
+}
+
+.discord-button {
+    right: 36px;
+}
+
+.reddit-button {
+    right: 66px;
 }
 
 .mpp-rules-button {
