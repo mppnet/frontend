@@ -157,31 +157,31 @@ $(function () {
   const BASIC_PIANO_SCALES = {
     // ty https://www.pianoscales.org/
     // major keys
-    "Highlight notes in C Major" : ["C", "D", "E", "F", "G", "A", "B", "C"],
-    "Highlight notes in D Major" : ["D", "E", "G♭", "G", "A", "B", "D♭", "D"],
-    "Highlight notes in E Major" : ["E", "G♭", "A♭", "A", "B", "D♭", "E♭", "E"],
-    "Highlight notes in F Major" : ["F", "G", "A", "B♭", "C", "D", "E", "F"],
-    "Highlight notes in G Major" : ["G", "A", "B", "C", "D", "E", "G♭", "G"],
-    "Highlight notes in A Major" : ["A", "B", "D♭", "D", "E", "G♭", "A♭", "A"],
-    "Highlight notes in B Major" : ["B", "D♭", "E♭", "E", "G♭", "A♭", "B♭", "B"],
-    "Highlight notes in C# / Db Major" : ["D♭", "E♭", "F", "G♭", "A♭", "B♭", "C", "D♭"],
-    "Highlight notes in D# / Eb Major" : ["E♭", "F", "G", "A♭", "B♭", "C", "D", "E♭"],
-    "Highlight notes in F# / Gb Major" : ["G♭", "A♭", "B♭", "B", "D♭", "E♭", "F", "G♭"],
-    "Highlight notes in G# / Ab Major" : ["A♭", "B♭", "C", "D♭", "E♭", "F", "G", "A♭"],
-    "Highlight notes in A# / Bb Major" : ["B♭", "C", "D", "E♭", "F", "G", "A", "B♭"],
+    "Notes in C Major" : ["C", "D", "E", "F", "G", "A", "B", "C"],
+    "Notes in D Major" : ["D", "E", "G♭", "G", "A", "B", "D♭", "D"],
+    "Notes in E Major" : ["E", "G♭", "A♭", "A", "B", "D♭", "E♭", "E"],
+    "Notes in F Major" : ["F", "G", "A", "B♭", "C", "D", "E", "F"],
+    "Notes in G Major" : ["G", "A", "B", "C", "D", "E", "G♭", "G"],
+    "Notes in A Major" : ["A", "B", "D♭", "D", "E", "G♭", "A♭", "A"],
+    "Notes in B Major" : ["B", "D♭", "E♭", "E", "G♭", "A♭", "B♭", "B"],
+    "Notes in C# / Db Major" : ["D♭", "E♭", "F", "G♭", "A♭", "B♭", "C", "D♭"],
+    "Notes in D# / Eb Major" : ["E♭", "F", "G", "A♭", "B♭", "C", "D", "E♭"],
+    "Notes in F# / Gb Major" : ["G♭", "A♭", "B♭", "B", "D♭", "E♭", "F", "G♭"],
+    "Notes in G# / Ab Major" : ["A♭", "B♭", "C", "D♭", "E♭", "F", "G", "A♭"],
+    "Notes in A# / Bb Major" : ["B♭", "C", "D", "E♭", "F", "G", "A", "B♭"],
     // natural minor keys
-    "Highlight notes in A Minor" : ["A", "B", "C", "D", "E", "F", "G", "A"],
-    "Highlight notes in A# / Bb Minor" : ["B♭", "C", "D♭", "E♭", "F", "G♭", "A♭", "B♭"],
-    "Highlight notes in B Minor" : ["B", "D♭", "D", "E", "G♭", "G", "A", "B"],
-    "Highlight notes in C Minor" : ["C", "D", "E♭", "F", "G", "A♭", "B♭", "C"],
-    "Highlight notes in C# / Db Minor" : ["D♭", "E♭", "E", "G♭", "A♭", "A", "B", "D♭"],
-    "Highlight notes in D Minor" : ["D", "E", "F", "G", "A", "B♭", "C", "D"],
-    "Highlight notes in D# / Eb Minor" : ["E♭", "F", "G♭", "A♭", "B♭", "B", "D♭", "E♭"],
-    "Highlight notes in E Minor" : ["E", "G♭", "G", "A", "B", "C", "D", "E"],
-    "Highlight notes in F Minor" : ["F", "G", "A♭", "B♭", "C", "D♭", "E♭", "F"],
-    "Highlight notes in F# / Gb Minor" : ["G♭", "A♭", "A", "B", "D♭", "D", "E", "G♭"],
-    "Highlight notes in G Minor" : ["G", "A", "B♭", "C", "D", "E♭", "F", "G"],
-    "Highlight notes in G# / Ab Minor" : ["A♭", "B♭", "B", "D♭", "E♭", "E", "G♭", "A♭"],
+    "Notes in A Minor" : ["A", "B", "C", "D", "E", "F", "G", "A"],
+    "Notes in A# / Bb Minor" : ["B♭", "C", "D♭", "E♭", "F", "G♭", "A♭", "B♭"],
+    "Notes in B Minor" : ["B", "D♭", "D", "E", "G♭", "G", "A", "B"],
+    "Notes in C Minor" : ["C", "D", "E♭", "F", "G", "A♭", "B♭", "C"],
+    "Notes in C# / Db Minor" : ["D♭", "E♭", "E", "G♭", "A♭", "A", "B", "D♭"],
+    "Notes in D Minor" : ["D", "E", "F", "G", "A", "B♭", "C", "D"],
+    "Notes in D# / Eb Minor" : ["E♭", "F", "G♭", "A♭", "B♭", "B", "D♭", "E♭"],
+    "Notes in E Minor" : ["E", "G♭", "G", "A", "B", "C", "D", "E"],
+    "Notes in F Minor" : ["F", "G", "A♭", "B♭", "C", "D♭", "E♭", "F"],
+    "Notes in F# / Gb Minor" : ["G♭", "A♭", "A", "B", "D♭", "D", "E", "G♭"],
+    "Notes in G Minor" : ["G", "A", "B♭", "C", "D", "E♭", "F", "G"],
+    "Notes in G# / Ab Minor" : ["A♭", "B♭", "B", "D♭", "E♭", "E", "G♭", "A♭"],
   };
 
 
@@ -1804,11 +1804,26 @@ $(function () {
   var gHighlightScaleNotes = localStorage.highlightScaleNotes;
   var gCursorHides = (localStorage.cursorHides ? localStorage.cursorHides : "").split(',').filter(v => v);
   var gHideAllCursors = localStorage.hideAllCursors == "true";
+  var gHidePiano = localStorage.hidePiano == "true";
+  var gHideChat = localStorage.hideChat == "true";
 
   //var gWarnOnLinks = localStorage.warnOnLinks ? localStorage.warnOnLinks == "true" : true;
 
 
 
+  // Hide piano attribute
+  if (gHidePiano) {
+    $("#piano").hide();
+  } else {
+    $("#piano").show();
+  }
+
+  // Hide chat attribute 
+  if (gHideChat) {
+    $("#chat").hide();
+  } else {
+    $("#chat").show();
+  }
 
 
 
@@ -4005,6 +4020,214 @@ $(function () {
 
   (function () {
     var button = document.getElementById("client-settings-btn");
+    var content = document.getElementById("client-settings-content");
+    var tablinks = document.getElementsByClassName("client-settings-tablink");
+    var okButton = document.getElementById("client-settings-ok-btn");
+
+    button.addEventListener("click", (evt) => {
+      evt.stopPropagation();
+      openModal("#client-settings");
+    });
+
+    okButton.addEventListener("click", (evt) => {
+      evt.stopPropagation();
+      closeModal();
+    });
+
+    function createSetting(id, labelText, isChecked, addBr, html, onclickFunc) {
+      const setting = document.createElement("input");
+      setting.type = "checkbox";
+      setting.id = id;
+      setting.checked = isChecked;
+      setting.onclick = onclickFunc;
+
+      const label = document.createElement("label");
+      label.setAttribute("for", id);
+      label.innerText = labelText + ": ";
+
+      html.appendChild(label);
+      html.appendChild(setting);
+      if (addBr) html.appendChild(document.createElement("br"));
+    }
+
+    window.changeClientSettingsTab = (evt, tabName) => {
+      content.innerHTML = "";
+
+      for (let index = 0; index < tablinks.length; index++) {
+        tablinks[index].className = tablinks[index].className.replace(" active", "");
+      }
+      
+      evt.currentTarget.className += " active";
+      
+      switch (tabName) {
+        case "Chat":
+          var html = document.createElement("div");
+
+          createSetting("show-timestamps-in-chat", "Show timestamps in chat", gShowTimestampsInChat, true, html, () => {
+            gShowTimestampsInChat = !gShowTimestampsInChat;
+            localStorage.showTimestampsInChat = gShowTimestampsInChat;
+          });
+
+          createSetting("show-user-ids-in-chat", "Show user IDs in chat", gShowIdsInChat, true, html, () => {
+            gShowIdsInChat = !gShowIdsInChat;
+            localStorage.showIdsInChat = gShowIdsInChat;
+          });
+
+          createSetting("show-id-tooltips", "Show ID tooltips", gShowChatTooltips, true, html, () => {
+            gShowChatTooltips = !gShowChatTooltips;
+            localStorage.showChatTooltips = gShowChatTooltips;
+          });
+
+          createSetting("no-chat-colors", "No chat colors", gNoChatColors, true, html, () => {
+            gNoChatColors = !gNoChatColors;
+            localStorage.noChatColors = gNoChatColors;
+          });
+
+          createSetting("hide-chat", "Hide chat", gHideChat, false, html, () => {
+            gHideChat = !gHideChat;
+            localStorage.hideChat = gHideChat;
+
+            if (gHideChat) {
+              $("#chat").hide();
+            } else {
+              $("#chat").show();
+            }
+          });
+
+          content.appendChild(html);
+          break;
+      
+        case "Midi":
+          var html = document.createElement("div");
+
+          createSetting("output-own-notes-to-midi", "Output own notes to MIDI", gOutputOwnNotes, false, html, () => {
+            gOutputOwnNotes = !gOutputOwnNotes;
+            localStorage.outputOwnNotes = gOutputOwnNotes;
+          });
+
+          content.appendChild(html);
+          break;
+
+        case "Piano":
+          var html = document.createElement("div");
+
+          createSetting("virtual-piano-layout", "Virtual Piano layout", gVirtualPianoLayout, true, html, () => {
+            gVirtualPianoLayout = !gVirtualPianoLayout;
+            localStorage.virtualPianoLayout = gVirtualPianoLayout;
+            key_binding = gVirtualPianoLayout ? layouts.VP : layouts.MPP;
+          });
+
+          createSetting("show-piano-notes", "Show piano notes", gShowPianoNotes, true, html, () => {
+            gShowPianoNotes = !gShowPianoNotes;
+            localStorage.showPianoNotes = gShowPianoNotes;
+          });
+
+          createSetting("hide-piano", "Hide piano", gHidePiano, true, html, () => {
+            gHidePiano = !gHidePiano;
+            localStorage.hidePiano = gHidePiano;
+
+            if (gHidePiano) {
+              $("#piano").hide();
+            } else {
+              $("#piano").show();
+            }
+          });
+
+          var setting = document.createElement("select");
+          setting.classList = "setting";
+          setting.style = "width: calc(58.7% - 2px);"
+
+          setting.onchange = () => {
+            localStorage.highlightScaleNotes = setting.value;
+            gHighlightScaleNotes = setting.value;
+          }
+
+          const keys = Object.keys(BASIC_PIANO_SCALES); // lol
+          const option = document.createElement('option');
+          option.value = option.innerText = "None";
+          option.selected = !gHighlightScaleNotes;
+          setting.appendChild(option);
+  
+          for (const key of keys) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.innerText = key;
+            option.selected = key === gHighlightScaleNotes;
+            setting.appendChild(option);
+          }
+  
+          if (gHighlightScaleNotes) {
+            setting.value = gHighlightScaleNotes;
+          }
+
+          var label = document.createElement("label");
+
+          label.setAttribute("for", setting.id);
+          label.innerText = "Highlighted notes: ";
+
+          html.appendChild(label);
+          html.appendChild(setting);
+
+          content.appendChild(html);
+          break;
+
+        case "Misc":
+          var html = document.createElement("div");
+
+          createSetting("force-dark-background", "Force dark background", gNoBackgroundColor, true, html, () => {
+            gNoBackgroundColor = !gNoBackgroundColor;
+            localStorage.noBackgroundColor = gNoBackgroundColor;
+
+            if (gClient.channel.settings.color && !gNoBackgroundColor) {
+              setBackgroundColor(gClient.channel.settings.color, gClient.channel.settings.color2);
+            } else {
+              setBackgroundColorToDefault();
+            }
+          });
+
+          createSetting("enable-smooth-cursors", "Enable smooth cursors", gSmoothCursor, true, html, () => {
+            gSmoothCursor = !gSmoothCursor;
+            localStorage.smoothCursor = gSmoothCursor;
+            if (gSmoothCursor) {
+              $("#cursors").attr("smooth-cursors", "");
+              Object.values(gClient.ppl).forEach(function (participant) {
+                if (participant.cursorDiv) {
+                  participant.cursorDiv.style.left = '';
+                  participant.cursorDiv.style.top = '';
+                  participant.cursorDiv.style.transform = 'translate3d(' + participant.x + 'vw, ' + participant.y + 'vh, 0)';
+                }
+              });
+            } else {
+              $("#cursors").removeAttr("smooth-cursors");
+              Object.values(gClient.ppl).forEach(function (participant) {
+                if (participant.cursorDiv) {
+                  participant.cursorDiv.style.left = participant.x + "%";
+                  participant.cursorDiv.style.top = participant.y + "%";
+                  participant.cursorDiv.style.transform = '';
+                }
+              });
+            }
+          });
+
+          createSetting("hide-all-cursors", "Hide all cursors", gHideAllCursors, true, html, () => {
+            gHideAllCursors = !gHideAllCursors;
+            localStorage.hideAllCursors = gHideAllCursors;
+            if (gHideAllCursors) {
+                $("#cursors").hide();
+            } else {
+                $("#cursors").show();
+            }
+          });
+
+          content.appendChild(html);
+          break;
+      }
+    }
+  
+    changeClientSettingsTab({currentTarget: document.getElementsByClassName("client-settings-tablink")[0]}, "Chat");
+
+    /*
+    var button = document.getElementById("client-settings-btn");
     var notification;
 
     button.addEventListener("click", function () {
@@ -4259,7 +4482,7 @@ $(function () {
         html.appendChild(setting);
       })();*/
 
-
+/*
       //useless blank space
       //var div = document.createElement("div");
       //div.innerHTML = "<br><br><br><br><center>this space intentionally left blank</center><br><br><br><br>";
@@ -4274,7 +4497,7 @@ $(function () {
         if (tip) tip.parentNode.removeChild(tip);
         notification = null;
       });
-    }
+    }*/
   })();
 
 

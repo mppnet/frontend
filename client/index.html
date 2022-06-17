@@ -172,6 +172,15 @@
         </div>
         <div id="logout-btn" class="ugly-button logout-btn">Log out</div>
       </div>
+      <div id="client-settings" class="dialog">
+        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'Chat')">Chat</div>
+        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'Midi')">Midi</div>
+        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'Piano')">Piano</div>
+        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'Misc')">Misc</div>
+        <br>
+        <div id="client-settings-content"></div>
+        <div id="client-settings-ok-btn" class="client-settings-button">Ok</div>
+      </div>
     </div>
   </div>
 
