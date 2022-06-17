@@ -2030,6 +2030,7 @@ $(function () {
   var transpose = 0;
 
   function handleKeyDown(evt) {
+    if(evt.target.type) return;
     //console.log(evt);
     var code = parseInt(evt.keyCode);
     if (key_binding[code] !== undefined) {
@@ -2101,6 +2102,7 @@ $(function () {
   }
 
   function handleKeyUp(evt) {
+    if(evt.target.type) return;
     var code = parseInt(evt.keyCode);
     if (key_binding[code] !== undefined) {
       var binding = key_binding[code];
@@ -2137,6 +2139,7 @@ $(function () {
   };
 
   function handleKeyPress(evt) {
+    if(evt.target.type) return;
     evt.preventDefault();
     evt.stopPropagation();
     if (evt.keyCode == 27 || evt.keyCode == 13) {
