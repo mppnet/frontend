@@ -627,6 +627,20 @@ input[type="range"]:hover {
     bottom: 8px;
 }
 
+#client-settings-ok-btn {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    font-size: 24px;
+    height: 20px;
+    padding-top: 14px;
+    width: 18%;
+}
+
+#client-settings-ok-btn:hover {
+    background: #222;
+}
+
 #tooltip {
     position: absolute;
     pointer-events: none;
@@ -995,6 +1009,52 @@ input[type="range"]:hover {
     position: absolute;
     top: 8px;
     right: 8px;
+}
+
+#client-settings {
+    height: 300px;
+    margin-top: -150px;
+    overflow: hidden;
+}
+
+#client-settings div {
+    float: left;
+    margin-left: 2px;
+}
+
+.client-settings-tablink {
+    font-size: 16px;
+}
+
+.client-settings-tablink.active {
+    background-color: rgb(69, 69, 69);
+}
+
+.client-settings-button {
+    height: 14px;
+    font-size: 18px;
+    background: #111;
+    border: 1px solid #444;
+    padding: 6px;
+    cursor: pointer;
+    line-height: 12px;
+    width: 84px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* .client-settings-button:hover {
+    background: #222;
+} */
+
+.client-settings-button.stuck {
+    background: rgba(204,187,170,.35);
+}
+
+#client-settings-content {
+    float: unset !important;
+    font-size: 12px;
 }
 
 .logged-in-text {
