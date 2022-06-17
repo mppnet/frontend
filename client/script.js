@@ -4022,177 +4022,174 @@ $(function () {
   })();
 
   (function () {
-    var button = document.getElementById("client-settings-btn");
-    var content = document.getElementById("client-settings-content");
-    var tablinks = document.getElementsByClassName("client-settings-tablink");
-    var okButton = document.getElementById("client-settings-ok-btn");
+    if (window.location.hostname === "multiplayerpiano.com") {
+      var button = document.getElementById("client-settings-btn");
+      var notification;
 
-    button.addEventListener("click", (evt) => {
-      evt.stopPropagation();
-      openModal("#client-settings");
-    });
+      button.addEventListener("click", function () {
+        if (notification) {
+          notification.close();
+        } else {
+          showSynth();
+        }
+      });
 
-    okButton.addEventListener("click", (evt) => {
-      evt.stopPropagation();
-      closeModal();
-    });
+      function showSynth() {
 
-    function createSetting(id, labelText, isChecked, addBr, html, onclickFunc) {
-      const setting = document.createElement("input");
-      setting.type = "checkbox";
-      setting.id = id;
-      setting.checked = isChecked;
-      setting.onclick = onclickFunc;
+        var html = document.createElement("div");
 
-      const label = document.createElement("label");
-      label.setAttribute("for", id);
-      label.innerText = labelText + ": ";
-
-      html.appendChild(label);
-      html.appendChild(setting);
-      if (addBr) html.appendChild(document.createElement("br"));
-    }
-
-    window.changeClientSettingsTab = (evt, tabName) => {
-      content.innerHTML = "";
-
-      for (let index = 0; index < tablinks.length; index++) {
-        tablinks[index].className = tablinks[index].className.replace(" active", "");
-      }
-      
-      evt.currentTarget.className += " active";
-      
-      switch (tabName) {
-        case "Chat":
-          var html = document.createElement("div");
-
-          createSetting("show-timestamps-in-chat", "Show timestamps in chat", gShowTimestampsInChat, true, html, () => {
-            gShowTimestampsInChat = !gShowTimestampsInChat;
-            localStorage.showTimestampsInChat = gShowTimestampsInChat;
-          });
-
-          createSetting("show-user-ids-in-chat", "Show user IDs in chat", gShowIdsInChat, true, html, () => {
-            gShowIdsInChat = !gShowIdsInChat;
-            localStorage.showIdsInChat = gShowIdsInChat;
-          });
-
-          createSetting("show-id-tooltips", "Show ID tooltips", gShowChatTooltips, true, html, () => {
-            gShowChatTooltips = !gShowChatTooltips;
-            localStorage.showChatTooltips = gShowChatTooltips;
-          });
-
-          createSetting("no-chat-colors", "No chat colors", gNoChatColors, true, html, () => {
-            gNoChatColors = !gNoChatColors;
-            localStorage.noChatColors = gNoChatColors;
-          });
-
-          createSetting("hide-chat", "Hide chat", gHideChat, false, html, () => {
-            gHideChat = !gHideChat;
-            localStorage.hideChat = gHideChat;
-
-            if (gHideChat) {
-              $("#chat").hide();
-            } else {
-              $("#chat").show();
-            }
-          });
-
-          content.appendChild(html);
-          break;
-      
-        case "Midi":
-          var html = document.createElement("div");
-
-          createSetting("output-own-notes-to-midi", "Output own notes to MIDI", gOutputOwnNotes, false, html, () => {
-            gOutputOwnNotes = !gOutputOwnNotes;
-            localStorage.outputOwnNotes = gOutputOwnNotes;
-          });
-
-          content.appendChild(html);
-          break;
-
-        case "Piano":
-          var html = document.createElement("div");
-
-          createSetting("virtual-piano-layout", "Virtual Piano layout", gVirtualPianoLayout, true, html, () => {
-            gVirtualPianoLayout = !gVirtualPianoLayout;
-            localStorage.virtualPianoLayout = gVirtualPianoLayout;
-            key_binding = gVirtualPianoLayout ? layouts.VP : layouts.MPP;
-          });
-
-          createSetting("show-piano-notes", "Show piano notes", gShowPianoNotes, true, html, () => {
-            gShowPianoNotes = !gShowPianoNotes;
-            localStorage.showPianoNotes = gShowPianoNotes;
-          });
-
-          createSetting("hide-piano", "Hide piano", gHidePiano, true, html, () => {
-            gHidePiano = !gHidePiano;
-            localStorage.hidePiano = gHidePiano;
-
-            if (gHidePiano) {
-              $("#piano").hide();
-            } else {
-              $("#piano").show();
-            }
-          });
-
-          var setting = document.createElement("select");
+        // show ids in chat
+        (function () {
+          var setting = document.createElement("div");
           setting.classList = "setting";
-          setting.style = "width: calc(58.7% - 2px);"
-
-          setting.onchange = () => {
-            localStorage.highlightScaleNotes = setting.value;
-            gHighlightScaleNotes = setting.value;
+          setting.innerText = "Show user IDs in chat";
+          if (gShowIdsInChat) {
+            setting.classList.toggle("enabled");
           }
-
-          const keys = Object.keys(BASIC_PIANO_SCALES); // lol
-          const option = document.createElement('option');
-          option.value = option.innerText = "None";
-          option.selected = !gHighlightScaleNotes;
-          setting.appendChild(option);
-  
-          for (const key of keys) {
-            const option = document.createElement('option');
-            option.value = key;
-            option.innerText = key;
-            option.selected = key === gHighlightScaleNotes;
-            setting.appendChild(option);
-          }
-  
-          if (gHighlightScaleNotes) {
-            setting.value = gHighlightScaleNotes;
-          }
-
-          var label = document.createElement("label");
-
-          label.setAttribute("for", setting.id);
-          label.innerText = "Highlighted notes: ";
-
-          html.appendChild(label);
+          setting.onclick = function () {
+            setting.classList.toggle("enabled");
+            localStorage.showIdsInChat = setting.classList.contains("enabled");
+            gShowIdsInChat = setting.classList.contains("enabled");
+          };
           html.appendChild(setting);
+        })();
 
-          content.appendChild(html);
-          break;
+        // show timestamps in chat
+        (function () {
+          var setting = document.createElement("div");
+          setting.classList = "setting";
+          setting.innerText = "Timestamps in chat";
+          if (gShowTimestampsInChat) {
+            setting.classList.toggle("enabled");
+          }
+          setting.onclick = function () {
+            setting.classList.toggle("enabled");
+            localStorage.showTimestampsInChat = setting.classList.contains("enabled");
+            gShowTimestampsInChat = setting.classList.contains("enabled");
+          };
+          html.appendChild(setting);
+        })();
 
-        case "Misc":
-          var html = document.createElement("div");
+        // no chat colors
+        (function () {
+          var setting = document.createElement("div");
+          setting.classList = "setting";
+          setting.innerText = "No chat colors";
+          if (gNoChatColors) {
+            setting.classList.toggle("enabled");
+          }
+          setting.onclick = function () {
+            setting.classList.toggle("enabled");
+            localStorage.noChatColors = setting.classList.contains("enabled");
+            gNoChatColors = setting.classList.contains("enabled");
+          };
+          html.appendChild(setting);
+        })();
 
-          createSetting("force-dark-background", "Force dark background", gNoBackgroundColor, true, html, () => {
-            gNoBackgroundColor = !gNoBackgroundColor;
-            localStorage.noBackgroundColor = gNoBackgroundColor;
-
+        // no background color
+        (function () {
+          var setting = document.createElement("div");
+          setting.classList = "setting";
+          setting.innerText = "Force dark background";
+          if (gNoBackgroundColor) {
+            setting.classList.toggle("enabled");
+          }
+          setting.onclick = function () {
+            setting.classList.toggle("enabled");
+            localStorage.noBackgroundColor = setting.classList.contains("enabled");
+            gNoBackgroundColor = setting.classList.contains("enabled");
             if (gClient.channel.settings.color && !gNoBackgroundColor) {
               setBackgroundColor(gClient.channel.settings.color, gClient.channel.settings.color2);
             } else {
               setBackgroundColorToDefault();
             }
-          });
+          };
+          html.appendChild(setting);
+        })();
 
-          createSetting("enable-smooth-cursors", "Enable smooth cursors", gSmoothCursor, true, html, () => {
-            gSmoothCursor = !gSmoothCursor;
-            localStorage.smoothCursor = gSmoothCursor;
+        // output own notes
+        (function () {
+          var setting = document.createElement("div");
+          setting.classList = "setting";
+          setting.innerText = "Output own notes to MIDI";
+          if (gOutputOwnNotes) {
+            setting.classList.toggle("enabled");
+          }
+          setting.onclick = function () {
+            setting.classList.toggle("enabled");
+            localStorage.outputOwnNotes = setting.classList.contains("enabled");
+            gOutputOwnNotes = setting.classList.contains("enabled");
+          };
+          html.appendChild(setting);
+        })();
+
+        // virtual piano layout
+        (function () {
+          var setting = document.createElement("div");
+          setting.classList = "setting";
+          setting.innerText = "Virtual Piano layout";
+          if (gVirtualPianoLayout) {
+            setting.classList.toggle("enabled");
+          }
+          setting.onclick = function () {
+            setting.classList.toggle("enabled");
+            localStorage.virtualPianoLayout = setting.classList.contains("enabled");
+            gVirtualPianoLayout = setting.classList.contains("enabled");
+            key_binding = gVirtualPianoLayout ? layouts.VP : layouts.MPP;
+          };
+          html.appendChild(setting);
+        })();
+
+        // 			gShowChatTooltips
+        // Show chat tooltips for _ids.
+        (function () {
+          var setting = document.createElement("div");
+          setting.classList = "setting";
+          setting.innerText = "Show _id tooltips";
+          if (gShowChatTooltips) {
+            setting.classList.toggle("enabled");
+          }
+          setting.onclick = function () {
+            setting.classList.toggle("enabled");
+            localStorage.showChatTooltips = setting.classList.contains("enabled");
+            gShowChatTooltips = setting.classList.contains("enabled");
+          };
+          html.appendChild(setting);
+        })();
+
+        (function () {
+          var setting = document.createElement("div");
+          setting.classList = "setting";
+          setting.innerText = "Show Piano Notes";
+          if (gShowPianoNotes) {
+            setting.classList.toggle("enabled");
+          }
+          setting.onclick = function () {
+            setting.classList.toggle("enabled");
+            localStorage.showPianoNotes = setting.classList.contains("enabled");
+            gShowPianoNotes = setting.classList.contains("enabled");
+          };
+          html.appendChild(setting);
+        })();
+
+        // Enable smooth cursors.
+        (function () {
+          var setting = document.createElement("div");
+          setting.classList = "setting";
+          setting.innerText = "Enable smooth cursors";
+          if (gSmoothCursor) {
+            setting.classList.toggle("enabled");
+          }
+          setting.onclick = function () {
+            setting.classList.toggle("enabled");
+            localStorage.smoothCursor = setting.classList.contains("enabled");
+            gSmoothCursor = setting.classList.contains("enabled");
             if (gSmoothCursor) {
-              $("#cursors").attr("smooth-cursors", "");
+              $("#cursors").attr('smooth-cursors', '');
+            } else {
+              $("#cursors").removeAttr('smooth-cursors');
+            }
+            if (gSmoothCursor) {
               Object.values(gClient.ppl).forEach(function (participant) {
                 if (participant.cursorDiv) {
                   participant.cursorDiv.style.left = '';
@@ -4201,7 +4198,6 @@ $(function () {
                 }
               });
             } else {
-              $("#cursors").removeAttr("smooth-cursors");
               Object.values(gClient.ppl).forEach(function (participant) {
                 if (participant.cursorDiv) {
                   participant.cursorDiv.style.left = participant.x + "%";
@@ -4210,297 +4206,301 @@ $(function () {
                 }
               });
             }
-          });
+          };
+          html.appendChild(setting);
+        })();
 
-          createSetting("hide-all-cursors", "Hide all cursors", gHideAllCursors, true, html, () => {
-            gHideAllCursors = !gHideAllCursors;
-            localStorage.hideAllCursors = gHideAllCursors;
+        (function () {
+          var setting = document.createElement("select");
+          setting.classList = "setting";
+          setting.style = "color: inherit; width: calc(100% - 2px);"
+
+          const keys = Object.keys(BASIC_PIANO_SCALES); // lol
+          const option = document.createElement('option');
+          option.value = option.innerText = "No highlighted notes";
+          option.selected = !gHighlightScaleNotes;
+          setting.appendChild(option);
+
+          for (const key of keys) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.innerText = key;
+            option.selected = key === gHighlightScaleNotes;
+            setting.appendChild(option);
+          }
+
+          if (gHighlightScaleNotes) {
+            setting.value = gHighlightScaleNotes;
+          }
+
+
+          setting.onchange = function () {
+            localStorage.highlightScaleNotes = setting.value;
+            gHighlightScaleNotes = setting.value;
+          };
+          html.appendChild(setting);
+        })();
+
+        (function () {
+            var setting = document.createElement("div");
+          setting.classList = "setting";
+          setting.innerText = "Hide all cursors";
+          if (gHideAllCursors) {
+            setting.classList.toggle("enabled");
+          }
+          setting.onclick = function () {
+            setting.classList.toggle("enabled");
+            localStorage.hideAllCursors = setting.classList.contains("enabled");
+            gHideAllCursors = setting.classList.contains("enabled");
             if (gHideAllCursors) {
                 $("#cursors").hide();
             } else {
                 $("#cursors").show();
             }
-          });
-
-          content.appendChild(html);
-          break;
-      }
-    }
-  
-    changeClientSettingsTab({currentTarget: document.getElementsByClassName("client-settings-tablink")[0]}, "Chat");
-
-    /*
-    var button = document.getElementById("client-settings-btn");
-    var notification;
-
-    button.addEventListener("click", function () {
-      if (notification) {
-        notification.close();
-      } else {
-        showSynth();
-      }
-    });
-
-    function showSynth() {
-
-      var html = document.createElement("div");
-
-      // show ids in chat
-      (function () {
-        var setting = document.createElement("div");
-        setting.classList = "setting";
-        setting.innerText = "Show user IDs in chat";
-        if (gShowIdsInChat) {
-          setting.classList.toggle("enabled");
-        }
-        setting.onclick = function () {
-          setting.classList.toggle("enabled");
-          localStorage.showIdsInChat = setting.classList.contains("enabled");
-          gShowIdsInChat = setting.classList.contains("enabled");
-        };
-        html.appendChild(setting);
-      })();
-
-      // show timestamps in chat
-      (function () {
-        var setting = document.createElement("div");
-        setting.classList = "setting";
-        setting.innerText = "Timestamps in chat";
-        if (gShowTimestampsInChat) {
-          setting.classList.toggle("enabled");
-        }
-        setting.onclick = function () {
-          setting.classList.toggle("enabled");
-          localStorage.showTimestampsInChat = setting.classList.contains("enabled");
-          gShowTimestampsInChat = setting.classList.contains("enabled");
-        };
-        html.appendChild(setting);
-      })();
-
-      // no chat colors
-      (function () {
-        var setting = document.createElement("div");
-        setting.classList = "setting";
-        setting.innerText = "No chat colors";
-        if (gNoChatColors) {
-          setting.classList.toggle("enabled");
-        }
-        setting.onclick = function () {
-          setting.classList.toggle("enabled");
-          localStorage.noChatColors = setting.classList.contains("enabled");
-          gNoChatColors = setting.classList.contains("enabled");
-        };
-        html.appendChild(setting);
-      })();
-
-      // no background color
-      (function () {
-        var setting = document.createElement("div");
-        setting.classList = "setting";
-        setting.innerText = "Force dark background";
-        if (gNoBackgroundColor) {
-          setting.classList.toggle("enabled");
-        }
-        setting.onclick = function () {
-          setting.classList.toggle("enabled");
-          localStorage.noBackgroundColor = setting.classList.contains("enabled");
-          gNoBackgroundColor = setting.classList.contains("enabled");
-          if (gClient.channel.settings.color && !gNoBackgroundColor) {
-            setBackgroundColor(gClient.channel.settings.color, gClient.channel.settings.color2);
-          } else {
-            setBackgroundColorToDefault();
-          }
-        };
-        html.appendChild(setting);
-      })();
-
-      // output own notes
-      (function () {
-        var setting = document.createElement("div");
-        setting.classList = "setting";
-        setting.innerText = "Output own notes to MIDI";
-        if (gOutputOwnNotes) {
-          setting.classList.toggle("enabled");
-        }
-        setting.onclick = function () {
-          setting.classList.toggle("enabled");
-          localStorage.outputOwnNotes = setting.classList.contains("enabled");
-          gOutputOwnNotes = setting.classList.contains("enabled");
-        };
-        html.appendChild(setting);
-      })();
-
-      // virtual piano layout
-      (function () {
-        var setting = document.createElement("div");
-        setting.classList = "setting";
-        setting.innerText = "Virtual Piano layout";
-        if (gVirtualPianoLayout) {
-          setting.classList.toggle("enabled");
-        }
-        setting.onclick = function () {
-          setting.classList.toggle("enabled");
-          localStorage.virtualPianoLayout = setting.classList.contains("enabled");
-          gVirtualPianoLayout = setting.classList.contains("enabled");
-          key_binding = gVirtualPianoLayout ? layouts.VP : layouts.MPP;
-        };
-        html.appendChild(setting);
-      })();
-
-      // 			gShowChatTooltips
-      // Show chat tooltips for _ids.
-      (function () {
-        var setting = document.createElement("div");
-        setting.classList = "setting";
-        setting.innerText = "Show _id tooltips";
-        if (gShowChatTooltips) {
-          setting.classList.toggle("enabled");
-        }
-        setting.onclick = function () {
-          setting.classList.toggle("enabled");
-          localStorage.showChatTooltips = setting.classList.contains("enabled");
-          gShowChatTooltips = setting.classList.contains("enabled");
-        };
-        html.appendChild(setting);
-      })();
-
-      (function () {
-        var setting = document.createElement("div");
-        setting.classList = "setting";
-        setting.innerText = "Show Piano Notes";
-        if (gShowPianoNotes) {
-          setting.classList.toggle("enabled");
-        }
-        setting.onclick = function () {
-          setting.classList.toggle("enabled");
-          localStorage.showPianoNotes = setting.classList.contains("enabled");
-          gShowPianoNotes = setting.classList.contains("enabled");
-        };
-        html.appendChild(setting);
-      })();
-
-      // Enable smooth cursors.
-      (function () {
-        var setting = document.createElement("div");
-        setting.classList = "setting";
-        setting.innerText = "Enable smooth cursors";
-        if (gSmoothCursor) {
-          setting.classList.toggle("enabled");
-        }
-        setting.onclick = function () {
-          setting.classList.toggle("enabled");
-          localStorage.smoothCursor = setting.classList.contains("enabled");
-          gSmoothCursor = setting.classList.contains("enabled");
-          if (gSmoothCursor) {
-            $("#cursors").attr('smooth-cursors', '');
-          } else {
-            $("#cursors").removeAttr('smooth-cursors');
-          }
-          if (gSmoothCursor) {
-            Object.values(gClient.ppl).forEach(function (participant) {
-              if (participant.cursorDiv) {
-                participant.cursorDiv.style.left = '';
-                participant.cursorDiv.style.top = '';
-                participant.cursorDiv.style.transform = 'translate3d(' + participant.x + 'vw, ' + participant.y + 'vh, 0)';
-              }
-            });
-          } else {
-            Object.values(gClient.ppl).forEach(function (participant) {
-              if (participant.cursorDiv) {
-                participant.cursorDiv.style.left = participant.x + "%";
-                participant.cursorDiv.style.top = participant.y + "%";
-                participant.cursorDiv.style.transform = '';
-              }
-            });
-          }
-        };
-        html.appendChild(setting);
-      })();
-
-      (function () {
-        var setting = document.createElement("select");
-        setting.classList = "setting";
-        setting.style = "color: inherit; width: calc(100% - 2px);"
-
-        const keys = Object.keys(BASIC_PIANO_SCALES); // lol
-        const option = document.createElement('option');
-        option.value = option.innerText = "No highlighted notes";
-        option.selected = !gHighlightScaleNotes;
-        setting.appendChild(option);
-
-        for (const key of keys) {
-          const option = document.createElement('option');
-          option.value = key;
-          option.innerText = key;
-          option.selected = key === gHighlightScaleNotes;
-          setting.appendChild(option);
-        }
-
-        if (gHighlightScaleNotes) {
-          setting.value = gHighlightScaleNotes;
-        }
-
-
-        setting.onchange = function () {
-          localStorage.highlightScaleNotes = setting.value;
-          gHighlightScaleNotes = setting.value;
-        };
-        html.appendChild(setting);
-      })();
-
-      (function () {
-          var setting = document.createElement("div");
-        setting.classList = "setting";
-        setting.innerText = "Hide all cursors";
-        if (gHideAllCursors) {
-          setting.classList.toggle("enabled");
-        }
-        setting.onclick = function () {
-          setting.classList.toggle("enabled");
-          localStorage.hideAllCursors = setting.classList.contains("enabled");
-          gHideAllCursors = setting.classList.contains("enabled");
-          if (gHideAllCursors) {
-              $("#cursors").hide();
-          } else {
-              $("#cursors").show();
-          }
-        };
-        html.appendChild(setting);
-      })();
-
-
-      // warn on links
-      /*(function() {
-        var setting = document.createElement("div");
-          setting.classList = "setting";
-          setting.innerText = "Warn when clicking links";
-          if (gWarnOnLinks) {
-                    setting.classList.toggle("enabled");
-          }
-          setting.onclick = function() {
-            setting.classList.toggle("enabled");
-            localStorage.warnOnLinks = setting.classList.contains("enabled");
-            gWarnOnLinks = setting.classList.contains("enabled");
           };
-        html.appendChild(setting);
-      })();*/
-
-/*
-      //useless blank space
-      //var div = document.createElement("div");
-      //div.innerHTML = "<br><br><br><br><center>this space intentionally left blank</center><br><br><br><br>";
-      //html.appendChild(div);
+          html.appendChild(setting);
+        })();
 
 
+        // warn on links
+        /*(function() {
+          var setting = document.createElement("div");
+            setting.classList = "setting";
+            setting.innerText = "Warn when clicking links";
+            if (gWarnOnLinks) {
+                      setting.classList.toggle("enabled");
+            }
+            setting.onclick = function() {
+              setting.classList.toggle("enabled");
+              localStorage.warnOnLinks = setting.classList.contains("enabled");
+              gWarnOnLinks = setting.classList.contains("enabled");
+            };
+          html.appendChild(setting);
+        })();*/
 
-      // notification
-      notification = new Notification({ title: "Client Settings", html: html, duration: -1, target: "#client-settings-btn" });
-      notification.on("close", function () {
-        var tip = document.getElementById("tooltip");
-        if (tip) tip.parentNode.removeChild(tip);
-        notification = null;
+        //useless blank space
+        //var div = document.createElement("div");
+        //div.innerHTML = "<br><br><br><br><center>this space intentionally left blank</center><br><br><br><br>";
+        //html.appendChild(div);
+
+
+
+        // notification
+        notification = new Notification({ title: "Client Settings", html: html, duration: -1, target: "#client-settings-btn" });
+        notification.on("close", function () {
+          var tip = document.getElementById("tooltip");
+          if (tip) tip.parentNode.removeChild(tip);
+          notification = null;
+        });
+      }
+    } else {
+      var button = document.getElementById("client-settings-btn");
+      var content = document.getElementById("client-settings-content");
+      var tablinks = document.getElementsByClassName("client-settings-tablink");
+      var okButton = document.getElementById("client-settings-ok-btn");
+
+      button.addEventListener("click", (evt) => {
+        evt.stopPropagation();
+        openModal("#client-settings");
       });
-    }*/
+
+      okButton.addEventListener("click", (evt) => {
+        evt.stopPropagation();
+        closeModal();
+      });
+
+      function createSetting(id, labelText, isChecked, addBr, html, onclickFunc) {
+        const setting = document.createElement("input");
+        setting.type = "checkbox";
+        setting.id = id;
+        setting.checked = isChecked;
+        setting.onclick = onclickFunc;
+
+        const label = document.createElement("label");
+        label.setAttribute("for", id);
+        label.innerText = labelText + ": ";
+
+        html.appendChild(label);
+        html.appendChild(setting);
+        if (addBr) html.appendChild(document.createElement("br"));
+      }
+
+      window.changeClientSettingsTab = (evt, tabName) => {
+        content.innerHTML = "";
+
+        for (let index = 0; index < tablinks.length; index++) {
+          tablinks[index].className = tablinks[index].className.replace(" active", "");
+        }
+        
+        evt.currentTarget.className += " active";
+        
+        switch (tabName) {
+          case "Chat":
+            var html = document.createElement("div");
+
+            createSetting("show-timestamps-in-chat", "Show timestamps in chat", gShowTimestampsInChat, true, html, () => {
+              gShowTimestampsInChat = !gShowTimestampsInChat;
+              localStorage.showTimestampsInChat = gShowTimestampsInChat;
+            });
+
+            createSetting("show-user-ids-in-chat", "Show user IDs in chat", gShowIdsInChat, true, html, () => {
+              gShowIdsInChat = !gShowIdsInChat;
+              localStorage.showIdsInChat = gShowIdsInChat;
+            });
+
+            createSetting("show-id-tooltips", "Show ID tooltips", gShowChatTooltips, true, html, () => {
+              gShowChatTooltips = !gShowChatTooltips;
+              localStorage.showChatTooltips = gShowChatTooltips;
+            });
+
+            createSetting("no-chat-colors", "No chat colors", gNoChatColors, true, html, () => {
+              gNoChatColors = !gNoChatColors;
+              localStorage.noChatColors = gNoChatColors;
+            });
+
+            createSetting("hide-chat", "Hide chat", gHideChat, false, html, () => {
+              gHideChat = !gHideChat;
+              localStorage.hideChat = gHideChat;
+
+              if (gHideChat) {
+                $("#chat").hide();
+              } else {
+                $("#chat").show();
+              }
+            });
+
+            content.appendChild(html);
+            break;
+        
+          case "MIDI":
+            var html = document.createElement("div");
+
+            createSetting("output-own-notes-to-midi", "Output own notes to MIDI", gOutputOwnNotes, false, html, () => {
+              gOutputOwnNotes = !gOutputOwnNotes;
+              localStorage.outputOwnNotes = gOutputOwnNotes;
+            });
+
+            content.appendChild(html);
+            break;
+
+          case "Piano":
+            var html = document.createElement("div");
+
+            createSetting("virtual-piano-layout", "Virtual Piano layout", gVirtualPianoLayout, true, html, () => {
+              gVirtualPianoLayout = !gVirtualPianoLayout;
+              localStorage.virtualPianoLayout = gVirtualPianoLayout;
+              key_binding = gVirtualPianoLayout ? layouts.VP : layouts.MPP;
+            });
+
+            createSetting("show-piano-notes", "Show piano notes", gShowPianoNotes, true, html, () => {
+              gShowPianoNotes = !gShowPianoNotes;
+              localStorage.showPianoNotes = gShowPianoNotes;
+            });
+
+            createSetting("hide-piano", "Hide piano", gHidePiano, true, html, () => {
+              gHidePiano = !gHidePiano;
+              localStorage.hidePiano = gHidePiano;
+
+              if (gHidePiano) {
+                $("#piano").hide();
+              } else {
+                $("#piano").show();
+              }
+            });
+
+            var setting = document.createElement("select");
+            setting.classList = "setting";
+            setting.style = "width: calc(58.7% - 2px);"
+
+            setting.onchange = () => {
+              localStorage.highlightScaleNotes = setting.value;
+              gHighlightScaleNotes = setting.value;
+            }
+
+            const keys = Object.keys(BASIC_PIANO_SCALES); // lol
+            const option = document.createElement('option');
+            option.value = option.innerText = "None";
+            option.selected = !gHighlightScaleNotes;
+            setting.appendChild(option);
+    
+            for (const key of keys) {
+              const option = document.createElement('option');
+              option.value = key;
+              option.innerText = key;
+              option.selected = key === gHighlightScaleNotes;
+              setting.appendChild(option);
+            }
+    
+            if (gHighlightScaleNotes) {
+              setting.value = gHighlightScaleNotes;
+            }
+
+            var label = document.createElement("label");
+
+            label.setAttribute("for", setting.id);
+            label.innerText = "Highlighted notes: ";
+
+            html.appendChild(label);
+            html.appendChild(setting);
+
+            content.appendChild(html);
+            break;
+
+          case "Misc":
+            var html = document.createElement("div");
+
+            createSetting("force-dark-background", "Force dark background", gNoBackgroundColor, true, html, () => {
+              gNoBackgroundColor = !gNoBackgroundColor;
+              localStorage.noBackgroundColor = gNoBackgroundColor;
+
+              if (gClient.channel.settings.color && !gNoBackgroundColor) {
+                setBackgroundColor(gClient.channel.settings.color, gClient.channel.settings.color2);
+              } else {
+                setBackgroundColorToDefault();
+              }
+            });
+
+            createSetting("enable-smooth-cursors", "Enable smooth cursors", gSmoothCursor, true, html, () => {
+              gSmoothCursor = !gSmoothCursor;
+              localStorage.smoothCursor = gSmoothCursor;
+              if (gSmoothCursor) {
+                $("#cursors").attr("smooth-cursors", "");
+                Object.values(gClient.ppl).forEach(function (participant) {
+                  if (participant.cursorDiv) {
+                    participant.cursorDiv.style.left = '';
+                    participant.cursorDiv.style.top = '';
+                    participant.cursorDiv.style.transform = 'translate3d(' + participant.x + 'vw, ' + participant.y + 'vh, 0)';
+                  }
+                });
+              } else {
+                $("#cursors").removeAttr("smooth-cursors");
+                Object.values(gClient.ppl).forEach(function (participant) {
+                  if (participant.cursorDiv) {
+                    participant.cursorDiv.style.left = participant.x + "%";
+                    participant.cursorDiv.style.top = participant.y + "%";
+                    participant.cursorDiv.style.transform = '';
+                  }
+                });
+              }
+            });
+
+            createSetting("hide-all-cursors", "Hide all cursors", gHideAllCursors, true, html, () => {
+              gHideAllCursors = !gHideAllCursors;
+              localStorage.hideAllCursors = gHideAllCursors;
+              if (gHideAllCursors) {
+                  $("#cursors").hide();
+              } else {
+                  $("#cursors").show();
+              }
+            });
+
+            content.appendChild(html);
+            break;
+        }
+      }
+    
+      changeClientSettingsTab({currentTarget: document.getElementsByClassName("client-settings-tablink")[0]}, "Chat");
+    }
   })();
 
 
