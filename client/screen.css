@@ -65,7 +65,10 @@ table {
     top: 4px;
     left: 4px;
     font-size: 12px;
-    width: 95%;
+    width: 90%;
+    width: -webkit-calc(100% - 105px);
+    width: -moz-calc(100% - 105px);
+    width: calc(100% - 105px);
 }
 
 #names .name {
