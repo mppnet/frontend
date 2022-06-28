@@ -4334,8 +4334,8 @@ $(function () {
         
         evt.currentTarget.className += " active";
         
-        switch (tabName) {
-          case "Chat":
+        switch (tabName.toLowerCase()) {
+          case "chat":
             var html = document.createElement("div");
 
             createSetting("show-timestamps-in-chat", "Show timestamps in chat", gShowTimestampsInChat, true, html, () => {
@@ -4372,7 +4372,7 @@ $(function () {
             content.appendChild(html);
             break;
         
-          case "MIDI":
+          case "midi":
             var html = document.createElement("div");
 
             createSetting("output-own-notes-to-midi", "Output own notes to MIDI", gOutputOwnNotes, false, html, () => {
@@ -4383,7 +4383,7 @@ $(function () {
             content.appendChild(html);
             break;
 
-          case "Piano":
+          case "piano":
             var html = document.createElement("div");
 
             createSetting("virtual-piano-layout", "Virtual Piano layout", gVirtualPianoLayout, true, html, () => {
@@ -4446,7 +4446,7 @@ $(function () {
             content.appendChild(html);
             break;
 
-          case "Misc":
+          case "misc":
             var html = document.createElement("div");
 
             createSetting("force-dark-background", "Force dark background", gNoBackgroundColor, true, html, () => {
