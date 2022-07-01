@@ -948,7 +948,7 @@ $(function () {
   ////////////////////////////////////////////////////////////////
 
   if (window.location.hostname === "localhost") {
-    var soundDomain = 'http://localhost';
+    var soundDomain = `http://${location.host}`;
   } else {
     var soundDomain = 'https://mppclone.com';
   }
