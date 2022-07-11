@@ -3096,7 +3096,7 @@ $(function () {
       "(?::\\d{2,5})?" +
       // resource path (optional)
       "(?:[/?#]\\S*)?",
-      "i"
+      "ig"
     );
 
     gClient.on("ch", function (msg) {
