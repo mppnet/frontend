@@ -4656,18 +4656,8 @@ $(function () {
     }
   })();
 
-  if (Date.now() > 1645142400000 && Date.now() < 1645228800000 && localStorage.seenAnniversary !== "true") { // 2/18/2022 12 AM UTC - 2/19/2022 12 AM UTC
-    localStorage.seenAnniversary = "true";
-    new Notification({
-      title: "Happy 10th Anniversary to Multiplayer Piano!",
-      text: "This site has had a long and interesting history over the last 10 years, with tons of people contributing to make it what it is today. Huge thanks to them and to everyone who was a part of the community.",
-      duration: 25000,
-      target: "#room"
-    });
-    startConfetti();
-    setTimeout(() => {
-      stopConfetti();
-    }, 4000);
+  if (window !== top) {
+    alert("Hey, it looks like you're visiting our site through another website. Consider playing Multiplayer Piano directly at https://mppclone.com")
   }
 
 
