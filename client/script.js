@@ -2407,7 +2407,7 @@ $(function () {
         }
         $('<div class="menu-item kickban">Kickban</div>').appendTo(menu)
           .on("mousedown touchstart", function (evt) {
-            var minutes = prompt("How many minutes? (0-60)", "30");
+            var minutes = prompt("How many minutes? (0-300)", "30");
             if (minutes === null) return;
             minutes = parseFloat(minutes) || 0;
             var ms = minutes * 60 * 1000;
