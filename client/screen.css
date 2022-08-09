@@ -1331,6 +1331,14 @@ input[type="range"]:hover {
     z-index: 300;
 }
 
+#names .nametag {
+    z-index: 301;
+}
+
+#names .name.owner:before {
+    z-index: 302;
+}
+
 #piano {
     z-index: 400;
 }
