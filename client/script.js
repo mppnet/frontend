@@ -21,15 +21,30 @@ $(function () {
   
   function setupMarkdown() {
     var renderer = new marked.Renderer();
-    renderer.link = function(href, title, text) {
-      var link = marked.Renderer.prototype.link.apply(this, arguments);
-      return link.replace("<a","<a target='_blank'");
-    };
     renderer.image = function (text) {
       return text;
     };
-    renderer.link = function (text) {
-      return text;
+    renderer.link = function (href, title, text) {
+        if (this.options.sanitize) {
+            try {
+                let prot = decodeURIComponent(unescape(href))
+                    .replace(/[^\w:]/g, "")
+                    .toLowerCase();
+
+                if (prot.indexOf("javascript:") === 0 || prot.indexOf("vbscript:") === 0 || prot.indexOf("data:") === 0) {
+                    return "";
+                }
+            } catch (e) {
+                return "";
+            }
+        }
+
+        // Only interpret links that contain a protocol
+        if (!text.startsWith("http://") && !text.startsWith("https://")) {
+            return text;
+        }
+
+        return `<a href="${ href }" target="_blank">${ text }</a>`;
     };
     marked.setOptions({
       renderer: renderer
