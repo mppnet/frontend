@@ -25,7 +25,9 @@ $(function () {
       var link = marked.Renderer.prototype.link.apply(this, arguments);
       return link.replace("<a","<a target='_blank'");
     };
-   
+    renderer.image = function (text) {
+      return text;
+    };
     marked.setOptions({
       renderer: renderer
     });
