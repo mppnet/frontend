@@ -21,3 +21,8 @@ jobs:
             git clone -b main https://github.com/LapisHusky/mppclone.git
             mv mppclone/client/* .
             rm -r mppclone/
+      - name: Purge cache
+        uses: jakejarvis/cloudflare-purge-action@master
+        env:
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
