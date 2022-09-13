@@ -18,6 +18,6 @@ jobs:
           script: |
             cd /var/www/dev
             rm -r *
-            git clone -b develop https://github.com/LapisHusky/mppclone.git
+            git clone -b dev https://github.com/LapisHusky/mppclone.git
             mv mppclone/* .
             rm -r mppclone/
