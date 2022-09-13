@@ -19,5 +19,5 @@ jobs:
             cd /var/www/dev
             rm -r *
             git clone -b dev https://github.com/LapisHusky/mppclone.git
-            mv mppclone/* .
+            mv mppclone/client/* .
             rm -r mppclone/
