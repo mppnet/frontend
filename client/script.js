@@ -1,4 +1,3 @@
-
 // 钢琴
 
 $(function () {
@@ -6,17 +5,39 @@ $(function () {
   console.log("%cWelcome to MPP's developer console!", "color:blue; font-size:20px;");
   console.log("%cCheck out the source code: https://github.com/LapisHusky/mppclone/tree/main/client\nGuide for coders and bot developers: https://docs.google.com/document/d/1OrxwdLD1l1TE8iau6ToETVmnLuLXyGBhA0VfAY1Lf14/edit?usp=sharing", "color:gray; font-size:12px;")
 
+  const loadScript = function (url) {
+    return new Promise(function (resolve, reject) {
+      const script = document.createElement('script');
+        script.src = url;
 
-  var renderer = new marked.Renderer();
-  renderer.link = function(href, title, text) {
-  var link = marked.Renderer.prototype.link.apply(this, arguments);
-    return link.replace("<a","<a target='_blank'");
+        script.addEventListener('load', function () {
+            // The script is loaded completely
+            resolve(true);
+        });
+
+        document.head.appendChild(script);
+    });
   };
-    
-  marked.setOptions({
-    renderer: renderer
-  });
-
+  
+  function setupMarkdown() {
+    var renderer = new marked.Renderer();
+    renderer.link = function(href, title, text) {
+      var link = marked.Renderer.prototype.link.apply(this, arguments);
+      return link.replace("<a","<a target='_blank'");
+    };
+   
+    marked.setOptions({
+      renderer: renderer
+    });
+  }
+  
+  if (!window.marked) {
+    loadScript("https://cdn.jsdelivr.net/npm/marked/marked.min.js").then(() => {
+      setupMarkdown();
+    });
+  } else {
+      setupMarkdown();
+  }
 
   var test_mode = (window.location.hash && window.location.hash.match(/^(?:#.+)*#test(?:#.+)*$/i));
 
