@@ -28,6 +28,9 @@ $(function () {
     renderer.image = function (text) {
       return text;
     };
+    renderer.link = function (text) {
+      return text;
+    };
     marked.setOptions({
       renderer: renderer
     });
