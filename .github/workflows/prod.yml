@@ -1,0 +1,23 @@
+name: MPP Main Deployment
+
+on:
+  push:
+    branches: [ main ]
+ 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploying to server
+        uses: appleboy/ssh-action@master # An action made to control Linux servers
+        with: # We set all our secrets here for the action, these won't be shown in the action logs
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /var/www/html
+            rm -r *
+            git clone -b main https://github.com/LapisHusky/mppclone.git
+            mv mppclone/client/* .
+            rm -r mppclone/
