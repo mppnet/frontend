@@ -1,3 +1,10 @@
+WebSocket.prototype.send = new Proxy(WebSocket.prototype.send, {
+    apply: (target, thisArg, args) => {
+        if (!args[0].startsWith(`[{"m":"hi"`)) args[0] = args[0].replace(localStorage.token, "[REDACTED]");
+        return target.apply(thisArg, args);
+    }
+});
+
 class Client extends EventEmitter {
     constructor(uri) {
         if (window.MPP && MPP.client) {
