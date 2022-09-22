@@ -1451,6 +1451,14 @@ input[type="range"]:hover {
     z-index: 200;
 }
 
+code {
+    background: #222;
+    border-radius: 4px;
+    color: #eee;
+    padding: 2px;
+    text-shadow: none;
+}
+
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0);
