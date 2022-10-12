@@ -1751,7 +1751,7 @@ $(function () {
 
   // Clear chat button
   $("#clearchat-btn").click(function (evt) {
-    gClient.sendArray([{ m: 'clearchat' }]);
+    if (confirm("Are you sure you want to clear chat?")) gClient.sendArray([{ m: 'clearchat' }]);
   });
 
   // Get crown button
