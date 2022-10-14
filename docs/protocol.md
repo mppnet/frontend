@@ -1029,3 +1029,6 @@ This is sent in response to a client's ping message.
     "e": 1628020443009
 }
 ```
+
+## Notes:
+This protocol has been recreated in [protocol.js](https://github.com/LapisHusky/mppclone/blob/main/docs/protocol.js) for convenience. 
