@@ -1047,7 +1047,9 @@ $(function () {
     }
 
     if (typeof pack == "string") {
-      $.getJSON(soundDomain + pack + "/info.json").done(function (json) {
+      let useDomain = true;
+      if (pack.match(/^(http|https):\/\//i)) useDomain = false;
+      $.getJSON((useDomain ? soundDomain : '') + pack + "/info.json").done(function (json) {
         json.url = pack;
         add(json);
       });
@@ -1111,7 +1113,9 @@ $(function () {
       (function () {
         var key = self.piano.keys[i];
         key.loaded = false;
-        self.piano.audio.load(key.note, soundDomain + pack.url + key.note + pack.ext, function () {
+        let useDomain = true;
+        if (pack.url.match(/^(http|https):\/\//i)) useDomain = false
+        self.piano.audio.load(key.note, (useDomain ? soundDomain : '') + pack.url + key.note + pack.ext, function () {
           key.loaded = true;
           key.timeLoaded = Date.now();
         });
