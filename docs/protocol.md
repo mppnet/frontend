@@ -1,5 +1,8 @@
 # mppclone.com Protocol
 
+## Notes:
+This protocol has been recreated in [protocol.js](https://github.com/LapisHusky/mppclone/blob/main/docs/protocol.js) for convenience. 
+
 ## Navigation
 - [Websocket Information](#websocket-information)
   - [Connecting](#connecting)
