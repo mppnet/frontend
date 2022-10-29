@@ -46,6 +46,9 @@ $(function () {
 
         return `<a href="${ href }" target="_blank">${ text }</a>`;
     };
+    renderer.codespan = function(code) {
+      return `<code>${code}</code>`.split('&amp;').join('&');
+    };
     marked.setOptions({
       renderer: renderer
     });
