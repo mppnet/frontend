@@ -4,7 +4,7 @@ $(function () {
 
   console.log("%cWelcome to MPP's developer console!", "color:blue; font-size:20px;");
   console.log("%cCheck out the source code: https://github.com/LapisHusky/mppclone/tree/main/client\nGuide for coders and bot developers: https://docs.google.com/document/d/1OrxwdLD1l1TE8iau6ToETVmnLuLXyGBhA0VfAY1Lf14/edit?usp=sharing", "color:gray; font-size:12px;")
-
+/*
   const loadScript = function (url) {
     return new Promise(function (resolve, reject) {
       const script = document.createElement('script');
@@ -61,7 +61,7 @@ $(function () {
   } else {
       setupMarkdown();
   }
-
+*/
   var test_mode = (window.location.hash && window.location.hash.match(/^(?:#.+)*#test(?:#.+)*$/i));
 
   var gSeeOwnCursor = (window.location.hash && window.location.hash.match(/^(?:#.+)*#seeowncursor(?:#.+)*$/i));
@@ -3340,7 +3340,8 @@ $(function () {
         });
 
         //apply names, colors, ids
-        li.find(".message").html(marked.parseInline(message));
+        //li.find(".message").html(marked.parseInline(message));
+        li.find(".message").html(message);
 
         if (msg.m === 'dm') {
           if (!gNoChatColors) li.find(".message").css("color", msg.sender.color || "white");
