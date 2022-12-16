@@ -4,7 +4,7 @@ $(function () {
 
   console.log("%cWelcome to MPP's developer console!", "color:blue; font-size:20px;");
   console.log("%cCheck out the source code: https://github.com/LapisHusky/mppclone/tree/main/client\nGuide for coders and bot developers: https://docs.google.com/document/d/1OrxwdLD1l1TE8iau6ToETVmnLuLXyGBhA0VfAY1Lf14/edit?usp=sharing", "color:gray; font-size:12px;")
-/*
+
   const loadScript = function (url) {
     return new Promise(function (resolve, reject) {
       const script = document.createElement('script');
@@ -44,7 +44,7 @@ $(function () {
             return text;
         }
 
-        return `<a href="${ urlencode(href) }" target="_blank">${ text }</a>`;
+        return `<a href="${ encodeURIComponent(href) }" target="_blank">${ text }</a>`;
     };
     renderer.codespan = function(code) {
       return `<code>${code}</code>`.split('&amp;').join('&');
@@ -61,7 +61,7 @@ $(function () {
   } else {
       setupMarkdown();
   }
-*/
+
   var test_mode = (window.location.hash && window.location.hash.match(/^(?:#.+)*#test(?:#.+)*$/i));
 
   var gSeeOwnCursor = (window.location.hash && window.location.hash.match(/^(?:#.+)*#seeowncursor(?:#.+)*$/i));
@@ -2768,7 +2768,7 @@ $(function () {
     var room_name = "Room" + Math.floor(Math.random() * 1000000000000);
     changeRoom(room_name, "right", { "visible": false });
     setTimeout(function () {
-      new Notification({ id: "share", title: "Playing alone", html: 'You are playing alone in a room by yourself, but you can always invite friends by sending them the link.<br><a href="' + location.href + '">' + decodeURIComponent(location.href) + '</a>', duration: 25000 });
+      new Notification({ id: "share", title: "Playing alone", html: 'You are playing alone in a room by yourself, but you can always invite friends by sending them the link.<br><a href="' + location.href + '">' + encodeURIComponent(location.href) + '</a>', duration: 25000 });
     }, 1000);
   });
 
@@ -3340,8 +3340,7 @@ $(function () {
         });
 
         //apply names, colors, ids
-        //li.find(".message").html(marked.parseInline(message));
-        li.find(".message").html(message);
+        li.find(".message").html(marked.parseInline(message));
 
         if (msg.m === 'dm') {
           if (!gNoChatColors) li.find(".message").css("color", msg.sender.color || "white");
