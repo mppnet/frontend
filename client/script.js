@@ -2768,7 +2768,7 @@ $(function () {
     var room_name = "Room" + Math.floor(Math.random() * 1000000000000);
     changeRoom(room_name, "right", { "visible": false });
     setTimeout(function () {
-      new Notification({ id: "share", title: "Playing alone", html: 'You are playing alone in a room by yourself, but you can always invite friends by sending them the link.<br><a href="' + location.href + '">' + encodeURI(location.href) + '</a>', duration: 25000 });
+      new Notification({ id: "share", title: "Playing alone", html: 'You are playing alone in a room by yourself, but you can always invite friends by sending them the link.<br><a href="' + location.href + '">' + location.href + '</a>', duration: 25000 });
     }, 1000);
   });
 
@@ -2843,7 +2843,7 @@ $(function () {
       closeModal();
       changeRoom(name, "right", settings);
       setTimeout(function () {
-        new Notification({ id: "share", title: "Created a Room", html: 'You can invite friends to your room by sending them the link.<br><a href="' + location.href + '">' + decodeURIComponent(location.href) + '</a>', duration: 25000 });
+        new Notification({ id: "share", title: "Created a Room", html: 'You can invite friends to your room by sending them the link.<br><a href="' + location.href + '">' + location.href + '</a>', duration: 25000 });
       }, 1000);
     };
     $("#new-room .submit").click(function (evt) {
