@@ -44,7 +44,7 @@ $(function () {
             return text;
         }
 
-        return `<a href="${ encodeURIComponent(href) }" target="_blank">${ text }</a>`;
+        return `<a href="${ encodeURI(href) }" target="_blank">${ text }</a>`;
     };
     renderer.codespan = function(code) {
       return `<code>${code}</code>`.split('&amp;').join('&');
@@ -2768,7 +2768,7 @@ $(function () {
     var room_name = "Room" + Math.floor(Math.random() * 1000000000000);
     changeRoom(room_name, "right", { "visible": false });
     setTimeout(function () {
-      new Notification({ id: "share", title: "Playing alone", html: 'You are playing alone in a room by yourself, but you can always invite friends by sending them the link.<br><a href="' + location.href + '">' + encodeURIComponent(location.href) + '</a>', duration: 25000 });
+      new Notification({ id: "share", title: "Playing alone", html: 'You are playing alone in a room by yourself, but you can always invite friends by sending them the link.<br><a href="' + location.href + '">' + encodeURI(location.href) + '</a>', duration: 25000 });
     }, 1000);
   });
 
