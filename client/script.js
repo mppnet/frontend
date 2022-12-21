@@ -2342,7 +2342,10 @@ $(function () {
         }
       });
       // this spaces stuff out but also can be used for informational
-      $('<div class="info"></div>').appendTo(menu).text(part._id);
+      $('<div class="info"></div>').appendTo(menu).text(part._id).on("mousedown touchstart", evt => {
+          navigator.clipboard.writeText(part._id);
+          evt.target.innerText = "Copied!";
+      });
       // add menu items
       if (gPianoMutes.indexOf(part._id) == -1) {
         $('<div class="menu-item">Mute Notes</div>').appendTo(menu)
