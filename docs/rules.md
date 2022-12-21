@@ -1,16 +1,11 @@
+<!-- Output copied to clipboard! -->
+
+<!-- Yay, no errors, warnings, or alerts! -->
+
+
 ## **Multiplayer Piano Site Rules**
 
 Throughout the last nearly 10 years of Multiplayer Piano, there have been no well defined rules. The site was nearly anarchy, and that resulted in a somewhat toxic and uncontrolled community. Although some users enjoyed the freedom of being able to do whatever they want, the majority of users wanted rules to be enforced. The following rules are currently in effect.
-
-
-### Recent changes
-
-**July 2, 2022**
-
-
-
-* Rooms advertising dating are no longer allowed due to grooming.
-* Spamming the piano in multiple rooms to annoy users is no longer allowed and fits under [Disrupting users throughout multiple rooms](#bookmark=id.7sqr9tc5nx1y).
 
 
 ## **Summary of what’s not allowed**
