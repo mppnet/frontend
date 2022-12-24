@@ -650,7 +650,7 @@ $(function () {
     $(piano.rootElement).mousedown(function (event) {
       mouse_down = true;
       //event.stopPropagation();
-      event.preventDefault();
+      if (!gNoPreventDefault) event.preventDefault();
 
       var pos = CanvasRenderer.translateMouseEvent(event);
       var hit = self.getHit(pos.x, pos.y);
@@ -662,7 +662,7 @@ $(function () {
     piano.rootElement.addEventListener("touchstart", function (event) {
       mouse_down = true;
       //event.stopPropagation();
-      event.preventDefault();
+      if (!gNoPreventDefault) event.preventDefault();
       for (var i in event.changedTouches) {
         var pos = CanvasRenderer.translateMouseEvent(event.changedTouches[i]);
         var hit = self.getHit(pos.x, pos.y);
@@ -1862,8 +1862,8 @@ $(function () {
   var gHideAllCursors = localStorage.hideAllCursors == "true";
   var gHidePiano = localStorage.hidePiano == "true";
   var gHideChat = localStorage.hideChat == "true";
-
-  //var gWarnOnLinks = localStorage.warnOnLinks ? localStorage.warnOnLinks == "true" : true;
+  var gNoPreventDefault = localStorage.noPreventDefault == "true";
+//   var gWarnOnLinks = localStorage.warnOnLinks ? loalStorage.warnOnLinks == "true" : true;
 
 
 
@@ -2119,15 +2119,15 @@ $(function () {
         if (window.gKnowsYouCanUseKeyboardNotification) gKnowsYouCanUseKeyboardNotification.close();
       }
 
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
       evt.stopPropagation();
       return false;
     } else if (code == 20) { // Caps Lock
       capsLockKey = true;
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
     } else if (code === 0x20) { // Space Bar
       pressSustain();
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
     } else if (code === 38 && transpose <= 100) {
       transpose += 12;
       sendTransposeNotif();
@@ -2141,10 +2141,10 @@ $(function () {
       transpose--;
       sendTransposeNotif();
     } else if (code == 9) { // Tab (don't tab away from the piano)
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
     } else if (code == 8) { // Backspace (don't navigate Back)
       gAutoSustain = !gAutoSustain;
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
     }
   };
 
@@ -2182,21 +2182,21 @@ $(function () {
         release(note);
       }
 
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
       evt.stopPropagation();
       return false;
     } else if (code == 20) { // Caps Lock
       capsLockKey = false;
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
     } else if (code === 0x20) { // Space Bar
       releaseSustain();
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
     }
   };
 
   function handleKeyPress(evt) {
     if(evt.target.type) return;
-    evt.preventDefault();
+    if (!gNoPreventDefault) evt.preventDefault();
     evt.stopPropagation();
     if (evt.keyCode == 27 || evt.keyCode == 13) {
       //$("#chat input").focus();
@@ -2803,7 +2803,7 @@ $(function () {
   function modalHandleEsc(evt) {
     if (evt.keyCode == 27) {
       closeModal();
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
       evt.stopPropagation();
     }
   };
@@ -2860,7 +2860,7 @@ $(function () {
       } else {
         return;
       }
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
       evt.stopPropagation();
       return false;
     });
@@ -2963,7 +2963,7 @@ $(function () {
       } else {
         return;
       }
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
       evt.stopPropagation();
       return false;
     });
@@ -3064,7 +3064,7 @@ $(function () {
       } else {
         return;
       }
-      evt.preventDefault();
+      if (!gNoPreventDefault) evt.preventDefault();
       evt.stopPropagation();
       return false;
     }
@@ -3169,7 +3169,7 @@ $(function () {
       if ($("#chat").hasClass("chatting")) {
         if (evt.keyCode == 27) {
           chat.blur();
-          evt.preventDefault();
+          if (!gNoPreventDefault) evt.preventDefault();
           evt.stopPropagation();
         } else if (evt.keyCode == 13) {
           $("#chat input").focus();
@@ -3198,14 +3198,14 @@ $(function () {
             }, 100);
           }
         }
-        evt.preventDefault();
+        if (!gNoPreventDefault) evt.preventDefault();
         evt.stopPropagation();
       } else if (evt.keyCode == 27) {
         chat.blur();
-        evt.preventDefault();
+        if (!gNoPreventDefault) evt.preventDefault();
         evt.stopPropagation();
       } else if (evt.keyCode == 9) {
-        evt.preventDefault();
+        if (!gNoPreventDefault) evt.preventDefault();
         evt.stopPropagation();
       }
     });
@@ -4397,6 +4397,11 @@ $(function () {
 
           case "piano":
             var html = document.createElement("div");
+            
+            createSetting("dont-use-prevent-default", "Don't use prevent default", gNoChatColors, true, html, () => {
+              gNoPreventDefault = !gNoPreventDefault;
+              localStorage.noPreventDefault = noPreventDefault;
+            });
 
             createSetting("virtual-piano-layout", "Virtual Piano layout", gVirtualPianoLayout, true, html, () => {
               gVirtualPianoLayout = !gVirtualPianoLayout;
