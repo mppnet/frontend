@@ -4397,11 +4397,6 @@ $(function () {
 
           case "piano":
             var html = document.createElement("div");
-            
-            createSetting("dont-use-prevent-default", "Don't use prevent default", gNoChatColors, true, html, () => {
-              gNoPreventDefault = !gNoPreventDefault;
-              localStorage.noPreventDefault = noPreventDefault;
-            });
 
             createSetting("virtual-piano-layout", "Virtual Piano layout", gVirtualPianoLayout, true, html, () => {
               gVirtualPianoLayout = !gVirtualPianoLayout;
@@ -4466,6 +4461,11 @@ $(function () {
           case "misc":
             var html = document.createElement("div");
 
+            createSetting("dont-use-prevent-default", "Don't use prevent default", gNoChatColors, true, html, () => {
+              gNoPreventDefault = !gNoPreventDefault;
+              localStorage.noPreventDefault = noPreventDefault;
+            });
+            
             createSetting("force-dark-background", "Force dark background", gNoBackgroundColor, true, html, () => {
               gNoBackgroundColor = !gNoBackgroundColor;
               localStorage.noBackgroundColor = gNoBackgroundColor;
