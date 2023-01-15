@@ -4329,11 +4329,10 @@ $(function () {
         setting.onclick = onclickFunc;
 
         const label = document.createElement("label");
-        label.setAttribute("for", id);
         label.innerText = labelText + ": ";
-
+          
+        label.appendChild(setting);
         html.appendChild(label);
-        html.appendChild(setting);
         if (addBr) html.appendChild(document.createElement("br"));
       }
 
