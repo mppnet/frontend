@@ -1,6 +1,6 @@
 WebSocket.prototype.send = new Proxy(WebSocket.prototype.send, {
     apply: (target, thisArg, args) => {
-        if (!args[0].startsWith(`[{"m":"hi"`)) args[0] = args[0].replace(localStorage.token, "[REDACTED]");
+        if (localStorage.token && !args[0].startsWith(`[{"m":"hi"`)) args[0] = args[0].replace(localStorage.token, "[REDACTED]");
         return target.apply(thisArg, args);
     }
 });
