@@ -34,7 +34,7 @@ jobs:
           remote_user: ${{ secrets.SSH_USER }}
           remote_key: ${{ secrets.SSH_KEY }}
           remote_port: ${{ secrets.SSH_PORT }}
-          remote_path: /var/www/dev/
+          remote_path: /var/www/html/
           path: client/
 
       - name: Purge cache
