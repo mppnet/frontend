@@ -8,19 +8,35 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploying to server
-        uses: appleboy/ssh-action@master # An action made to control Linux servers
-        with: # We set all our secrets here for the action, these won't be shown in the action logs
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd /var/www/html
-            rm -r *
-            git clone -b main https://github.com/LapisHusky/mppclone.git
-            mv mppclone/client/* .
-            rm -r mppclone/
+      - name: Checkout git
+        uses: actions/checkout@v3
+
+      - name: Setup Node.JS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Run yarn install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+
+      - name: Run yarn build:dev
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build
+
+      - name: Upload to server
+        uses: burnett01/rsync-deployments@5.2.1
+        with:
+          switches: -rclzv --delete
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_KEY }}
+          remote_port: ${{ secrets.SSH_PORT }}
+          remote_path: /var/www/dev/
+          path: client/
+
       - name: Purge cache
         uses: jakejarvis/cloudflare-purge-action@master
         env:
