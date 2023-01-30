@@ -1,0 +1,11 @@
+{
+  "name": "mppclone",
+  "version": "1.0.0",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.17.5"
+  },
+  "scripts": {
+    "build": "esbuild --minify client/*.js client/*.css --outdir=client/ --allow-overwrite"
+  }
+}
