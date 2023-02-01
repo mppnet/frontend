@@ -3,64 +3,7 @@
 $(function () {
 
   console.log("%cWelcome to MPP's developer console!", "color:blue; font-size:20px;");
-  console.log("%cCheck out the source code: https://github.com/LapisHusky/mppclone/tree/main/client\nGuide for coders and bot developers: https://docs.google.com/document/d/1OrxwdLD1l1TE8iau6ToETVmnLuLXyGBhA0VfAY1Lf14/edit?usp=sharing", "color:gray; font-size:12px;")
-
-  const loadScript = function (url) {
-    return new Promise(function (resolve, reject) {
-      const script = document.createElement('script');
-        script.src = url;
-
-        script.addEventListener('load', function () {
-            // The script is loaded completely
-            resolve(true);
-        });
-
-        document.head.appendChild(script);
-    });
-  };
-  
-  function setupMarkdown() {
-    var renderer = new marked.Renderer();
-    renderer.image = function (text) {
-      return text;
-    };
-    renderer.link = function (href, title, text) {
-        if (this.options.sanitize) {
-            try {
-                let prot = decodeURIComponent(unescape(href))
-                    .replace(/[^\w:]/g, "")
-                    .toLowerCase();
-
-                if (prot.indexOf("javascript:") === 0 || prot.indexOf("vbscript:") === 0 || prot.indexOf("data:") === 0) {
-                    return "";
-                }
-            } catch (e) {
-                return "";
-            }
-        }
-
-        // Only interpret links that contain a protocol
-        if (!text.startsWith("http://") && !text.startsWith("https://")) {
-            return text;
-        }
-
-        return `<a href="${ encodeURI(href) }" target="_blank">${ text }</a>`;
-    };
-    renderer.codespan = function(code) {
-      return `<code>${code}</code>`.split('&amp;').join('&');
-    };
-    marked.setOptions({
-      renderer: renderer
-    });
-  }
-  
-  if (!window.marked) {
-    loadScript("https://cdn.jsdelivr.net/npm/marked/marked.min.js").then(() => {
-      setupMarkdown();
-    });
-  } else {
-      setupMarkdown();
-  }
+  console.log("%cCheck out the source code: https://github.com/LapisHusky/mppclone/tree/main/client\nGuide for coders and bot developers: https://docs.google.com/document/d/1OrxwdLD1l1TE8iau6ToETVmnLuLXyGBhA0VfAY1Lf14/edit?usp=sharing", "color:gray; font-size:12px;");
 
   var test_mode = (window.location.hash && window.location.hash.match(/^(?:#.+)*#test(?:#.+)*$/i));
 
@@ -3261,9 +3204,9 @@ $(function () {
 
       send: function (message) {
         if (gIsDming) {
-          gClient.sendArray([{ m: 'dm', _id: gDmParticipant._id, message: message }]);
+          gClient.sendArray([{ m: 'dm', _id: gDmParticipant._id, message }]);
         } else {
-          gClient.sendArray([{ m: "a", message: message }]);
+          gClient.sendArray([{ m: "a", message }]);
         }
       },
 
@@ -3326,24 +3269,22 @@ $(function () {
           li.find(".timestamp").text(new Date(msg.t).toLocaleTimeString());
         }
 
-        var message = $('<div>').text(msg.a).html().replace(/@([\da-f]{24})/g, (match, id) => {
-          var user = gClient.ppl[id];
+        const message = parseUrl(parseMarkdown(parseContent(msg.a))).replace(/@([\da-f]{24})/g, (match, id) => {
+          const user = gClient.ppl[id];
           if (user) {
-            var nick = $('<div>').text(user.name).html();
+            const nick = parseContent(user.name);
             if (user.id === gClient.getOwnParticipant().id) {
               if (!tabIsActive) {
                 youreMentioned = true;
-                document.title = "You were mentioned!";
+                document.title = 'You were mentioned!';
               }
               return `<span class="mention" style="background-color: ${user.color};">${nick}</span>`;
-            }
-            else return "@" + nick;
-          }
-          else return match;
+            } else return `@${nick}`;
+          } else return match;
         });
 
         //apply names, colors, ids
-        li.find(".message").html(marked.parseInline(message));
+        li.find(".message").html(message);
 
         if (msg.m === 'dm') {
           if (!gNoChatColors) li.find(".message").css("color", msg.sender.color || "white");

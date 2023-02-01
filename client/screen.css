@@ -1453,10 +1453,10 @@ input[type="range"]:hover {
 
 code {
     background: #222;
-    border-radius: 4px;
     color: #eee;
-    padding: 2px;
+    padding: 2px 4px;
     text-shadow: none;
+    border-radius: 4px;
 }
 
 @-webkit-keyframes spin {
