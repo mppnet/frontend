@@ -229,3 +229,91 @@ Knob.prototype.translateMouseEvent = function(evt) {
 		y: evt.clientY - (element.getBoundingClientRect().top - element.clientTop + element.scrollTop)
 	}
 };
+
+const url_regex = new RegExp(
+  // protocol identifier (optional)
+  // short syntax // still required
+  "(?:(?:(?:https?|ftp):)?\\/\\/)" +
+  // user:pass BasicAuth (optional)
+  "(?:\\S+(?::\\S*)?@)?" +
+  "(?:" +
+  // IP address exclusion
+  // private & local networks
+  "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
+  "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
+  "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +
+  // IP address dotted notation octets
+  // excludes loopback network 0.0.0.0
+  // excludes reserved space >= 224.0.0.0
+  // excludes network & broadcast addresses
+  // (first & last IP address of each class)
+  "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
+  "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
+  "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
+  "|" +
+  // host & domain names, may end with dot
+  // can be replaced by a shortest alternative
+  // (?![-_])(?:[-\\w\\u00a1-\\uffff]{0,63}[^-_]\\.)+
+  "(?:" +
+  "(?:" +
+  "[a-z0-9\\u00a1-\\uffff]" +
+  "[a-z0-9\\u00a1-\\uffff_-]{0,62}" +
+  ")?" +
+  "[a-z0-9\\u00a1-\\uffff]\\." +
+  ")+" +
+  // TLD identifier name, may end with dot
+  "(?:[a-z\\u00a1-\\uffff]{2,}\\.?)" +
+  ")" +
+  // port number (optional)
+  "(?::\\d{2,5})?" +
+  // resource path (optional)
+  "(?:[/?#]\\S*)?",
+  "ig"
+);
+
+const parseContent = text => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+
+const markdownRegex = /(?:\\|)(\|\|.+?\|\||```.+?```|``.+?``|`.+?`|\*\*\*.+?\*\*\*|\*\*.+?\*\*|\*.+?\*|___.+?___|__.+?__|_.+?_|~~.+?~~)/g;
+
+const getTextContent = text => {
+	return text.indexOf('>') > -1 && text.indexOf('</') > -1 ? text.slice(text.indexOf('>') + 1, text.lastIndexOf('</')) || text : text;
+};
+
+const parseUrl = text => {
+	return text.replace(url_regex, match => {
+		const url = getTextContent(match);
+		return `<a rel="noreferer noopener" target="_blank" class="chatLink" href="${url}">${url}</a>`;
+	});
+};
+
+const parseMarkdown = text => {
+	return text.replace(markdownRegex, match => {
+		if (match.startsWith('\\')) {
+			return match.slice(1);
+		} else if (match.startsWith('~~') && match.endsWith('~~')) {
+			return `<del class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))}</del>`;
+		} else if (match.startsWith('___') && match.endsWith('___')) {
+			return `<em class="markdown"><u class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))}</u></em>`;
+		} else if (match.startsWith('__') && match.endsWith('__')) {
+			return `<u class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))}</u>`;
+		} else if (match.startsWith('***') && match.endsWith('***')) {
+			return `<em class="markdown"><strong class="markdown">${parseMarkdown(getTextContent(match.slice(3, match.length - 3)))}</strong></em>`;
+		} else if (match.startsWith('**') && match.endsWith('**')) {
+			return `<strong class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))}</strong>`;
+		} else if ((
+			match.startsWith('*') &&
+			match.endsWith('*')
+		) || (
+			match.startsWith('_') &&
+			match.endsWith('_')
+		)) {
+			return `<em class="markdown">${parseMarkdown(getTextContent(match.slice(1, match.length - 1)))}</em>`;
+		} else if (match.startsWith('`') && match.endsWith('`')) {
+			const slice = match.startsWith('```') && match.endsWith('```') ? 3 : match.startsWith('``') && match.endsWith('``') ? 2 : 1;
+			return `<code class="markdown">${parseMarkdown(getTextContent(match.slice(slice, match.length - slice)))}</code>`;
+		} else if (match.startsWith('||') && match.endsWith('||')) {
+			return `<span class="markdown spoiler">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))}</span>`;
+		}
+		return match;
+	});
+};

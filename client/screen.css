@@ -37,15 +37,14 @@ body {
     -webkit-transition: background 1s linear;
 }
 
-a {
+a, .spoiler:hover a {
     cursor: pointer;
     color: #f46;
     transition: color .25s;
 }
 
-a:hover {
+a:hover, .spoiler a:hover {
     color: #e05;
-    transition: color .25s;
 }
 
 .link {
@@ -1453,10 +1452,30 @@ input[type="range"]:hover {
 
 code {
     background: #222;
-    border-radius: 4px;
     color: #eee;
-    padding: 2px;
+    padding: 2px 4px;
     text-shadow: none;
+    border-radius: 4px;
+}
+
+.spoiler {
+    background: #222;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.spoiler, .spoiler > * {
+    color: rgba(0, 0, 0, 0);
+    text-shadow: rgba(0, 0, 0, 0) 1px 1px;
+	transition: color .25s, text-shadow .25s;
+	-webkit-transition: color .25s, text-shadow .25s;
+	-moz-transition: color .25s, text-shadow .25s;
+	-o-transition: color .25s, text-shadow .25s;
+}
+
+.spoiler:hover, .spoiler:hover > *, .spoiler > *:hover {
+    color: #fff;
+    text-shadow: rgba(0, 0, 0, .5) 1px 1px;
 }
 
 @-webkit-keyframes spin {
