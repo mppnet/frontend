@@ -273,7 +273,7 @@ const url_regex = new RegExp(
 
 const parseContent = text => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 
-const markdownRegex = /(?:\\|)(\|\|.+?\|\||```.+?```|``.+?``|`.+?`|\*\*\*.+?\*\*\*|\*\*.+?\*\*|\*.+?\*|___.+?___|__.+?__|_.+?_|~~.+?~~)/g;
+const markdownRegex = /(?:\\|)(\|\|.+?\|\||```.+?```|``.+?``|`.+?`|\*\*\*.+?\*\*\*|\*\*.+?\*\*|\*.+?\*|___.+?___|__.+?__|_.+?_(?:\s|$)|~~.+?~~)/g;
 
 const getTextContent = text => {
 	return text.indexOf('>') > -1 && text.indexOf('</') > -1 ? text.slice(text.indexOf('>') + 1, text.lastIndexOf('</')) || text : text;
