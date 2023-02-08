@@ -3269,7 +3269,7 @@ $(function () {
           li.find(".timestamp").text(new Date(msg.t).toLocaleTimeString());
         }
 
-        const message = parseUrl(parseMarkdown(parseContent(msg.a))).replace(/@([\da-f]{24})/g, (match, id) => {
+        const message = parseMarkdown(parseContent(msg.a), parseUrl).replace(/@([\da-f]{24})/g, (match, id) => {
           const user = gClient.ppl[id];
           if (user) {
             const nick = parseContent(user.name);
