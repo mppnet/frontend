@@ -279,9 +279,23 @@ const getTextContent = text => {
 	return text.indexOf('>') > -1 && text.indexOf('</') > -1 ? text.slice(text.indexOf('>') + 1, text.lastIndexOf('</')) || text : text;
 };
 
+const getLinkTextContent = text => {
+	const rightArrowIndex = text.indexOf('>');
+	const leftArrowSlashIndex = text.lastIndexOf('</');
+	const properRightArrowIndex = rightArrowIndex > leftArrowSlashIndex ? -1 : rightArrowIndex;
+	return properRightArrowIndex > -1 || leftArrowSlashIndex > -1 ? text.slice(
+		properRightArrowIndex > -1 ?
+		properRightArrowIndex + 1 :
+		0,
+		leftArrowSlashIndex > -1 ?
+		leftArrowSlashIndex :
+		text.length,
+	) || text : text;
+};
+
 const parseUrl = text => {
 	return text.replace(url_regex, match => {
-		const url = getTextContent(match);
+		const url = getLinkTextContent(match);
 		return `<a rel="noreferer noopener" target="_blank" class="chatLink" href="${url}">${url}</a>`;
 	});
 };
@@ -291,15 +305,15 @@ const parseMarkdown = text => {
 		if (match.startsWith('\\')) {
 			return match.slice(1);
 		} else if (match.startsWith('~~') && match.endsWith('~~')) {
-			return `<del class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))} </del>`;
+			return `<del class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))}</del>`;
 		} else if (match.startsWith('___') && match.endsWith('___')) {
-			return `<em class="markdown"><u class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))} </u></em>`;
+			return `<em class="markdown"><u class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))}</u></em>`;
 		} else if (match.startsWith('__') && match.endsWith('__')) {
-			return `<u class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))} </u>`;
+			return `<u class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))}</u>`;
 		} else if (match.startsWith('***') && match.endsWith('***')) {
-			return `<em class="markdown"><strong class="markdown">${parseMarkdown(getTextContent(match.slice(3, match.length - 3)))} </strong></em>`;
+			return `<em class="markdown"><strong class="markdown">${parseMarkdown(getTextContent(match.slice(3, match.length - 3)))}</strong></em>`;
 		} else if (match.startsWith('**') && match.endsWith('**')) {
-			return `<strong class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))} </strong>`;
+			return `<strong class="markdown">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))}</strong>`;
 		} else if ((
 			match.startsWith('*') &&
 			match.endsWith('*')
@@ -307,12 +321,12 @@ const parseMarkdown = text => {
 			match.startsWith('_') &&
 			match.endsWith('_')
 		)) {
-			return `<em class="markdown">${parseMarkdown(getTextContent(match.slice(1, match.length - 1)))} </em>`;
+			return `<em class="markdown">${parseMarkdown(getTextContent(match.slice(1, match.length - 1)))}</em>`;
 		} else if (match.startsWith('`') && match.endsWith('`')) {
 			const slice = match.startsWith('```') && match.endsWith('```') ? 3 : match.startsWith('``') && match.endsWith('``') ? 2 : 1;
-			return `<code class="markdown">${parseMarkdown(getTextContent(match.slice(slice, match.length - slice)))} </code>`;
+			return `<code class="markdown">${parseMarkdown(getTextContent(match.slice(slice, match.length - slice)))}</code>`;
 		} else if (match.startsWith('||') && match.endsWith('||')) {
-			return `<span class="markdown spoiler">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))} </span>`;
+			return `<span class="markdown spoiler">${parseMarkdown(getTextContent(match.slice(2, match.length - 2)))}</span>`;
 		}
 		return match;
 	});
