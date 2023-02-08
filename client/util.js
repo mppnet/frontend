@@ -306,23 +306,23 @@ const parseMarkdown = (text, parseFunction = t => t) => {
 			return parseFunction(match.slice(1));
 		} else if (match.startsWith('~~') && match.endsWith('~~')) {
 			return `<del class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseUrl)
+				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
 			}</del>`;
 		} else if (match.startsWith('___') && match.endsWith('___')) {
 			return `<em class="markdown"><u class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseUrl)
+				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
 			}</u></em>`;
 		} else if (match.startsWith('__') && match.endsWith('__')) {
 			return `<u class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseUrl)
+				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
 			}</u>`;
 		} else if (match.startsWith('***') && match.endsWith('***')) {
 			return `<em class="markdown"><strong class="markdown">${
-				parseMarkdown(getTextContent(match.slice(3, match.length - 3)), parseUrl)
+				parseMarkdown(getTextContent(match.slice(3, match.length - 3)), parseFunction)
 			}</strong></em>`;
 		} else if (match.startsWith('**') && match.endsWith('**')) {
 			return `<strong class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseUrl)
+				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
 			}</strong>`;
 		} else if ((
 			match.startsWith('*') &&
@@ -332,7 +332,7 @@ const parseMarkdown = (text, parseFunction = t => t) => {
 			match.endsWith('_')
 		)) {
 			return `<em class="markdown">${
-				parseMarkdown(getTextContent(match.slice(1, match.length - 1)), parseUrl)
+				parseMarkdown(getTextContent(match.slice(1, match.length - 1)), parseFunction)
 			}</em>`;
 		} else if (match.startsWith('`') && match.endsWith('`')) {
 			const slice = match.startsWith('```') && match.endsWith('```') ? 3 : match.startsWith('``') && match.endsWith('``') ? 2 : 1;
@@ -341,7 +341,7 @@ const parseMarkdown = (text, parseFunction = t => t) => {
 			}</code>`;
 		} else if (match.startsWith('||') && match.endsWith('||')) {
 			return `<span class="markdown spoiler">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseUrl)
+				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
 			}</span>`;
 		}
 		return parseFunction(match);
