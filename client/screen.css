@@ -1474,10 +1474,10 @@ code {
 }
 
 .spoiler, .spoiler > * {
-	transition: color .25s, text-shadow .25s, background .25s;
-	-webkit-transition: color .25s, text-shadow .25s, background .25s;
-	-moz-transition: color .25s, text-shadow .25s, background .25s;
-	-o-transition: color .25s, text-shadow .25s, background .25s;
+    transition: color .25s, text-shadow .25s, background .25s;
+    -webkit-transition: color .25s, text-shadow .25s, background .25s;
+    -moz-transition: color .25s, text-shadow .25s, background .25s;
+    -o-transition: color .25s, text-shadow .25s, background .25s;
 }
 
 .spoiler > code {
