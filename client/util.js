@@ -417,8 +417,8 @@ const parseMarkdown = (text, parseFunction = t => t) => {
 			match.startsWith('`') &&
 			endsWithBacktick
 		) {
-			const content = getTextContent(match.slice(slice, match.length - slice));
 			const slice = match.startsWith('```') && endsWithThreeBackticks ? 3 : match.startsWith('``') && endsWithTwoBackticks ? 2 : 1;
+			const content = getTextContent(match.slice(slice, match.length - slice));
 			return content.trim().length < 1 ? match : `<code class="markdown">${
 				content
 			}</code>`;
