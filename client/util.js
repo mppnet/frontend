@@ -273,7 +273,7 @@ const url_regex = new RegExp(
 
 const parseContent = text => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 
-const markdownRegex = /(?:\\|)(\|\|.+?\|\||```.+?```|``.+?``|`.+?`|\*\*\*.+?\*\*\*|\*\*.+?\*\*|\*.+?\*|___.+?___|__.+?__|_.+?_(?:\s|$)|~~.+?~~)/g;
+const markdownRegex = /((?:\\|)(?:\|\|.+?\|\||```.+?```|``.+?``|`.+?`|\*\*\*.+?\*\*\*|\*\*.+?\*\*|\*.+?\*|___.+?___|__.+?__|_.+?_(?:\s|$)|~~.+?~~))/g;
 
 const getTextContent = text => {
 	return text.indexOf('>') > -1 && text.indexOf('</') > -1 ? text.slice(text.indexOf('>') + 1, text.lastIndexOf('</')) || text : text;
@@ -302,44 +302,123 @@ const parseUrl = text => {
 
 const parseMarkdown = (text, parseFunction = t => t) => {
 	return text.split(markdownRegex).map(match => {
-		if (match.startsWith('\\')) {
+		const endsWithTildes = match.endsWith('~~');
+		const endsWithThreeUnderscores = match.endsWith('___');
+		const endsWithTwoUnderscores = match.endsWith('__');
+		const endsWithUnderscore = match.endsWith('_');
+		const endsWithThreeAsterisks = match.endsWith('***');
+		const endsWithTwoAsterisks = match.endsWith('**');
+		const endsWithAsterisk = match.endsWith('*');
+		const endsWithThreeBackticks = match.endsWith('```');
+		const endsWithTwoBackticks = match.endsWith('``');
+		const endsWithBacktick = match.endsWith('`');
+		const endsWithVerticalBars = match.endsWith('||');
+		if (
+			(
+				match.startsWith('\\~~') &&
+				endsWithTildes
+			) ||
+			(
+				match.startsWith('\\___') &&
+				endsWithThreeUnderscores
+			) ||
+			(
+				match.startsWith('\\__') &&
+				endsWithTwoUnderscores
+			) ||
+			(
+				match.startsWith('\\_') &&
+				endsWithUnderscore
+			) ||
+			(
+				match.startsWith('\\***') &&
+				endsWithThreeAsterisks
+			) ||
+			(
+				match.startsWith('\\**') &&
+				endsWithTwoAsterisks
+			) ||
+			(
+				match.startsWith('\\*') &&
+				endsWithAsterisk
+			) ||
+			(
+				match.startsWith('\\```') &&
+				endsWithThreeBackticks
+			) ||
+			(
+				match.startsWith('\\``') &&
+				endsWithTwoBackticks
+			) ||
+			(
+				match.startsWith('\\`') &&
+				endsWithBacktick
+			) ||
+			(
+				match.startsWith('\\||') &&
+				endsWithVerticalBars
+			)
+		) {
 			return parseFunction(match.slice(1));
-		} else if (match.startsWith('~~') && match.endsWith('~~')) {
+		} else if (
+			match.startsWith('~~') &&
+			endsWithTildes
+		) {
 			return `<del class="markdown">${
 				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
 			}</del>`;
-		} else if (match.startsWith('___') && match.endsWith('___')) {
+		} else if (
+			match.startsWith('___') &&
+			endsWithThreeUnderscores
+		) {
 			return `<em class="markdown"><u class="markdown">${
 				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
 			}</u></em>`;
-		} else if (match.startsWith('__') && match.endsWith('__')) {
+		} else if (
+			match.startsWith('__') &&
+			endsWithTwoUnderscores
+		) {
 			return `<u class="markdown">${
 				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
 			}</u>`;
-		} else if (match.startsWith('***') && match.endsWith('***')) {
+		} else if (
+			match.startsWith('***') &&
+			endsWithThreeAsterisks
+		) {
 			return `<em class="markdown"><strong class="markdown">${
 				parseMarkdown(getTextContent(match.slice(3, match.length - 3)), parseFunction)
 			}</strong></em>`;
-		} else if (match.startsWith('**') && match.endsWith('**')) {
+		} else if (
+			match.startsWith('**') &&
+			endsWithTwoAsterisks
+		) {
 			return `<strong class="markdown">${
 				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
 			}</strong>`;
-		} else if ((
-			match.startsWith('*') &&
-			match.endsWith('*')
-		) || (
-			match.startsWith('_') &&
-			match.endsWith('_')
-		)) {
+		} else if (
+			(
+				match.startsWith('*') &&
+				endsWithAsterisk
+			) || (
+				match.startsWith('_') &&
+				endsWithUnderscore
+			)
+		) {
 			return `<em class="markdown">${
 				parseMarkdown(getTextContent(match.slice(1, match.length - 1)), parseFunction)
 			}</em>`;
-		} else if (match.startsWith('`') && match.endsWith('`')) {
-			const slice = match.startsWith('```') && match.endsWith('```') ? 3 : match.startsWith('``') && match.endsWith('``') ? 2 : 1;
+		} else if (
+			match.startsWith('`') &&
+			endsWithBacktick
+		) {
+			const slice = match.startsWith('```') && endsWithThreeBackticks ? 3 : match.startsWith('``') && endsWithTwoBackticks ? 2 : 1;
 			return `<code class="markdown">${
 				getTextContent(match.slice(slice, match.length - slice))
 			}</code>`;
-		} else if (match.startsWith('||') && match.endsWith('||')) {
+		} else if (
+			match.startsWith('||') &&
+			endsWithVerticalBars
+		) {
 			return `<span class="markdown spoiler">${
 				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
 			}</span>`;
