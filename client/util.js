@@ -364,36 +364,41 @@ const parseMarkdown = (text, parseFunction = t => t) => {
 			match.startsWith('~~') &&
 			endsWithTildes
 		) {
-			return `<del class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
+			const content = parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction);
+			return content.trim().length < 1 ? match : `<del class="markdown">${
+				content
 			}</del>`;
 		} else if (
 			match.startsWith('___') &&
 			endsWithThreeUnderscores
 		) {
-			return `<em class="markdown"><u class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
+			const content = parseMarkdown(getTextContent(match.slice(3, match.length - 3)), parseFunction);
+			return content.trim().length < 1 ? match : `<em class="markdown"><u class="markdown">${
+				content
 			}</u></em>`;
 		} else if (
 			match.startsWith('__') &&
 			endsWithTwoUnderscores
 		) {
-			return `<u class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
+			const content = parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction);
+			return content.trim().length < 1 ? match : `<u class="markdown">${
+				content
 			}</u>`;
 		} else if (
 			match.startsWith('***') &&
 			endsWithThreeAsterisks
 		) {
-			return `<em class="markdown"><strong class="markdown">${
-				parseMarkdown(getTextContent(match.slice(3, match.length - 3)), parseFunction)
+			const content = parseMarkdown(getTextContent(match.slice(3, match.length - 3)), parseFunction);
+			return content.trim().length < 1 ? match : `<em class="markdown"><strong class="markdown">${
+				content
 			}</strong></em>`;
 		} else if (
 			match.startsWith('**') &&
 			endsWithTwoAsterisks
 		) {
-			return `<strong class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
+			const content = parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction);
+			return content.trim().length < 1 ? match : `<strong class="markdown">${
+				content
 			}</strong>`;
 		} else if (
 			(
@@ -404,23 +409,26 @@ const parseMarkdown = (text, parseFunction = t => t) => {
 				endsWithUnderscore
 			)
 		) {
-			return `<em class="markdown">${
-				parseMarkdown(getTextContent(match.slice(1, match.length - 1)), parseFunction)
+			const content = parseMarkdown(getTextContent(match.slice(1, match.length - 1)), parseFunction);
+			return content.trim().length < 1 ? match : `<em class="markdown">${
+				content
 			}</em>`;
 		} else if (
 			match.startsWith('`') &&
 			endsWithBacktick
 		) {
+			const content = getTextContent(match.slice(slice, match.length - slice));
 			const slice = match.startsWith('```') && endsWithThreeBackticks ? 3 : match.startsWith('``') && endsWithTwoBackticks ? 2 : 1;
-			return `<code class="markdown">${
-				getTextContent(match.slice(slice, match.length - slice))
+			return content.trim().length < 1 ? match : `<code class="markdown">${
+				content
 			}</code>`;
 		} else if (
 			match.startsWith('||') &&
 			endsWithVerticalBars
 		) {
-			return `<span class="markdown spoiler">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
+			const content = parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction);
+			return content.trim().length < 1 ? match : `<span class="markdown spoiler">${
+				content
 			}</span>`;
 		}
 		return parseFunction(match);
