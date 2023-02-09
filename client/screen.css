@@ -1187,7 +1187,7 @@ input[type="range"]:hover {
 }
 
 #chat.chatting {
-    background: rgba(64,80,80,.75);
+    background: rgba(64, 80, 80, .75);
     border-radius: 5px;
     box-shadow: 1px 1px 5px #888;
     transition: all .1s;
@@ -1460,22 +1460,29 @@ code {
 
 .spoiler {
     background: #222;
-    padding: 2px 4px;
+    padding: 2px 0 5px;
     border-radius: 4px;
 }
 
-.spoiler, .spoiler > * {
+.spoiler:not(:hover), .spoiler:not(:hover) > * {
     color: rgba(0, 0, 0, 0);
     text-shadow: rgba(0, 0, 0, 0) 1px 1px;
-	transition: color .25s, text-shadow .25s;
-	-webkit-transition: color .25s, text-shadow .25s;
-	-moz-transition: color .25s, text-shadow .25s;
-	-o-transition: color .25s, text-shadow .25s;
 }
 
-.spoiler:hover, .spoiler:hover > *, .spoiler > *:hover {
-    color: #fff;
-    text-shadow: rgba(0, 0, 0, .5) 1px 1px;
+.spoiler:hover {
+    background: rgba(64, 80, 80, .75);
+}
+
+.spoiler, .spoiler > * {
+    transition: color .25s, text-shadow .25s, background .25s;
+    -webkit-transition: color .25s, text-shadow .25s, background .25s;
+    -moz-transition: color .25s, text-shadow .25s, background .25s;
+    -o-transition: color .25s, text-shadow .25s, background .25s;
+}
+
+.spoiler > code {
+    background: rgba(0, 0, 0, 0);
+    padding: 0;
 }
 
 @-webkit-keyframes spin {
