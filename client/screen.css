@@ -1464,12 +1464,12 @@ code {
     border-radius: 4px;
 }
 
-.spoiler:not(:hover), .spoiler:not(:hover) > *, .spoiler > *:not(:hover) {
+.spoiler:not(:hover), .spoiler:not(:hover) > * {
     color: rgba(0, 0, 0, 0);
     text-shadow: rgba(0, 0, 0, 0) 1px 1px;
 }
 
-.spoiler:hover, .spoiler:hover > *, .spoiler > *:hover {
+.spoiler:hover {
     background: rgba(64, 80, 80, .75);
 }
 

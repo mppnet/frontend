@@ -273,7 +273,7 @@ const url_regex = new RegExp(
 
 const parseContent = text => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 
-const markdownRegex = /(?:\\|)(\|\|.+?\|\||```.+?```|``.+?``|`.+?`|\*\*\*.+?\*\*\*|\*\*.+?\*\*|\*.+?\*|___.+?___|__.+?__|_.+?_(?:\s|$)|~~.+?~~)/g;
+const markdownRegex = /((?:\\|)(?:\|\|.+?\|\||```.+?```|``.+?``|`.+?`|\*\*\*.+?\*\*\*|\*\*.+?\*\*|\*.+?\*|___.+?___|__.+?__|_.+?_(?:\s|$)|~~.+?~~))/g;
 
 const getTextContent = text => {
 	return text.indexOf('>') > -1 && text.indexOf('</') > -1 ? text.slice(text.indexOf('>') + 1, text.lastIndexOf('</')) || text : text;
@@ -302,46 +302,133 @@ const parseUrl = text => {
 
 const parseMarkdown = (text, parseFunction = t => t) => {
 	return text.split(markdownRegex).map(match => {
-		if (match.startsWith('\\')) {
+		const endsWithTildes = match.endsWith('~~');
+		const endsWithThreeUnderscores = match.endsWith('___');
+		const endsWithTwoUnderscores = match.endsWith('__');
+		const endsWithUnderscore = match.endsWith('_');
+		const endsWithThreeAsterisks = match.endsWith('***');
+		const endsWithTwoAsterisks = match.endsWith('**');
+		const endsWithAsterisk = match.endsWith('*');
+		const endsWithThreeBackticks = match.endsWith('```');
+		const endsWithTwoBackticks = match.endsWith('``');
+		const endsWithBacktick = match.endsWith('`');
+		const endsWithVerticalBars = match.endsWith('||');
+		if (
+			(
+				match.startsWith('\\~~') &&
+				endsWithTildes
+			) ||
+			(
+				match.startsWith('\\___') &&
+				endsWithThreeUnderscores
+			) ||
+			(
+				match.startsWith('\\__') &&
+				endsWithTwoUnderscores
+			) ||
+			(
+				match.startsWith('\\_') &&
+				endsWithUnderscore
+			) ||
+			(
+				match.startsWith('\\***') &&
+				endsWithThreeAsterisks
+			) ||
+			(
+				match.startsWith('\\**') &&
+				endsWithTwoAsterisks
+			) ||
+			(
+				match.startsWith('\\*') &&
+				endsWithAsterisk
+			) ||
+			(
+				match.startsWith('\\```') &&
+				endsWithThreeBackticks
+			) ||
+			(
+				match.startsWith('\\``') &&
+				endsWithTwoBackticks
+			) ||
+			(
+				match.startsWith('\\`') &&
+				endsWithBacktick
+			) ||
+			(
+				match.startsWith('\\||') &&
+				endsWithVerticalBars
+			)
+		) {
 			return parseFunction(match.slice(1));
-		} else if (match.startsWith('~~') && match.endsWith('~~')) {
-			return `<del class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
+		} else if (
+			match.startsWith('~~') &&
+			endsWithTildes
+		) {
+			const content = parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction);
+			return content.trim().length < 1 ? match : `<del class="markdown">${
+				content
 			}</del>`;
-		} else if (match.startsWith('___') && match.endsWith('___')) {
-			return `<em class="markdown"><u class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
+		} else if (
+			match.startsWith('___') &&
+			endsWithThreeUnderscores
+		) {
+			const content = parseMarkdown(getTextContent(match.slice(3, match.length - 3)), parseFunction);
+			return content.trim().length < 1 ? match : `<em class="markdown"><u class="markdown">${
+				content
 			}</u></em>`;
-		} else if (match.startsWith('__') && match.endsWith('__')) {
-			return `<u class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
+		} else if (
+			match.startsWith('__') &&
+			endsWithTwoUnderscores
+		) {
+			const content = parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction);
+			return content.trim().length < 1 ? match : `<u class="markdown">${
+				content
 			}</u>`;
-		} else if (match.startsWith('***') && match.endsWith('***')) {
-			return `<em class="markdown"><strong class="markdown">${
-				parseMarkdown(getTextContent(match.slice(3, match.length - 3)), parseFunction)
+		} else if (
+			match.startsWith('***') &&
+			endsWithThreeAsterisks
+		) {
+			const content = parseMarkdown(getTextContent(match.slice(3, match.length - 3)), parseFunction);
+			return content.trim().length < 1 ? match : `<em class="markdown"><strong class="markdown">${
+				content
 			}</strong></em>`;
-		} else if (match.startsWith('**') && match.endsWith('**')) {
-			return `<strong class="markdown">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
+		} else if (
+			match.startsWith('**') &&
+			endsWithTwoAsterisks
+		) {
+			const content = parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction);
+			return content.trim().length < 1 ? match : `<strong class="markdown">${
+				content
 			}</strong>`;
-		} else if ((
-			match.startsWith('*') &&
-			match.endsWith('*')
-		) || (
-			match.startsWith('_') &&
-			match.endsWith('_')
-		)) {
-			return `<em class="markdown">${
-				parseMarkdown(getTextContent(match.slice(1, match.length - 1)), parseFunction)
+		} else if (
+			(
+				match.startsWith('*') &&
+				endsWithAsterisk
+			) || (
+				match.startsWith('_') &&
+				endsWithUnderscore
+			)
+		) {
+			const content = parseMarkdown(getTextContent(match.slice(1, match.length - 1)), parseFunction);
+			return content.trim().length < 1 ? match : `<em class="markdown">${
+				content
 			}</em>`;
-		} else if (match.startsWith('`') && match.endsWith('`')) {
-			const slice = match.startsWith('```') && match.endsWith('```') ? 3 : match.startsWith('``') && match.endsWith('``') ? 2 : 1;
-			return `<code class="markdown">${
-				getTextContent(match.slice(slice, match.length - slice))
+		} else if (
+			match.startsWith('`') &&
+			endsWithBacktick
+		) {
+			const content = getTextContent(match.slice(slice, match.length - slice));
+			const slice = match.startsWith('```') && endsWithThreeBackticks ? 3 : match.startsWith('``') && endsWithTwoBackticks ? 2 : 1;
+			return content.trim().length < 1 ? match : `<code class="markdown">${
+				content
 			}</code>`;
-		} else if (match.startsWith('||') && match.endsWith('||')) {
-			return `<span class="markdown spoiler">${
-				parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction)
+		} else if (
+			match.startsWith('||') &&
+			endsWithVerticalBars
+		) {
+			const content = parseMarkdown(getTextContent(match.slice(2, match.length - 2)), parseFunction);
+			return content.trim().length < 1 ? match : `<span class="markdown spoiler">${
+				content
 			}</span>`;
 		}
 		return parseFunction(match);
