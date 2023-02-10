@@ -60,7 +60,7 @@ This protocol has been recreated in [protocol.js](https://github.com/LapisHusky/
 
 ## Websocket Information
 ### Connecting
-The websocket server is on (wss://mppclone.com:8443). Any non-websocket requests to that port will be rejected.
+The websocket server is on (wss://mppclone.com/).
 ### Messages
 All messages sent by the client and the server are JSON arrays. Socket messages are strings, not binary. Each array can contain one or more individual message objects. Each individual message object has a "m" property where its value is a string signaling which message type it is.
 #### Example socket message:
