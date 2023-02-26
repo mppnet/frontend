@@ -43,7 +43,7 @@ a, .spoiler:hover a {
     transition: color .25s;
 }
 
-a:hover, .spoiler a:hover {
+a:hover, .spoiler:hover a:hover {
     color: #e05;
 }
 
@@ -1460,29 +1460,39 @@ code {
 
 .spoiler {
     background: #222;
-    padding: 2px 0 5px;
+    padding: 1px 0 3px;
     border-radius: 4px;
 }
 
-.spoiler:not(:hover), .spoiler:not(:hover) > * {
+.spoiler:not(:hover) {
     color: rgba(0, 0, 0, 0);
     text-shadow: rgba(0, 0, 0, 0) 1px 1px;
+}
+
+.spoiler * {
+    opacity: 0;
+}
+
+.spoiler:hover * {
+    opacity: 1;
 }
 
 .spoiler:hover {
     background: rgba(64, 80, 80, .75);
 }
 
-.spoiler, .spoiler > * {
-    transition: color .25s, text-shadow .25s, background .25s;
-    -webkit-transition: color .25s, text-shadow .25s, background .25s;
-    -moz-transition: color .25s, text-shadow .25s, background .25s;
-    -o-transition: color .25s, text-shadow .25s, background .25s;
+.spoiler * {
+    transition: opacity .25s;
+    -webkit-transition: opacity .25s;
+    -moz-transition: opacity .25s;
+    -o-transition: opacity .25s;
 }
 
-.spoiler > code {
-    background: rgba(0, 0, 0, 0);
-    padding: 0;
+.spoiler {
+    transition: color .25s, text-shadow .25s, background .25s, opacity .25s;
+    -webkit-transition: color .25s, text-shadow .25s, background .25s, opacity .25s;
+    -moz-transition: color .25s, text-shadow .25s, background .25s, opacity .25s;
+    -o-transition: color .25s, text-shadow .25s, background .25s, opacity .25s;
 }
 
 @-webkit-keyframes spin {
