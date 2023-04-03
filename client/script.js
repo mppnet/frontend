@@ -860,7 +860,7 @@ $(function () {
             var blip = key.blips[b];
             if (blip.time > timeBlipEnd) {
               this.ctx.fillStyle = blip.color;
-              this.ctx.globalAlpha = alpha - ((now - blip.time) / 1000);
+              this.ctx.globalAlpha = alpha - ((now - blip.time) / 1000) * alpha;
               this.ctx.fillRect(x, y, w, h);
             } else {
               key.blips.splice(b, 1);
@@ -883,7 +883,7 @@ $(function () {
       var lyric_y = this.whiteKeyHeight + 1;
       this.ctx.fillStyle = key.lyric.color;
       var alpha = this.ctx.globalAlpha;
-      this.ctx.globalAlpha = alpha - ((now - key.lyric.time) / 1000);
+      this.ctx.globalAlpha = alpha - ((now - key.lyric.time) / 1000) * alpha;
       this.ctx.fillRect(x, y, 10, 10);
     }
   };
