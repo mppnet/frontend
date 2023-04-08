@@ -1442,6 +1442,7 @@ $(function () {
 
     }
     gClient.on("participant added", function (part) {
+      if (shouldHideUser(part)) return;
 
       part.displayX = 150;
       part.displayY = 50;
@@ -1806,8 +1807,25 @@ $(function () {
   var gHidePiano = localStorage.hidePiano == "true";
   var gHideChat = localStorage.hideChat == "true";
   var gNoPreventDefault = localStorage.noPreventDefault == "true";
+  var gHideBotUsers = localStorage.hideBotUsers == "true";
 //   var gWarnOnLinks = localStorage.warnOnLinks ? loalStorage.warnOnLinks == "true" : true;
 
+
+  // This code is not written specficially for readibility, it is a heavily used function and performance matters.
+  // If someone finds this code and knows a more performant way to do this (with proof of it being more performant)
+  // it may be replaced with the more performant code.
+  // Returns true if we should hide the user, and returns false when we should not.
+  function shouldHideUser(part) {
+      if (gHideBotUsers) {
+          if (part.tag && part.tag.text === "BOT") {
+              return true;
+          } else {
+              return false;
+          }
+      } else {
+          return false;
+      }
+  }
 
 
   // Hide piano attribute
@@ -4378,6 +4396,11 @@ $(function () {
               } else {
                   $("#cursors").show();
               }
+            });
+
+            createSetting("hide-bot-users", "Hide all bots", gHideBotUsers, true, html, () => {
+                gHideBotUsers = !gHideBotUsers;
+                localStorage.hideBotUsers = gHideBotUsers;
             });
 
             content.appendChild(html);
