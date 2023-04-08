@@ -1469,6 +1469,7 @@ $(function () {
       }
     });
     gClient.on("participant removed", function (part) {
+      if (shouldHideUser(part)) return;
       // remove nameDiv
       var nd = $(part.nameDiv);
       var cd = $(part.cursorDiv);
@@ -1481,6 +1482,7 @@ $(function () {
       });
     });
     gClient.on("participant update", function (part) {
+      if (shouldHideUser(part)) return;
       var name = part.name || "";
       var color = part.color || "#777";
       setupParticipantDivs(part);
@@ -1498,6 +1500,7 @@ $(function () {
       }
     });
     gClient.on("participant added", function (part) {
+      if (shouldHideUser(part)) return;
       updateLabels(part);
     });
     function updateLabels(part) {
@@ -1535,6 +1538,7 @@ $(function () {
     }
     function updateCursor(msg) {
       const part = gClient.ppl[msg.id];
+      if (shouldHideUser(part)) return;
       if (part && part.cursorDiv) {
         if (gSmoothCursor) {
           part.cursorDiv.style.transform = 'translate3d(' + msg.x + 'vw, ' + msg.y + 'vh, 0)';
@@ -1814,17 +1818,19 @@ $(function () {
   // This code is not written specficially for readibility, it is a heavily used function and performance matters.
   // If someone finds this code and knows a more performant way to do this (with proof of it being more performant)
   // it may be replaced with the more performant code.
-  // Returns true if we should hide the user, and returns false when we should not.
-  function shouldHideUser(part) {
-      if (gHideBotUsers) {
-          if (part.tag && part.tag.text === "BOT") {
-              return true;
-          } else {
-              return false;
-          }
-      } else {
+  // Returns true if we should hide the user, and returns false when we should not. 
+  function shouldHideUser(user) {
+    if (gHideBotUsers) {
+      if (user) {
+        if (user.tag && user.tag.text === "BOT") {
+          return true;
+        } else {
           return false;
+        }
       }
+    } else {
+      return false;
+    }
   }
 
 
