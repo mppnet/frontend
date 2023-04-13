@@ -1813,6 +1813,7 @@ $(function () {
   var gNoPreventDefault = localStorage.noPreventDefault == "true";
   var gHideBotUsers = localStorage.hideBotUsers == "true";
 //   var gWarnOnLinks = localStorage.warnOnLinks ? loalStorage.warnOnLinks == "true" : true;
+  var gDisableMIDIDrumChannel = localStorage.disableMIDIDrumChannel ? localStorage.disableMIDIDrumChannel == "true" : true;
 
 
   // This code is not written specficially for readibility, it is a heavily used function and performance matters.
@@ -3428,6 +3429,9 @@ $(function () {
             var cmd = evt.data[0] >> 4;
             var note_number = evt.data[1];
             var vel = evt.data[2];
+            if (gDisableMIDIDrumChannel && channel == 9) {
+              return;
+            }
             //console.log(channel, cmd, note_number, vel);
             if (cmd == 8 || (cmd == 9 && vel == 0)) {
               // NOTE_OFF
@@ -4280,9 +4284,14 @@ $(function () {
           case "midi":
             var html = document.createElement("div");
 
-            createSetting("output-own-notes-to-midi", "Output own notes to MIDI", gOutputOwnNotes, false, html, () => {
+            createSetting("output-own-notes-to-midi", "Output own notes to MIDI", gOutputOwnNotes, true, html, () => {
               gOutputOwnNotes = !gOutputOwnNotes;
               localStorage.outputOwnNotes = gOutputOwnNotes;
+            });
+
+            createSetting("disable-midi-drum-channel", "Disable MIDI Drum Channel (channel 10)", gDisableMIDIDrumChannel, true, html, () => {
+              gDisableMIDIDrumChannel = !gDisableMIDIDrumChannel;
+              localStorage.disableMIDIDrumChannel = gDisableMIDIDrumChannel;
             });
 
             content.appendChild(html);
