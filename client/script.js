@@ -1680,6 +1680,7 @@ $(function () {
           $("#room-settings .checkbox[name=nocussing]").prop("checked", settings["no cussing"]);
           $("#room-settings input[name=color]").val(settings.color);
           $("#room-settings input[name=color2]").val(settings.color2);
+          $("#room-settings .checkbox[name=noindex]").prop("checked", settings.noindex);
           $("#room-settings input[name=limit]").val(settings.limit);
         }, 100);
       }
@@ -1690,6 +1691,7 @@ $(function () {
         chat: $("#room-settings .checkbox[name=chat]").is(":checked"),
         crownsolo: $("#room-settings .checkbox[name=crownsolo]").is(":checked"),
         "no cussing": $("#room-settings .checkbox[name=nocussing]").is(":checked"),
+        noindex: $("#room-settings .checkbox[name=noindex]").is(":checked"),
         color: $("#room-settings input[name=color]").val(),
         color2: $("#room-settings input[name=color2]").val(),
         limit: $("#room-settings input[name=limit]").val(),
