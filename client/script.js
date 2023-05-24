@@ -3347,14 +3347,14 @@ $(function () {
               youreReplied = true;
             }
           }
-          li.find(".replyLink").text(`➦ ${(repliedMsg?.m !== 'dm' ? repliedMsg?.p?.name : repliedMsg?.sender?.name ?? "")} ${(repliedMsg?.a?.length > 10 ? repliedMsg?.a?.substring(0, 10) + "..." : repliedMsg?.a?.substring(0, 10)) ?? "Unknown Message"}`);
+          li.find(".replyLink").text(`➦ ${((repliedMsg?.m !== 'dm' ? repliedMsg?.p?.name : repliedMsg?.sender?.name) + ": ") ?? ""}${(repliedMsg?.a?.length > 10 ? repliedMsg?.a?.substring(0, 10) + "..." : repliedMsg?.a?.substring(0, 10)) ?? "Unknown Message"}`);
           li.find(`.replyLink`).css({"background": `${(repliedMsg?.m === "dm" ? repliedMsg?.sender?.color : repliedMsg?.p?.color) ?? "gray"}`});
           li.find(`.replyLink`).on(`click`, evt => {
             if (repliedMsg) {
               $(`#chat-input`).focus();
               document.getElementById(`msg-${repliedMsg?.id}`).scrollIntoView({behavior: "smooth"});
-              $(`#msg-${repliedMsg?.id}`).css({"border": `1px solid ${(repliedMsg?.m === 'dm' ? repliedMsg.sender?.color : repliedMsg.p?.color)}80`, "background-color": `${(repliedMsg?.m === 'dm' ? repliedMsg.sender?.color : repliedMsg.p?.color)}20`, "transition": "background 0.5s"});
-              setTimeout(()=> {$(`#msg-${repliedMsg?.id}`).css({"border": "none", "background": "", "transition": "background 0.5s"}); }, 5000);
+              $(`#msg-${repliedMsg?.id}`).css({"border": `1px solid ${(repliedMsg?.m === 'dm' ? repliedMsg.sender?.color : repliedMsg.p?.color)}80`, "background-color": `${(repliedMsg?.m === 'dm' ? repliedMsg.sender?.color : repliedMsg.p?.color)}20`});
+              setTimeout(()=> {$(`#msg-${repliedMsg?.id}`).css({"border": "none", "background-color": "unset"}); }, 5000);
             }
           })
         };

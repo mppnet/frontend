@@ -1103,15 +1103,26 @@ input[type="range"]:hover {
 #chat li {
     padding: 2px;
     opacity: 0;
+    transition: all 0.5s;
 }
 
 #chat li .reply {
-    margin-right: 8px;
+    margin-right: 4px;
+    padding-inline: 5px;
+    background-color: #111;
+    text-shadow: none;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
     cursor: pointer;
 }
 
 #chat li .replyLink {
     margin-right: 8px;
+    padding-inline: 4px;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
     cursor: pointer;
 }
 
