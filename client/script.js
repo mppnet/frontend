@@ -3304,7 +3304,7 @@ $(function () {
         var isSpecialDm = false;
 
         if (msg.m === 'dm') {
-          if (msg.sender._id != gClient.user._id) {
+          if (msg.sender._id === gClient.user._id || msg.recipient._id === gClient.user._id) {
             liString += `<span class="reply"/>`;
           }
         } else {
@@ -3461,8 +3461,9 @@ $(function () {
             setTimeout(() => { $('#chat-input').focus(); }, 100);
           } else {
             if (msg.m === 'dm') {
-              if (gClient.ppl[msg.sender._id]) {
-                MPP.chat.startDmReply(msg.sender, msg.id);
+              const replyingTo = msg.sender._id === gClient.user._id ? msg.recipient : msg.sender;
+              if (gClient.ppl[replyingTo._id]) {
+                MPP.chat.startDmReply(replyingTo, msg.id);
                 setTimeout(() => { $('#chat-input').focus(); }, 100);
               } else {
                 new Notification({target: "#piano", title: "User not found.", text: "The user who you are trying to reply to in a DM is not found, so a DM could not be started." });
