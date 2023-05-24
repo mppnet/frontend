@@ -3353,8 +3353,8 @@ $(function () {
             li.find(".replyLink").on("click", evt => {
               $("#chat-input").focus();
               document.getElementById(`msg-${repliedMsg?.id}`).scrollIntoView({behavior: "smooth"});
-              $(`#msg-${repliedMsg?.id}`).css({"background-color": `${(repliedMsg?.m === 'dm' ? repliedMsg.sender?.color : repliedMsg.p?.color)}20`});
-              setTimeout(()=> {$(`#msg-${repliedMsg?.id}`).css({"background-color": "unset"}); }, 5000);
+              $(`#msg-${repliedMsg?.id}`).css({"border": `1px solid ${(repliedMsg?.m === 'dm' ? repliedMsg.sender?.color : repliedMsg.p?.color)}80`, "background-color": `${(repliedMsg?.m === 'dm' ? repliedMsg.sender?.color : repliedMsg.p?.color)}20`});
+              setTimeout(()=> {$(`#msg-${repliedMsg?.id}`).css({"background-color": "unset", "border": "1px solid #00000000"}); }, 5000);
             });
           } else {
             li.find(".replyLink").text("Unknown Message");
