@@ -3348,7 +3348,7 @@ $(function () {
             }
           }
           if (repliedMsg) {
-            li.find(".replyLink").text(`➦ ${((repliedMsg.m === 'dm' ? repliedMsg.sender.name : repliedMsg.p.name))}: ${(repliedMsg.a.length > 10 ? repliedMsg.a.substring(0, 10) + "..." : repliedMsg.a.substring(0, 10))}`);
+            li.find(".replyLink").text(`➦ ${repliedMsg.m === 'dm' ? repliedMsg.sender.name : repliedMsg.p.name}`);
             li.find(".replyLink").css({"background": `${(repliedMsg?.m === "dm" ? repliedMsg?.sender?.color : repliedMsg?.p?.color) ?? "gray"}`});
             li.find(".replyLink").on("click", evt => {
               $("#chat-input").focus();
