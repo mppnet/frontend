@@ -3348,7 +3348,7 @@ $(function () {
             }
           }
           if (repliedMsg) {
-            li.find(".replyLink").text(`➦ ${repliedMsg.m === 'dm' ? repliedMsg.sender.name : repliedMsg.p.name}`);
+            li.find(".replyLink").text(`➥ ${repliedMsg.m === 'dm' ? repliedMsg.sender.name : repliedMsg.p.name}`);
             li.find(".replyLink").css({"background": `${(repliedMsg?.m === "dm" ? repliedMsg?.sender?.color : repliedMsg?.p?.color) ?? "gray"}`});
             li.find(".replyLink").on("click", evt => {
               $("#chat-input").focus();
@@ -3357,7 +3357,7 @@ $(function () {
               setTimeout(()=> {$(`#msg-${repliedMsg?.id}`).css({"background-color": "unset", "border": "1px solid #00000000"}); }, 5000);
             });
           } else {
-            li.find(".replyLink").text("Unknown Message");
+            li.find(".replyLink").text("➥ Unknown Message");
             li.find(".replyLink").css({"background": "gray"});
           }
         };
