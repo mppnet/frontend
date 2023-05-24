@@ -1105,6 +1105,16 @@ input[type="range"]:hover {
     opacity: 0;
 }
 
+#chat li .reply {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+#chat li .replyLink {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
 #chat li .receivedDm {
     margin-right: 8px;
 }
@@ -1127,10 +1137,12 @@ input[type="range"]:hover {
 
 #chat li .id {
     margin-right: 8px;
+    cursor: pointer;
 }
 
 #chat li .id2 {
     margin-right: 8px;
+    cursor: pointer;
 }
 
 #chat li .name {
