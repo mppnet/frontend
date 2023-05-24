@@ -1111,6 +1111,7 @@ input[type="range"]:hover {
     margin-right: 4px;
     padding-inline: 5px;
     background-color: #111;
+    border: 1px solid #444;
     text-shadow: none;
     border-radius: 2px;
     -webkit-border-radius: 2px;
