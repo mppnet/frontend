@@ -1104,6 +1104,7 @@ input[type="range"]:hover {
     padding: 2px;
     opacity: 0;
     transition: all 0.5s;
+    border: 1px solid #00000000;
 }
 
 #chat li .reply {
