@@ -200,6 +200,7 @@ Channel settings are an object with properties for each setting.
   "color":"#73b3cc",
   "color2":"#273546",
   "visible":true,
+  "noindex":false,
   "chat":true,
   "crownsolo":false
 }
