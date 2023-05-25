@@ -1103,7 +1103,7 @@ input[type="range"]:hover {
 #chat li {
     padding: 2px;
     opacity: 0;
-    transition: all 0.5s;
+    transition: border 0.5s, background 0.5s;
     border: 1px solid #00000000;
 }
 
