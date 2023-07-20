@@ -77,7 +77,7 @@ All websocket close codes have a code (number) and a reason (string).
 - `4001` - `Too many unique users per IP per hour.`: Each IP address can only use 3 unique non-bot tokens per hour. This is to discourage people from using so-called "proxy tokens" which let them evade mutes or bans without actually using a proxy.
 - `4002` - `Exceeded x bytes per y seconds.`: There is a cap on how much data clients can send in a given period. This quota may change later, and the owner can manually increase it. Make sure you aren't sending extremely large messages.
 - `4003` - `Message buffer length exceeded x.`: Internally, the server buffers messages so that things always get done in the right order, even if a message runs asynchronous code. Clients can hit this limit if they send too many messages too quickly, or if the server has an error. Errors in the server are rare and shouldn't happen. The owner is able to see if one happened.
-- `4004` - `Timed out.`: Clients must send [t](#t-server-bound) messages every 20 seconds. They will get kicked if it has been longer than 30 seconds since the last time sync message was received. Time sync messages will not work before [hi](#hi-server-bound) has been sent.
+- `4004` - `Timed out.`: Clients must send [t](#t-server-bound) messages every 20 seconds. They will get kicked if it has been longer than 60 seconds since the last time sync message was received. Time sync messages will not work before [hi](#hi-server-bound) has been sent.
 - `4005` - `VPN detected.`: The connecting IP address was detected as a vpn/proxy/hosting service and has been disallowed. Use this form to appeal: https://forms.gle/mKRgvectoaQpPW4C6
 - `4007` - `Exceeded x messages per y seconds.`: There is a cap on how many individual message objects can be sent in a period of time. If this cap is exceeded the socket is closed.
 - `4008` - `Banned.`: The user is banned from the server. A notification should show a reason and amount of time remaining.
@@ -554,7 +554,7 @@ This is sent to subscribe to channel list updates.
 ```
 
 ### T (server-bound)
-"t" is for pinging. This must be sent every 20 seconds, because the server will disconnect your client if it's not sent for more than 30 seconds.
+"t" is for pinging. This must be sent every 20 seconds, because the server will disconnect your client if it's not sent for more than 60 seconds.
 #### Properties
 - `?"e"`: The client's time.
 #### Example
