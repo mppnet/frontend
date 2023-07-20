@@ -1429,6 +1429,17 @@ $(function () {
         tagDiv.id = 'nametag-' + part._id;
         part.nameDiv.appendChild(tagDiv);
       }
+      if (part.afk) {
+        var afkDiv = document.createElement("div");
+        afkDiv.className = "nametag";
+        afkDiv.textContent = 'AFK';
+        afkDiv.style.backgroundColor = '#00000040';
+        afkDiv.style["margin-left"] = "5px";
+        afkDiv.style["margin-right"] = "0px";
+        afkDiv.style.float = "right";
+        afkDiv.id = 'afktag-' + part._id;
+        part.nameDiv.appendChild(afkDiv);
+      };
 
       var textDiv = document.createElement("div");
       textDiv.className = "nametext";
