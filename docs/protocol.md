@@ -120,6 +120,7 @@ In some messages, the server will send a participant info object instead of an i
 - `"color"`: The user's color.
 - `"x"`: The user's mouse x coordinate (string or number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the left edge, 100 is on the right edge. Default value is 200 until set by the user.
 - `"y"`: The user's mouse y coordinate (string or number). This is usually between 0-100 for standard clients, but can be any number if set with scripts. 0 is on the top edge, 100 is on the bottom edge. Default value is 100 until set by the user.
+- `"afk"`: Whether the user is AFK (boolean).
 - `?"tag"`: The user's [Tag](#tag) object.
 - `?"vanished"`: Whether the user is vanished (boolean). Regular users and bots will never see this property, however moderators will receive this if they or another user are vanished. If this property is not present, the user is not vanished.
 #### Example
@@ -134,7 +135,8 @@ In some messages, the server will send a participant info object instead of an i
     "color":"#a00"
   },
   "x":50,
-  "y":50
+  "y":50,
+  "afk": false
 }
 ```
 
