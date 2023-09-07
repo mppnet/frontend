@@ -1146,16 +1146,19 @@ input[type="range"]:hover {
 
 #chat li .timestamp {
     margin-right: 8px;
+    font-family: monospace;
 }
 
 #chat li .id {
     margin-right: 8px;
     cursor: pointer;
+    font-family: monospace;
 }
 
 #chat li .id2 {
     margin-right: 8px;
     cursor: pointer;
+    font-family: monospace;
 }
 
 #chat li .name {
