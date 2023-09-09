@@ -1,7 +1,24 @@
 if (location.host === "multiplayerpiano.com") {
-  location.replace("https://multiplayerpiano.net/" + location.search);
+  const url = new URL("https://multiplayerpiano.net/" + location.search);
+  if (localStorage.token) url.searchParams.set("token", localStorage.token);
+  location.replace(url);
   throw new Error("Redirecting to multiplayerpiano.net");
 }
+
+if (location.host === "multiplayerpiano.net") {
+  const url = new URL(location.href);
+  const token = url.searchParams.get("token");
+  if (token) {
+    localStorage.token = token;
+
+    url.searchParams.delete("token");
+
+    location.replace(url);
+
+    throw new Error("Finalizing redirect.");
+  }
+}
+
 // 钢琴
 
 $(function () {
