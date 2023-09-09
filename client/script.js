@@ -2658,7 +2658,7 @@ $(function () {
     if (!gHasBeenHereBefore) {
       new Notification({
         title: "Important Info",
-        text: "If you were not on multiplayerpiano.net or mppclone.com previously, you are now! This is due to an issue with the owner of multiplayerpiano.com, who has added a bunch of things in the website's HTML that has affected the site negatively. Since they are using our servers, it's best that you use this website. If you have any issues, please join our discord and let us know!", 
+        html: "If you were not on multiplayerpiano.net or mppclone.com previously, you are now! This is due to an issue with the owner of multiplayerpiano.com, who has added a bunch of things in the website's code that has affected the site negatively. Since they are using our servers, it's best that you use this website. If you have any issues, please join our <a href=\"https://discord.com/invite/338D2xMufC\">Discord</a> and let us know!",
         duration: -1
       });
     }
