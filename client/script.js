@@ -1,3 +1,7 @@
+if (location.host === "multiplayerpiano.com") {
+  location.replace("https://multiplayerpiano.net/" + location.search);
+  throw new Error("Redirecting to multiplayerpiano.net");
+}
 // 钢琴
 
 $(function () {
@@ -2651,7 +2655,12 @@ $(function () {
     else localStorage.volume = gPiano.audio.volume;
 
     window.gHasBeenHereBefore = (localStorage.gHasBeenHereBefore || false);
-    if (gHasBeenHereBefore) {
+    if (!gHasBeenHereBefore) {
+      new Notification({
+        title: "Important Info",
+        text: "If you were not on multiplayerpiano.net or mppclone.com previously, you are now! This is due to an issue with the owner of multiplayerpiano.com, who has added a bunch of things in the website's HTML that has affected the site negatively. Since they are using our servers, it's best that you use this website. If you have any issues, please join our discord and let us know!", 
+        duration: -1
+      });
     }
     localStorage.gHasBeenHereBefore = true;
 
@@ -3088,11 +3097,7 @@ $(function () {
       logout();
     });
     $("#account .login-discord").click(function (evt) {
-      if (location.hostname === "localhost") {
-        location.replace("https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=http%3A%2F%2Flocalhost%2F%3Fcallback%3Ddiscord&response_type=code&scope=identify%20email");
-      } else {
-        location.replace("https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=https%3A%2F%2Fmppclone.com%2F%3Fcallback%3Ddiscord&response_type=code&scope=identify%20email");
-      }
+        location.replace(encodeURI(`https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=${location.origin}/?callback=discord&response_type=code&scope=identify email`));
     });
   })();
 
