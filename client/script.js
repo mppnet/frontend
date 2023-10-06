@@ -24,7 +24,7 @@ if (location.host === "multiplayerpiano.net") {
 $(function () {
 
   console.log("%cWelcome to MPP's developer console!", "color:blue; font-size:20px;");
-  console.log("%cCheck out the source code: https://github.com/LapisHusky/mppclone/tree/main/client\nGuide for coders and bot developers: https://docs.google.com/document/d/1OrxwdLD1l1TE8iau6ToETVmnLuLXyGBhA0VfAY1Lf14/edit?usp=sharing", "color:gray; font-size:12px;");
+  console.log("%cCheck out the source code: https://github.com/mppnet/frontend/tree/main/client\nGuide for coders and bot developers: https://docs.google.com/document/d/1OrxwdLD1l1TE8iau6ToETVmnLuLXyGBhA0VfAY1Lf14/edit?usp=sharing", "color:gray; font-size:12px;");
 
   var test_mode = (window.location.hash && window.location.hash.match(/^(?:#.+)*#test(?:#.+)*$/i));
 
@@ -966,7 +966,7 @@ $(function () {
   if (window.location.hostname === "localhost") {
     var soundDomain = `http://${location.host}`;
   } else {
-    var soundDomain = 'https://mppclone.com';
+    var soundDomain = 'https://multiplayerpiano.net';
   }
 
   function SoundSelector(piano) {
@@ -4736,7 +4736,7 @@ $(function () {
   })();
 
   if (window !== top) {
-    alert("Hey, it looks like you're visiting our site through another website. Consider playing Multiplayer Piano directly at https://mppclone.com")
+    alert("Hey, it looks like you're visiting our site through another website. Consider playing Multiplayer Piano directly at https://multiplayerpiano.net")
   }
 
 
