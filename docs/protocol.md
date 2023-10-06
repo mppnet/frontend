@@ -1,4 +1,4 @@
-# multiplayerpiano.nnet Protocol
+# multiplayerpiano.net Protocol
 
 ## Notes:
 This protocol has been recreated in [protocol.js](https://github.com/mppnet/frontend/blob/main/docs/protocol.js) for convenience. 
