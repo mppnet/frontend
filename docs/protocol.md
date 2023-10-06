@@ -1,7 +1,7 @@
-# mppclone.com Protocol
+# multiplayerpiano.nnet Protocol
 
 ## Notes:
-This protocol has been recreated in [protocol.js](https://github.com/LapisHusky/mppclone/blob/main/docs/protocol.js) for convenience. 
+This protocol has been recreated in [protocol.js](https://github.com/mppnet/frontend/blob/main/docs/protocol.js) for convenience. 
 
 ## Navigation
 - [Websocket Information](#websocket-information)
@@ -1007,7 +1007,7 @@ Notification messages are sent when someone gets kickbanned from the channel you
 ```
 
 ### Nq
-This is sent when a client joins a channel or when their note quota changes. This message describes the note quota that the client should abide by. You can find the Note Quota script [here](https://github.com/LapisHusky/mppclone/blob/main/client/NoteQuota.js).
+This is sent when a client joins a channel or when their note quota changes. This message describes the note quota that the client should abide by. You can find the Note Quota script [here](https://github.com/mppnet/frontend/blob/main/client/NoteQuota.js).
 #### Properties
 - `"allowance"`: The amount of note on or offs that a participant can send per 2 seconds consistently.
 - `"max"`: The maximum amount of note on or offs that a participant can send per 6 seconds.
