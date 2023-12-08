@@ -1387,18 +1387,19 @@ $(function () {
   // Show moderator buttons
   (function () {
     gClient.on("hi", function (msg) {
-      if(msg.motd) {
-        document.getElementById("motd-text").innerText = msg.motd;
-        openModal("#motd");
-        $(document).off("keydown", modalHandleEsc);
-        var user_interact = function (evt) {
-          if ((evt.path || (evt.composedPath && evt.composedPath())).includes(document.getElementById('motd')) || evt.target === document.getElementById('motd')) {
-            closeModal();
-          }
-          document.removeEventListener("click", user_interact);
+      if(!msg.motd) 
+        msg.motd = "This site makes a lot of sound! You may want to adjust the volume before continuing.";
+      document.getElementById("motd-text").innerText = msg.motd;
+      openModal("#motd");
+      $(document).off("keydown", modalHandleEsc);
+      var user_interact = function (evt) {
+        if ((evt.path || (evt.composedPath && evt.composedPath())).includes(document.getElementById('motd')) || evt.target === document.getElementById('motd')) {
+          closeModal();
         }
-        document.addEventListener("click", user_interact);
+        document.removeEventListener("click", user_interact);
+        gPiano.audio.resume();
       }
+      document.addEventListener("click", user_interact);
       if (gClient.permissions.clearChat) {
         $("#clearchat-btn").show();
       }
@@ -2694,32 +2695,6 @@ $(function () {
     localStorage.gHasBeenHereBefore = true;
 
   }
-
-
-
-
-  // warn user about loud noises before starting sound (no autoplay)
-  openModal("#sound-warning");
-  $(document).off("keydown", modalHandleEsc);
-  var user_interact = function (evt) {
-    if ((evt.path || (evt.composedPath && evt.composedPath())).includes(document.getElementById('sound-warning')) || evt.target === document.getElementById('sound-warning')) {
-      closeModal();
-    }
-    document.removeEventListener("click", user_interact);
-    gPiano.audio.resume();
-  }
-  document.addEventListener("click", user_interact);
-
-
-
-
-
-
-
-
-
-
-
 
 
 
