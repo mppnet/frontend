@@ -1387,6 +1387,18 @@ $(function () {
   // Show moderator buttons
   (function () {
     gClient.on("hi", function (msg) {
+      if(msg.motd) {
+        document.getElementById("motd-text").innerText = msg.motd;
+        openModal("#motd");
+        $(document).off("keydown", modalHandleEsc);
+        var user_interact = function (evt) {
+          if ((evt.path || (evt.composedPath && evt.composedPath())).includes(document.getElementById('motd')) || evt.target === document.getElementById('motd')) {
+            closeModal();
+          }
+          document.removeEventListener("click", user_interact);
+        }
+        document.addEventListener("click", user_interact);
+      }
       if (gClient.permissions.clearChat) {
         $("#clearchat-btn").show();
       }
@@ -2697,6 +2709,8 @@ $(function () {
     gPiano.audio.resume();
   }
   document.addEventListener("click", user_interact);
+
+
 
 
 

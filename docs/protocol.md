@@ -865,6 +865,7 @@ This is sent as a response when the client first sends `"hi"`.
 - `"u"`: The client's [participant info](#participant-info) except without `"id"`.
 - `"permissions"`: An object containing the client's permissions. This is usually empty and can be ignored by most bots. This is used to display buttons and other options for staff.
 - `?"token"`: A string token that the client can send back in the future to keep the same user. This is only sent when it doesn't match the token the client sent. Bots should have their token hard coded and can ignore this.
+- `"motd"`: A "message of the day", every join you get a different message, usually a tip or trivia about MPPnet.
 - `"accountInfo"`: An [account info](#account-info) object.
 #### Example
 ```json
