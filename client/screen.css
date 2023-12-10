@@ -1,29 +1,29 @@
 * {
-    image-rendering: pixelated;
+    image-rendering: pixelated
 }
 
 * {
-    margin: 0;
+    margin: 0
 }
 
 * {
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
-    -ms-user-select: none;
+    -ms-user-select: none
 }
 
 body,html {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    font: 20pt verdana,"DejaVu Sans",sans-serif;
+    font: 20pt verdana,DejaVu Sans,sans-serif;
     color: #fff;
-    text-shadow: #444 1px 1px;
+    text-shadow: #444 1px 1px
 }
 
 body {
-    position: absolute;
+    position: absolute
 }
 
 body {
@@ -34,29 +34,29 @@ body {
     background: -o-radial-gradient(center,ellipse cover,#ecfafd 0,#c5d5d8 100%);
     background: -ms-radial-gradient(center,ellipse cover,#ecfafd 0,#c5d5d8 100%);
     background: radial-gradient(ellipse at center,#ecfafd 0,#c5d5d8 100%);
-    -webkit-transition: background 1s linear;
+    -webkit-transition: background 1s linear
 }
 
-a, .spoiler:hover a {
+a,.spoiler:hover a {
     cursor: pointer;
     color: #f46;
-    transition: color .25s;
+    transition: color .25s
 }
 
-a:hover, .spoiler:hover a:hover {
-    color: #e05;
+a:hover,.spoiler:hover a:hover {
+    color: #e05
 }
 
 .link {
     text-decoration: underline;
     cursor: pointer;
-    color: #fe0;
+    color: #fe0
 }
 
 table {
     border: 0;
     padding: 0;
-    margin: 0;
+    margin: 0
 }
 
 #names {
@@ -67,7 +67,7 @@ table {
     width: 90%;
     width: -webkit-calc(100% - 105px);
     width: -moz-calc(100% - 105px);
-    width: calc(100% - 105px);
+    width: calc(100% - 105px)
 }
 
 #names .name {
@@ -83,7 +83,7 @@ table {
     cursor: pointer;
     min-height: 15px;
     line-height: 15px;
-    max-width: 100%;
+    max-width: 100%
 }
 
 #names .name.me:after {
@@ -91,23 +91,23 @@ table {
     position: absolute;
     top: -4px;
     right: 50%;
-    font-size: 10px;
+    font-size: 10px
 }
 
 #names .name.owner:before {
     content: url(/crown.png);
     position: absolute;
     top: -8px;
-    left: 4px;
+    left: 4px
 }
 
 #names .name.play {
     transform: translateY(-4px);
-    -webkit-transform: translateY(-4px);
+    -webkit-transform: translateY(-4px)
 }
 
 #names .name.muted-notes {
-    color: #f88;
+    color: #f88
 }
 
 #names .name.muted-notes:after {
@@ -115,11 +115,11 @@ table {
     position: absolute;
     top: -4px;
     right: 50%;
-    font-size: 8px;
+    font-size: 8px
 }
 
 #names .name.muted-chat {
-    color: #f88;
+    color: #f88
 }
 
 #names .name.muted-chat:after {
@@ -127,7 +127,7 @@ table {
     position: absolute;
     top: -4px;
     right: 50%;
-    font-size: 8px;
+    font-size: 8px
 }
 
 .nametag {
@@ -141,93 +141,51 @@ table {
     text-align: center;
     cursor: pointer;
     font-size: 10px;
-    line-height: 7px;
+    line-height: 7px
 }
 
 .nametext {
     white-space: pre;
-    white-space: -moz-nowrap !important;
+    white-space: -moz-nowrap!important;
     white-space: -webkit-nowrap;
     white-space: nowrap;
     word-wrap: break-word;
     word-break: break-all;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100%;
+    max-width: 100%
 }
 
-input[type="range"] {
-        -webkit-appearance:     none;   /* Remove Safari default */
-        outline: none;
-        width: 210px;
-        height: 5px;
-        border-radius: 1px;
-        position: relative;
- 
-       
-        background-image: -webkit-gradient( linear, left top, right top,
-                color-stop( 0,          hsla(254, 100%, 25%, 0.8) ),
-                color-stop( .08,        hsla(254, 100%, 13%, 0.8) ),
-                color-stop( .5,         hsl(200,80%,0%) ),
-                color-stop( .92,        hsl(200,80%,15%) ),
-                color-stop( 1,          hsl(200,80%,45%) )
-        );
-       
-        -webkit-background-clip: padding-box;
-        border: 0;
-        border-bottom: 2px solid rgba(0,0,0,0.1);
-        cursor: ew-resize;
+input[type=range] {
+    -webkit-appearance: none;
+    outline: none;
+    width: 210px;
+    height: 5px;
+    border-radius: 1px;
+    position: relative;
+    background-image: -webkit-gradient(linear,left top,right top,color-stop(0,hsla(254,100%,25%,.8)),color-stop(.08,hsla(254,100%,13%,.8)),color-stop(.5,hsl(200,80%,0%)),color-stop(.92,hsl(200,80%,15%)),color-stop(1,hsl(200,80%,45%)));
+    -webkit-background-clip: padding-box;
+    border: 0;
+    border-bottom: 2px solid rgba(0,0,0,.1);
+    cursor: ew-resize
 }
- 
-input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance:     none;   /* Remove Safari default */
-        position: relative;
-        z-index:                1;
- 
-        width: 10px;
-        height: 20px;
-        border-radius: 1px / 2px ;
-       
-        background-image: -webkit-gradient( linear, left top, right top,
-                color-stop( 0,          hsl(0,0%,15%) ),
-                color-stop( .16,        hsl(0,0%,22%) ),
-                color-stop( .18,        hsl(0,0%,30%) ),
-                color-stop( .2,         hsl(0,0%,26%) ),
-               
-                
-               
-                color-stop( .8,         hsl(0,0%,26%) ),
-                color-stop( .82,        hsl(0,0%,30%) ),
-                color-stop( .84,        hsl(0,0%,22%) ),
-                color-stop( 1,          hsl(0,0%,15%) )
-        );
-       
-        -webkit-box-shadow:
-               
-                inset hsla(0,0%,100%,.15) 0 1px 0px,
-               
-                hsl(0,0%,17%) 0 2px 0px,
-                hsl(0,0%,15%) 0 4px 0px,
-                hsl(0,0%,13%) 0 6px 0px,
-               
-                rgba(0,0,0,.5) 0 8px 5px;
-       
-        -webkit-transform: translateY(-3px);
-        -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.6, transparent), to( rgba(255,255,255,0.15) ));
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    position: relative;
+    z-index: 1;
+    width: 10px;
+    height: 20px;
+    border-radius: 1px/2px;
+    background-image: -webkit-gradient(linear,left top,right top,color-stop(0,hsl(0,0%,15%)),color-stop(.16,hsl(0,0%,22%)),color-stop(.18,hsl(0,0%,30%)),color-stop(.2,hsl(0,0%,26%)),color-stop(.8,hsl(0,0%,26%)),color-stop(.82,hsl(0,0%,30%)),color-stop(.84,hsl(0,0%,22%)),color-stop(1,hsl(0,0%,15%)));
+    -webkit-box-shadow: inset hsla(0,0%,100%,.15) 0 1px 0px,hsl(0,0%,17%) 0 2px 0px,hsl(0,0%,15%) 0 4px 0px,hsl(0,0%,13%) 0 6px 0px,rgba(0,0,0,.5) 0 8px 5px;
+    -webkit-transform: translateY(-3px);
+    -webkit-box-reflect: below 0px -webkit-gradient(linear,left top,left bottom,from(transparent),color-stop(.6,transparent),to(rgba(255,255,255,.15)))
 }
- 
-input[type="range"]:hover {
-       
-        background-image: -webkit-gradient( linear, left top, right top,
-                color-stop( 0,          hsla(284, 100%, 25%, 0.8) ),
-                color-stop( .08,        hsla(284, 100%, 13%, 0.8) ),
-                color-stop( .5,         hsl(200,80%,0%) ),
-                color-stop( .92,        hsl(200,80%,15%) ),
-                color-stop( 1,          hsl(200,80%,45%) )
-        );
-       
-        -webkit-box-shadow: inset #000 1px 1px 1px, inset #000 -1px -1px 1px;
- 
+
+input[type=range]:hover {
+    background-image: -webkit-gradient(linear,left top,right top,color-stop(0,hsla(284,100%,25%,.8)),color-stop(.08,hsla(284,100%,13%,.8)),color-stop(.5,hsl(200,80%,0%)),color-stop(.92,hsl(200,80%,15%)),color-stop(1,hsl(200,80%,45%)));
+    -webkit-box-shadow: inset #000 1px 1px 1px,inset #000 -1px -1px 1px
 }
 
 #piano {
@@ -236,7 +194,7 @@ input[type="range"]:hover {
     margin: auto;
     position: relative;
     overflow: hidden;
-    padding-left: 1%;
+    padding-left: 1%
 }
 
 #piano .key {
@@ -258,11 +216,11 @@ input[type="range"]:hover {
     -moz-transition: background 4s ease-out;
     -o-transition: background 4s ease-out;
     padding: 0;
-    overflow: hidden;
+    overflow: hidden
 }
 
 #piano .key.c,#piano .key.f {
-    margin-left: 0;
+    margin-left: 0
 }
 
 #piano .key.sharp {
@@ -270,39 +228,39 @@ input[type="range"]:hover {
     height: 50%;
     background: #000;
     margin-left: -.9%;
-    position: relative;
+    position: relative
 }
 
 #piano .key.loading {
-    background: #888;
+    background: #888
 }
 
 #piano .key.play {
     transform: translateY(1%);
     -webkit-transform: translateY(1%);
-    -webkit-box-shadow: 0 1px 2px #000;
+    -webkit-box-shadow: 0 1px 2px #000
 }
 
 .ease-out {
     transition: left .1s ease-out;
     -webkit-transition: left .1s ease-out;
     -moz-transition: left .1s ease-out;
-    -o-transition: left .1s ease-out;
+    -o-transition: left .1s ease-out
 }
 
 .ease-in {
     transition: left .1s ease-in;
     -webkit-transition: left .1s ease-in;
     -moz-transition: left .1s ease-in;
-    -o-transition: left .1s ease-in;
+    -o-transition: left .1s ease-in
 }
 
 .slide-left {
-    left: -100%;
+    left: -100%
 }
 
 .slide-right {
-    left: 100%;
+    left: 100%
 }
 
 .cursor {
@@ -314,7 +272,7 @@ input[type="range"]:hover {
     margin-left: -2px;
     margin-top: -2px;
     left: 200%;
-    top: 100%;
+    top: 100%
 }
 
 .cursor .name {
@@ -330,28 +288,28 @@ input[type="range"]:hover {
     -moz-border-radius: 2px;
     white-space: nowrap;
     padding: 1px;
-    font-size: 10px;
+    font-size: 10px
 }
 
 .cursor.owner .name:after {
     content: url(/crown.png);
     position: relative;
     top: -8px;
-    left: 0;
+    left: 0
 }
 
 .cursor .name {
-    display: inline-block;
+    display: inline-block
 }
 
 .cursor {
-    transition: top .1s, left .1s;
+    transition: top .1s,left .1s
 }
 
 #cursors[smooth-cursors] .cursor {
     top: 0;
     left: 0;
-    transition: transform .1s linear;
+    transition: transform .1s linear
 }
 
 .participant-menu {
@@ -362,12 +320,12 @@ input[type="range"]:hover {
     font-size: 12px;
     padding: 0;
     margin: 0;
-    border-radius: 2px;
+    border-radius: 2px
 }
 
 .participant-menu:last-child .menu-item:hover {
     border-bottom-left-radius: inherit;
-    border-bottom-right-radius: inherit;
+    border-bottom-right-radius: inherit
 }
 
 .participant-menu .info {
@@ -375,31 +333,31 @@ input[type="range"]:hover {
     text-align: center;
     line-height: 40px;
     font-size: 9px;
-    color: rgba(255,255,255,.9);
+    color: #ffffffe6;
     overflow: hidden;
     opacity: 0;
     transition: opacity .2s ease-out;
-    user-select: text;
+    user-select: text
 }
 
 .participant-menu .info:hover {
     opacity: 1;
-    transition: opacity .2s ease-out;
+    transition: opacity .2s ease-out
 }
 
 .participant-menu .menu-item {
     cursor: pointer;
     margin: 0;
     padding: 15px 5px;
-    border-top: 1px solid rgba(255,255,255,.3);
+    border-top: 1px solid rgba(255,255,255,.3)
 }
 
 .participant-menu .menu-item:hover {
-    background: rgba(255,255,255,.4);
+    background: rgba(255,255,255,.4)
 }
 
 .participant-menu .menu-item.clicked {
-    background: rgba(255,255,255,.5);
+    background: rgba(255,255,255,.5)
 }
 
 #crown {
@@ -408,12 +366,12 @@ input[type="range"]:hover {
     height: 16px;
     background: url(/crown.png) no-repeat;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 10px
 }
 
 #crown span {
     margin-left: 16px;
-    margin-top: 2px;
+    margin-top: 2px
 }
 
 #room-notice {
@@ -424,11 +382,11 @@ input[type="range"]:hover {
     opacity: .5;
     font-size: 20px;
     pointer-events: none;
-    display: none;
+    display: none
 }
 
 #room-notice p {
-    margin: 1em;
+    margin: 1em
 }
 
 #bottom {
@@ -438,11 +396,11 @@ input[type="range"]:hover {
     width: 100%;
     height: 60px;
     background: #9a9;
-    margin-bottom: 3px;
+    margin-bottom: 3px
 }
 
 #room,#room * {
-    cursor: pointer;
+    cursor: pointer
 }
 
 #room {
@@ -456,38 +414,40 @@ input[type="range"]:hover {
     border: 1px solid #ccc;
     cursor: pointer;
     margin: 4px 24px;
-    font-size: 12px;
+    font-size: 12px
 }
 
 #room .info {
     white-space: nowrap;
     line-height: 12px;
     overflow: hidden;
-    height: 20px;
+    height: 20px
 }
 
 #room .info.lobby {
-    color: #efb;
+    color: #efb
 }
 
 #room .info.not-visible {
-    color: #8cf;
+    color: #8cf
 }
 
 #room .info.banned {
-    color: #f88;
+    color: #f88
 }
 
 #room .info.crownsolo:after {
-    content: url('/crownsolo.png');
-    position: relative; top: 2px;
-    margin-left: 4px;
+    content: url(/crownsolo.png);
+    position: relative;
+    top: 2px;
+    margin-left: 4px
 }
 
 #room .info.no-chat:after {
-    content: url('/no-chat.png');
-    position: relative; top: 2px;
-    margin-left: 4px;
+    content: url(/no-chat.png);
+    position: relative;
+    top: 2px;
+    margin-left: 4px
 }
 
 #room .expand {
@@ -496,7 +456,7 @@ input[type="range"]:hover {
     position: absolute;
     right: 0;
     top: 0;
-    background: #777 url(/arrow.png) no-repeat center 0;
+    background: #777 url(/arrow.png) no-repeat center 0
 }
 
 #room .more {
@@ -509,26 +469,26 @@ input[type="range"]:hover {
     overflow-y: scroll;
     background: #444;
     border: 1px solid #ccc;
-    max-height: 600px;
+    max-height: 600px
 }
 
 #room .more>div {
     margin: 0;
-    padding: 3px 6px 0 6px;
+    padding: 3px 6px 0;
     width: 100%;
-    height: 20px;
+    height: 20px
 }
 
 #room .more .info:hover {
-    background: #666;
+    background: #666
 }
 
 #room .more .new {
-    background: #111;
+    background: #111
 }
 
 #room .more .new:hover {
-    background: #333;
+    background: #333
 }
 
 .ugly-button {
@@ -544,89 +504,94 @@ input[type="range"]:hover {
     -moz-border-radius: 2px;
     width: 100px;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: nowrap
 }
 
 .ugly-button:hover {
-    background: #222;
+    background: #222
 }
 
 .ugly-button.stuck {
-    background: rgba(204,187,170,.35);
+    background: rgba(204,187,170,.35)
 }
 
 #new-room-btn {
     position: absolute;
     left: 300px;
-    top: 4px;
+    top: 4px
 }
 
 #play-alone-btn {
     position: absolute;
     left: 420px;
-    top: 4px;
+    top: 4px
 }
 
 #sound-btn {
     position: absolute;
     left: 540px;
-    top: 4px;
+    top: 4px
 }
 
 #room-settings-btn {
     position: absolute;
     left: 660px;
     top: 4px;
-    display: none;
+    display: none
 }
 
 #midi-btn {
     position: absolute;
     left: 300px;
-    top: 32px;
+    top: 32px
 }
 
 #record-btn {
     position: absolute;
     left: 420px;
-    top: 32px;
+    top: 32px
 }
 
 #synth-btn {
     position: absolute;
     left: 540px;
-    top: 32px;
+    top: 32px
 }
+
 #client-settings-btn {
     position: absolute;
     left: 660px;
-    top: 32px;
+    top: 32px
 }
+
 #account-btn {
     position: absolute;
     left: 780px;
-    top: 32px;
+    top: 32px
 }
+
 #clearchat-btn {
     position: absolute;
     left: 780px;
-    top: 4px;
+    top: 4px
 }
+
 #getcrown-btn {
     position: absolute;
     left: 900px;
-    top: 32px;
+    top: 32px
 }
+
 #vanish-btn {
     position: absolute;
     left: 900px;
-    top: 4px;
+    top: 4px
 }
 
 #logout-btn {
     position: absolute;
     right: 8px;
-    bottom: 8px;
+    bottom: 8px
 }
 
 #client-settings-ok-btn {
@@ -636,11 +601,11 @@ input[type="range"]:hover {
     font-size: 24px;
     height: 20px;
     padding-top: 14px;
-    width: 18%;
+    width: 18%
 }
 
 #client-settings-ok-btn:hover {
-    background: #222;
+    background: #222
 }
 
 #tooltip {
@@ -648,15 +613,15 @@ input[type="range"]:hover {
     pointer-events: none;
     background: #000;
     color: #fff;
-    font-size: 10px;
+    font-size: 10px
 }
 
 .knob {
-    cursor: pointer;
+    cursor: pointer
 }
 
 .switched-on {
-    background: #ff8;
+    background: #ff8
 }
 
 #status {
@@ -669,11 +634,11 @@ input[type="range"]:hover {
     font-size: 20px;
     font-weight: 800;
     line-height: 20px;
-    pointer-events: none;
+    pointer-events: none
 }
 
 #status .number {
-    font-size: 35px;
+    font-size: 35px
 }
 
 #volume {
@@ -682,9 +647,9 @@ input[type="range"]:hover {
     top: 0;
     width: 100px;
     height: 40px;
-    margin: 10px;
+    margin: 10px
 }
- 
+
 #volume-slider {
     width: 100%;
     height: 100%;
@@ -694,15 +659,15 @@ input[type="range"]:hover {
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
-    border: 0;
+    border: 0
 }
- 
+
 #volume-label {
     position: absolute;
     right: 30px;
     bottom: 10px;
     font-size: 10px;
-    color: #ccc;
+    color: #ccc
 }
 
 #banner {
@@ -712,11 +677,11 @@ input[type="range"]:hover {
     right: 0;
     top: 0;
     font-size: 18px;
-    display: none;
+    display: none
 }
 
 #banner a {
-    color: #fd0;
+    color: #fd0
 }
 
 #quota {
@@ -725,24 +690,24 @@ input[type="range"]:hover {
     position: fixed;
     bottom: 0;
     left: 0;
-    background: #f80;
+    background: #f80
 }
 
 #quota .value {
     width: 100%;
     height: 100%;
     display: block;
-    background: #fd0;
+    background: #fd0
 }
 
 .relative {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 100%
 }
 
 .notification {
-    position: absolute;
+    position: absolute
 }
 
 .notification-body {
@@ -756,14 +721,14 @@ input[type="range"]:hover {
     font-size: 12px;
     text-shadow: #444 1px 1px;
     border-radius: 6px;
-    box-shadow: 2px 2px 5px rgba(0,0,0,.25);
+    box-shadow: 2px 2px 5px #00000040
 }
 
 .notification-body .text {
     user-select: text;
     -webkit-user-select: text;
     -moz-user-select: text;
-    -ms-user-select: text;
+    -ms-user-select: text
 }
 
 .notification-body:after {
@@ -775,7 +740,7 @@ input[type="range"]:hover {
     border-top: 10px solid transparent;
     border-top-color: inherit;
     border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
+    border-right: 6px solid transparent
 }
 
 .title {
@@ -783,7 +748,7 @@ input[type="range"]:hover {
     font-size: 16px;
     font-weight: 700;
     padding-bottom: 5px;
-    margin-bottom: 8px;
+    margin-bottom: 8px
 }
 
 .notification .x {
@@ -793,21 +758,21 @@ input[type="range"]:hover {
     cursor: pointer;
     font-size: 20px;
     color: #d55;
-    text-shadow: none;
+    text-shadow: none
 }
 
 .notification .x:hover {
-    color: #f66;
+    color: #f66
 }
 
 .notification.classic .notification-body {
     width: 400px;
     background: #222;
-    border-color: #555;
+    border-color: #555
 }
 
 .notification.short .title {
-    display: none;
+    display: none
 }
 
 .notification h1 {
@@ -815,7 +780,7 @@ input[type="range"]:hover {
     font-weight: 700;
     padding-top: 8px;
     padding-bottom: 8px;
-    text-decoration: underline;
+    text-decoration: underline
 }
 
 .notification .connection {
@@ -824,33 +789,33 @@ input[type="range"]:hover {
     background: #fed;
     border: 1px solid #f84;
     cursor: pointer;
-    font-family: monospace;
+    font-family: monospace
 }
 
 .notification .connection.enabled {
-    background: #dfd;
+    background: #dfd
 }
 
 .notification .connection:after {
     content: "OFF";
     font-size: 10px;
     color: #a44;
-    float: right;
+    float: right
 }
 
 .notification .connection.enabled:after {
     content: "ON";
     font-size: 10px;
     color: #4a4;
-    float: right;
+    float: right
 }
 
 .notification .connection:hover {
-    font-weight: 700;
+    font-weight: 700
 }
 
 .notification ul {
-    list-style-type: upper-roman;
+    list-style-type: upper-roman
 }
 
 .notification .setting {
@@ -860,11 +825,12 @@ input[type="range"]:hover {
     border: 1px solid #555;
     border-radius: 4px;
     cursor: pointer;
-    font-family: monospace;
+    font-family: monospace
 }
+
 .notification .setting.enabled {
     background: #2b562b;
-    font-weight: bolder;
+    font-weight: bolder
 }
 
 .notification .pack {
@@ -874,31 +840,31 @@ input[type="range"]:hover {
     border: 1px solid #555;
     border-radius: 4px;
     cursor: pointer;
-    font-family: monospace;
+    font-family: monospace
 }
 
 .notification .pack.enabled {
     background: #2b562b;
     cursor: not-allowed;
-    font-weight: bolder;
+    font-weight: bolder
 }
 
 .notification .pack:after {
     content: "";
     font-size: 10px;
     color: #a44;
-    float: right;
+    float: right
 }
 
 .notification .pack.enabled:after {
     content: "Selected";
     font-size: 10px;
     color: #fff;
-    float: right;
+    float: right
 }
 
 .notification .pack:hover {
-    font-weight: 700;
+    font-weight: 700
 }
 
 #modal {
@@ -907,7 +873,7 @@ input[type="range"]:hover {
     position: fixed;
     left: 0;
     top: 0;
-    display: none;
+    display: none
 }
 
 #modal .bg {
@@ -917,7 +883,7 @@ input[type="range"]:hover {
     opacity: .5;
     position: absolute;
     left: 0;
-    top: 0;
+    top: 0
 }
 
 #modal,#modal * {
@@ -925,6 +891,7 @@ input[type="range"]:hover {
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
+    height: auto;
 }
 
 .dialog {
@@ -944,22 +911,22 @@ input[type="range"]:hover {
     -moz-border-radius: 4px;
     box-shadow: 0 0 8px #000;
     -webkit-box-shadow: 0 0 8px #000;
-    -moz-box-shadow: 0 0 8px #000;
+    -moz-box-shadow: 0 0 8px #000
 }
 
 .dialog p {
-    margin: 10px;
+    margin: 35px;
     font-size: 20px;
 }
 
 .dialog input.text {
     font-size: 20px;
     height: 20px;
-    width: 75%;
+    width: 75%
 }
 
 .dialog input.checkbox {
-    margin: 0 5px;
+    margin: 0 5px
 }
 
 .dialog .submit {
@@ -981,7 +948,7 @@ input[type="range"]:hover {
     -o-transition: all .25s;
     position: absolute;
     bottom: -10px;
-    right: -10px;
+    right: -10px
 }
 
 .dialog .submit:hover {
@@ -989,47 +956,42 @@ input[type="range"]:hover {
     transition: all .25s;
     -webkit-transition: all .25s;
     -moz-transition: all .25s;
-    -o-transition: all .25s;
+    -o-transition: all .25s
 }
 
-#room-settings {
+#room-settings,#siteban {
     height: 400px;
-    margin-top: -200px;
-}
-
-#siteban {
-    height: 400px;
-    margin-top: -200px;
+    margin-top: -200px
 }
 
 #account {
     height: 300px;
-    margin-top: -150px;
+    margin-top: -150px
 }
 
 #account-info {
     position: absolute;
     top: 8px;
-    right: 8px;
+    right: 8px
 }
 
 #client-settings {
     height: 300px;
     margin-top: -150px;
-    overflow: hidden;
+    overflow: hidden
 }
 
 #client-settings div {
     float: left;
-    margin-left: 2px;
+    margin-left: 2px
 }
 
 .client-settings-tablink {
-    font-size: 16px;
+    font-size: 16px
 }
 
 .client-settings-tablink.active {
-    background-color: rgb(69, 69, 69);
+    background-color: #454545
 }
 
 .client-settings-button {
@@ -1043,36 +1005,32 @@ input[type="range"]:hover {
     width: 84px;
     overflow: hidden;
     white-space: nowrap;
-    text-align: center;
+    text-align: center
 }
 
-/* .client-settings-button:hover {
-    background: #222;
-} */
-
 .client-settings-button.stuck {
-    background: rgba(204,187,170,.35);
+    background: rgba(204,187,170,.35)
 }
 
 #client-settings-content {
-    float: unset !important;
-    font-size: 12px;
+    float: unset!important;
+    font-size: 12px
 }
 
 .logged-in-text {
-    font-size: 20px;
+    font-size: 20px
 }
 
 .logged-in-user-text {
     font-size: 20px;
     position: absolute;
     top: 160px;
-    right: 8px;
+    right: 8px
 }
 
 #chat {
     display: none;
-    opacity: 1;
+    opacity: 1
 }
 
 #chat {
@@ -1083,110 +1041,86 @@ input[type="range"]:hover {
     vertical-align: bottom;
     font-size: 13px;
     color: #fff;
-    text-shadow: #888 1px 1px;
+    text-shadow: #888 1px 1px
 }
 
 #chat,#chat * {
     user-select: text;
     -webkit-user-select: text;
     -moz-user-select: text;
-    -ms-user-select: text;
+    -ms-user-select: text
 }
 
 #chat ul {
     list-style: none;
     margin: 4px;
     padding: 0;
-    background-attachment: local;
+    background-attachment: local
 }
 
 #chat li {
     padding: 2px;
     opacity: 0;
-    transition: border 0.5s, background 0.5s;
-    border: 1px solid #00000000;
+    transition: border .5s,background .5s;
+    border: 1px solid #00000000
 }
 
 #chat li .reply {
     margin-right: 4px;
-    padding-inline: 5px;
-    background-color: #111;
+    padding-inline:5px;background-color: #111;
     border: 1px solid #444;
     text-shadow: none;
     border-radius: 2px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
-    cursor: pointer;
+    cursor: pointer
 }
 
 #chat li .replyLink {
     margin-right: 8px;
-    padding-inline: 4px;
-    border-radius: 2px;
+    padding-inline:4px;border-radius: 2px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
-    cursor: pointer;
+    cursor: pointer
 }
 
-#chat li .receivedDm {
-    margin-right: 8px;
-}
-
-#chat li .sentDm {
-    margin-right: 8px;
-}
-
-#chat li .otherDm {
-    margin-right: 8px;
-}
-
-#chat li .dmArrow {
-    margin-right: 8px;
+#chat li .receivedDm,#chat li .sentDm,#chat li .otherDm,#chat li .dmArrow {
+    margin-right: 8px
 }
 
 #chat li .timestamp {
     margin-right: 8px;
-    font-family: monospace;
+    font-family: monospace
 }
 
-#chat li .id {
+#chat li .id,#chat li .id2 {
     margin-right: 8px;
     cursor: pointer;
-    font-family: monospace;
+    font-family: monospace
 }
 
-#chat li .id2 {
-    margin-right: 8px;
-    cursor: pointer;
-    font-family: monospace;
-}
-
-#chat li .name {
+#chat li .name,#chat li .name2 {
     font-weight: 700;
-    margin-right: 8px;
-}
-#chat li .name2 {
-    font-weight: 700;
-    margin-right: 8px;
+    margin-right: 8px
 }
 
 #chat li .message {
-    margin-right: 6px;
+    margin-right: 6px
 }
 
 #chat li .quote {
-    color: #789922;
+    color: #789922
 }
 
 #chat li .mention {
-    color: white;
+    color: #fff;
     padding: 4px;
     margin: 2px;
     border-radius: 2px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     line-height: 15px;
-    text-shadow: #444 1px 1px;
+    text-shadow: #444 1px 1px
 }
 
 #chat input {
@@ -1198,40 +1132,40 @@ input[type="range"]:hover {
     color: #fff;
     border-radius: 4px;
     -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
+    -moz-border-radius: 4px
 }
 
 #chat input::-webkit-input-placeholder {
-    color: #ccc;
+    color: #ccc
 }
 
 #chat input:-moz-placeholder {
-    color: #ccc;
+    color: #ccc
 }
 
 #chat input:focus {
     outline: 0;
-    border: 1px solid #ff8;
+    border: 1px solid #ff8
 }
 
 #chat.chatting {
-    background: rgba(64, 80, 80, .75);
+    background: rgba(64,80,80,.75);
     border-radius: 5px;
     box-shadow: 1px 1px 5px #888;
-    transition: all .1s;
+    transition: all .1s
 }
 
 #chat.chatting li {
     display: list-item!important;
     opacity: 1!important;
-    text-shadow: #aaa 1px 1px;
+    text-shadow: #aaa 1px 1px
 }
 
 #chat.chatting ul {
     max-height: 50em;
     overflow-y: scroll;
     overflow-x: hidden;
-    word-wrap: break-word;
+    word-wrap: break-word
 }
 
 #social {
@@ -1239,7 +1173,7 @@ input[type="range"]:hover {
     top: 4px;
     right: 6px;
     width: 80px;
-    font-size: 12px;
+    font-size: 12px
 }
 
 #social #more-button {
@@ -1254,23 +1188,23 @@ input[type="range"]:hover {
     color: #788;
     text-shadow: none;
     background: url(kitten1.png) 0 4px no-repeat;
-    background-color: #dee;
+    background-color: #dee
 }
 
 #social #more-button:hover {
     color: #899;
     background-color: #e8f8f0;
-    transition: background-color .25s;
+    transition: background-color .25s
 }
 
 #social .fb-like {
     position: absolute;
-    right: 0;
+    right: 0
 }
 
 #social #inclinations {
     margin-top: 50px;
-    margin-bottom: 20px;
+    margin-bottom: 20px
 }
 
 #more {
@@ -1287,131 +1221,131 @@ input[type="range"]:hover {
     position: fixed;
     top: 50px;
     right: 50px;
-    text-shadow: none;
+    text-shadow: none
 }
 
 #more div {
     margin: 0;
-    padding: 0;
+    padding: 0
 }
 
 #more .items {
-    margin-left: 1%;
+    margin-left: 1%
 }
 
 #more .items .item {
     width: 33%;
     float: left;
     background: #cdd;
-    transition: background .25s;
+    transition: background .25s
 }
 
 #more .items .item:hover {
     background: #d0e0e0;
-    transition: background .25s;
+    transition: background .25s
 }
 
 #more .items .item .content {
     height: 200px;
     padding: 10px;
     border-right: 1px solid #bcc;
-    border-bottom: 1px solid #bcc;
+    border-bottom: 1px solid #bcc
 }
 
 #more .items .item .content p {
     margin-top: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 1em
 }
 
 #more .header {
-    padding: 5px 10px;
+    padding: 5px 10px
 }
 
 #more .footer {
     clear: both;
     padding: 5px 10px;
-    font-size: 12px;
+    font-size: 12px
 }
 
 #email:before {
     content: url(envelope.png);
-    margin: 4px;
+    margin: 4px
 }
 
 #room-notice {
-    z-index: 1;
+    z-index: 1
 }
 
 #cursors {
-    z-index: 2;
+    z-index: 2
 }
 
 #chat {
-    z-index: 100;
+    z-index: 100
 }
 
 #social {
-    z-index: 200;
+    z-index: 200
 }
 
 #names {
-    z-index: 300;
+    z-index: 300
 }
 
 #names .nametag {
-    z-index: 301;
+    z-index: 301
 }
 
 #names .name.owner:before {
-    z-index: 302;
+    z-index: 302
 }
 
 #piano {
-    z-index: 400;
+    z-index: 400
 }
 
 #piano .key {
-    z-index: 401;
+    z-index: 401
 }
 
 #piano .key.sharp {
-    z-index: 402;
+    z-index: 402
 }
 
 #bottom {
-    z-index: 500;
+    z-index: 500
 }
 
 #crown {
-    z-index: 600;
+    z-index: 600
 }
 
 .notification {
-    z-index: 700;
+    z-index: 700
 }
 
 #cursors .cursor {
-    z-index: 800;
+    z-index: 800
 }
 
 #chat.chatting {
-    z-index: 900;
+    z-index: 900
 }
 
 .participant-menu {
-    z-index: 1000;
+    z-index: 1000
 }
 
 #modal {
-    z-index: 10000;
+    z-index: 10000
 }
 
 #tooltip {
-    z-index: 20000;
+    z-index: 20000
 }
 
 .clear {
-    clear: both;
+    clear: both
 }
 
 .spin {
@@ -1419,7 +1353,7 @@ input[type="range"]:hover {
     -webkit-animation: spin 1s linear infinite;
     -moz-animation: spin 1s linear infinite;
     -o-animation: spin 1s linear infinite;
-    -ms-animation: spin 1s linear infinite;
+    -ms-animation: spin 1s linear infinite
 }
 
 .top-button {
@@ -1435,20 +1369,20 @@ input[type="range"]:hover {
     -moz-border-radius: 2px;
     overflow: hidden;
     white-space: nowrap;
-    color: #fff;
+    color: #fff
 }
 
 .top-button:hover {
-    background: #222;
+    background: #222
 }
 
 .top-button.stuck {
-    background: rgba(204,187,170,.35);
+    background: rgba(204,187,170,.35)
 }
 
 .icon-button img {
     width: 16px;
-    height: 16px;
+    height: 16px
 }
 
 .icon-button {
@@ -1456,26 +1390,26 @@ input[type="range"]:hover {
     top: 6px;
     z-index: 200;
     width: 26px;
-    padding: 0;
+    padding: 0
 }
 
 .mppcommunity-button {
-    right: 6px;
+    right: 6px
 }
 
 .discord-button {
-    right: 36px;
+    right: 36px
 }
 
 .reddit-button {
-    right: 66px;
+    right: 66px
 }
 
 .mpp-rules-button {
     position: fixed;
     right: 6px;
     top: 32px;
-    z-index: 200;
+    z-index: 200
 }
 
 code {
@@ -1484,82 +1418,82 @@ code {
     padding: 2px 4px;
     text-shadow: none;
     border-radius: 4px;
-    line-height: 1.5;
+    line-height: 1.5
 }
 
 .spoiler {
     background: #222;
     padding: 1px 0 3px;
-    border-radius: 4px;
+    border-radius: 4px
 }
 
 .spoiler:not(:hover) {
-    color: rgba(0, 0, 0, 0);
-    text-shadow: rgba(0, 0, 0, 0) 1px 1px;
+    color: #0000;
+    text-shadow: rgba(0,0,0,0) 1px 1px
 }
 
 .spoiler * {
-    opacity: 0;
+    opacity: 0
 }
 
 .spoiler:hover * {
-    opacity: 1;
+    opacity: 1
 }
 
 .spoiler:hover {
-    background: rgba(64, 80, 80, .75);
+    background: rgba(64,80,80,.75)
 }
 
 .spoiler * {
     transition: opacity .25s;
     -webkit-transition: opacity .25s;
     -moz-transition: opacity .25s;
-    -o-transition: opacity .25s;
+    -o-transition: opacity .25s
 }
 
 .spoiler {
-    transition: color .25s, text-shadow .25s, background .25s, opacity .25s;
-    -webkit-transition: color .25s, text-shadow .25s, background .25s, opacity .25s;
-    -moz-transition: color .25s, text-shadow .25s, background .25s, opacity .25s;
-    -o-transition: color .25s, text-shadow .25s, background .25s, opacity .25s;
+    transition: color .25s,text-shadow .25s,background .25s,opacity .25s;
+    -webkit-transition: color .25s,text-shadow .25s,background .25s,opacity .25s;
+    -moz-transition: color .25s,text-shadow .25s,background .25s,opacity .25s;
+    -o-transition: color .25s,text-shadow .25s,background .25s,opacity .25s
 }
 
 @-webkit-keyframes spin {
     0% {
-        -webkit-transform: rotate(0);
+        -webkit-transform: rotate(0)
     }
 
-    100% {
-        -webkit-transform: rotate(360deg);
+    to {
+        -webkit-transform: rotate(360deg)
     }
 }
 
 @-moz-keyframes spin {
     0% {
-        -moz-transform: rotate(0);
+        -moz-transform: rotate(0)
     }
 
-    100% {
-        -moz-transform: rotate(360deg);
+    to {
+        -moz-transform: rotate(360deg)
     }
 }
 
 @-o-keyframes spin {
     0% {
-        -o-transform: rotate(0);
+        -o-transform: rotate(0)
     }
 
-    100% {
-        -o-transform: rotate(360deg);
+    to {
+        -o-transform: rotate(360deg)
     }
 }
 
 @-ms-keyframes spin {
     0% {
-        -ms-transform: rotate(0);
+        -ms-transform: rotate(0)
     }
 
-    100% {
-        -ms-transform: rotate(360deg);
+    to {
+        -ms-transform: rotate(360deg)
     }
 }
