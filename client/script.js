@@ -1389,7 +1389,7 @@ $(function () {
     gClient.on("hi", function (msg) {
       if(!msg.motd) 
         msg.motd = "This site makes a lot of sound! You may want to adjust the volume before continuing.";
-      document.getElementById("motd-text").innerText = msg.motd;
+      document.getElementById("motd-text").innerHTML = msg.motd;
       openModal("#motd");
       $(document).off("keydown", modalHandleEsc);
       var user_interact = function (evt) {
@@ -2294,8 +2294,7 @@ $(function () {
   var gKnowsHowToDm = localStorage.knowsHowToDm === "true";
   gClient.on('participant removed', part => {
     if (gIsDming && part._id === gDmParticipant._id) {
-      gIsDming = false;
-      $('#chat-input')[0].placeholder = 'You can chat with this thing.';
+      chat.endDM();
     }
   });
 
@@ -2441,8 +2440,7 @@ $(function () {
       if (gIsDming && gDmParticipant._id === part._id) {
         $('<div class="menu-item">End Direct Message</div>').appendTo(menu)
           .on("mousedown touchstart", function (evt) {
-            gIsDming = false;
-            $('#chat-input')[0].placeholder = 'You can chat with this thing.';
+            chat.endDM();
           });
       } else {
         $('<div class="menu-item">Direct Message</div>').appendTo(menu)
@@ -2457,9 +2455,7 @@ $(function () {
                 text: 'After you click the button to direct message someone, future chat messages will be sent to them instead of to everyone. To go back to talking in public chat, send a blank chat message, or click the button again.',
               });
             }
-            gIsDming = true;
-            gDmParticipant = part;
-            $('#chat-input')[0].placeholder = 'Direct messaging ' + part.name + '.';
+            chat.startDM(part)
           });
       }
       if (gCursorHides.indexOf(part._id) == -1) {
@@ -3193,12 +3189,10 @@ $(function () {
           var message = $(this).val();
           if (message.length == 0) {
             if (gIsDming) {
-              gIsDming = false;
-              $('#chat-input')[0].placeholder = 'You can chat with this thing.';
+              chat.endDM()
             }
             if (gIsReplying) {
-              gIsReplying = false;
-              $('#chat-input')[0].placeholder = 'You can chat with this thing.';
+              chat.cancelReply()
             }
             setTimeout(function () {
               chat.blur();
@@ -3247,6 +3241,18 @@ $(function () {
     var messageCache = [];
 
     return {
+
+      startDM: function (part) {
+        gIsDming = true;
+        gDmParticipant = part;
+        $('#chat-input')[0].placeholder = 'Direct messaging ' + part.name + '.';
+      },
+
+      endDM: function () {
+        gIsDming = false;
+        $('#chat-input')[0].placeholder = 'You can chat with this thing.';
+      },
+      
       startReply: function (part, id) {
         gIsReplying = true;
         gReplyParticipant = part;
@@ -3266,6 +3272,7 @@ $(function () {
       cancelReply: function () {
         if (gIsDming) gIsDming = false;
         gIsReplying = false;
+        $(`#msg-${gMessageId}`).css({ "background-color": "unset", "border": "1px solid #00000000" });
         $("#chat-input")[0].placeholder = `You can chat with this thing.`;
       },
 
@@ -3481,12 +3488,14 @@ $(function () {
         li.find('.reply').on('click', evt => {
           if (msg.m !== 'dm') {
             MPP.chat.startReply(msg.p, msg.id, msg.a);
+            $(`#msg-${msg.id}`).css({ "border": `1px solid ${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}80`, "background-color": `${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}20` });
             setTimeout(() => { $('#chat-input').focus(); }, 100);
           } else {
             if (msg.m === 'dm') {
               const replyingTo = msg.sender._id === gClient.user._id ? msg.recipient : msg.sender;
               if (gClient.ppl[replyingTo._id]) {
                 MPP.chat.startDmReply(replyingTo, msg.id);
+                $(`#msg-${msg.id}`).css({ "border": `1px solid ${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}80`, "background-color": `${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}20` });
                 setTimeout(() => { $('#chat-input').focus(); }, 100);
               } else {
                 new Notification({target: "#piano", title: "User not found.", text: "The user who you are trying to reply to in a DM is not found, so a DM could not be started." });
