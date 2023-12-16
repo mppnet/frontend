@@ -2165,6 +2165,7 @@ $(function () {
   gClient.on('participant removed', part => {
     if (gIsDming && part._id === gDmParticipant._id) {
       chat.endDM();
+      chat.endDM();
     }
   });
 
