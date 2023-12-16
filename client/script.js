@@ -1865,8 +1865,7 @@ $(function () {
   var gHideChat = localStorage.hideChat == "true";
   var gNoPreventDefault = localStorage.noPreventDefault == "true";
   var gHideBotUsers = localStorage.hideBotUsers == "true";
-  var gSnowflakes = !localStorage.snowflakes ? true : 
-    localStorage.snowflakes == "true";
+  var gSnowflakes = new Date().getMonth() === 11 && localStorage.snowflakes !== "false";
 
 //   var gWarnOnLinks = localStorage.warnOnLinks ? loalStorage.warnOnLinks == "true" : true;
   var gDisableMIDIDrumChannel = localStorage.disableMIDIDrumChannel ? localStorage.disableMIDIDrumChannel == "true" : true;
@@ -1880,6 +1879,7 @@ $(function () {
       snowflakes.style.visibility = "hidden";
     }
   }
+
   shouldShowSnowflakes();
   // This code is not written specficially for readibility, it is a heavily used function and performance matters.
   // If someone finds this code and knows a more performant way to do this (with proof of it being more performant)
@@ -4573,13 +4573,15 @@ $(function () {
                 gHideBotUsers = !gHideBotUsers;
                 localStorage.hideBotUsers = gHideBotUsers;
             });
-
-            createSetting("snowflakes", "Disable/enable christmas snowflakes", gSnowflakes, true, html, () => {
-              gSnowflakes = !gSnowflakes;
-              localStorage.snowflakes = gSnowflakes;
-              shouldShowSnowflakes();
-            });
-
+            
+            if(new Date().getMonth() === 11) {
+              createSetting("snowflakes", "Enable snowflakes", gSnowflakes, true, html, () => {
+                gSnowflakes = !gSnowflakes;
+                localStorage.snowflakes = gSnowflakes;
+                shouldShowSnowflakes();
+              });
+            }
+            
             content.appendChild(html);
             break;
         }
