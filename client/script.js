@@ -3266,6 +3266,7 @@ $(function () {
       },
       
       startReply: function (part, id) {
+        $(`#msg-${gMessageId}`).css({ "background-color": "unset", "border": "1px solid #00000000" });
         gIsReplying = true;
         gReplyParticipant = part;
         gMessageId = id;
@@ -3273,6 +3274,7 @@ $(function () {
       },
 
       startDmReply: function (part, id) {
+        $(`#msg-${gMessageId}`).css({ "background-color": "unset", "border": "1px solid #00000000" });
         gIsReplying = true;
         gIsDming = true;
         gMessageId = id;
@@ -3500,14 +3502,14 @@ $(function () {
         li.find('.reply').on('click', evt => {
           if (msg.m !== 'dm') {
             MPP.chat.startReply(msg.p, msg.id, msg.a);
-            $(`#msg-${msg.id}`).css({ "border": `1px solid ${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}80`, "background-color": `${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}20` });
+            setTimeout(() => { $(`#msg-${msg.id}`).css({ "border": `1px solid ${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}80`, "background-color": `${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}20` }); }, 100)
             setTimeout(() => { $('#chat-input').focus(); }, 100);
           } else {
             if (msg.m === 'dm') {
               const replyingTo = msg.sender._id === gClient.user._id ? msg.recipient : msg.sender;
               if (gClient.ppl[replyingTo._id]) {
                 MPP.chat.startDmReply(replyingTo, msg.id);
-                $(`#msg-${msg.id}`).css({ "border": `1px solid ${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}80`, "background-color": `${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}20` });
+                setTimeout(() => { $(`#msg-${msg.id}`).css({ "border": `1px solid ${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}80`, "background-color": `${(msg?.m === 'dm' ? msg.sender?.color : msg.p?.color)}20` }); }, 100)
                 setTimeout(() => { $('#chat-input').focus(); }, 100);
               } else {
                 new Notification({target: "#piano", title: "User not found.", text: "The user who you are trying to reply to in a DM is not found, so a DM could not be started." });
