@@ -1553,7 +1553,7 @@ $(function () {
       var color = part.color || "#777";
       setupParticipantDivs(part);
       $(part.cursorDiv)
-        .find(".name")
+        .find(".name p")
         .text(name)
         .css("background-color", color);
     });
