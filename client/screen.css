@@ -326,19 +326,11 @@ input[type="range"]:hover {
     top: 8px;
     pointer-events: none;
     color: #fff;
-    border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    white-space: nowrap;
-    padding: 1px;
-    font-size: 10px;
 }
 
 .cursor .name p {
     display: inline;
     position: relative;
-    left: 0px;
-    top: 0px;
     pointer-events: none;
     color: #fff;
     background: #000;
@@ -355,7 +347,7 @@ input[type="range"]:hover {
     display: inline;
     position: relative;
     left: 101%;
-    top: -14px;
+    top: -17px;
     float: bottom;
     position: relative;
 }
