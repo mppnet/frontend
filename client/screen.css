@@ -332,7 +332,7 @@ input[type="range"]:hover {
     display: inline-block;
     position: absolute;
     pointer-events: none;
-    left: 97%;
+    left: 94%;
     color: #fff;
     background: #000;
     border-radius: 2px;
