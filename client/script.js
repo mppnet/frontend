@@ -1497,6 +1497,7 @@ $(function () {
 
       part.displayX = 150;
       part.displayY = 50;
+      var tagText = typeof part.tag === 'object' ? part.tag.text : part.tag;
 
       // add nameDiv
       setupParticipantDivs(part);
@@ -1511,9 +1512,24 @@ $(function () {
 
         var div = document.createElement("div");
         div.className = "name";
-        div.style.backgroundColor = part.color || "#777"
-        div.textContent = part.name || "";
+
+        var namep = document.createElement("p");
+        namep.textContent = part.name || "";
+        namep.style.backgroundColor = part.color || "#777"
+
+
+        div.appendChild(namep);
         part.cursorDiv.appendChild(div);
+
+        if(part.tag) {
+          var tagDiv = document.createElement("div");
+          tagDiv.className = "nametag";
+          tagDiv.textContent = tagText || "";
+          tagDiv.style.bottom = "0"
+          tagDiv.style.backgroundColor = tagColor(part.tag);
+          tagDiv.id = 'nametag-' + part._id;
+          div.appendChild(tagDiv);
+        }
 
       } else {
         part.cursorDiv = undefined;
