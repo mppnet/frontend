@@ -1525,7 +1525,6 @@ $(function () {
           var tagDiv = document.createElement("div");
           tagDiv.className = "nametag";
           tagDiv.textContent = tagText || "";
-          tagDiv.style.bottom = "0"
           tagDiv.style.backgroundColor = tagColor(part.tag);
           tagDiv.id = 'nametag-' + part._id;
           div.appendChild(tagDiv);
