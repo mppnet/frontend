@@ -320,37 +320,44 @@ input[type="range"]:hover {
 }
 
 .cursor .name {
-    display: inline;
+    display: block;
+    align-items: center;
     position: relative;
-    left: 16px;
-    top: 8px;
+    white-space: nowrap;
+    height: fit-content;
+    width: fit-content;
+    line-height: 15px;
+    text-align: center;
+    left: 18px;
+    top: 12px;
+    border-radius: 2px;
     pointer-events: none;
     color: #fff;
 }
 
-.cursor .name p {
+.cursor .name span.nametext {
     display: inline-block;
-    position: absolute;
     pointer-events: none;
-    left: 94%;
     color: #fff;
-    background: #000;
     border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
+    margin-bottom: 1px;
     white-space: nowrap;
-    padding: 1px;
+    flex-shrink: 0;
     font-size: 10px;
 }
 
 
-.cursor .name .nametag {
-    display: inline;
+.cursor .name .curtag {
+    display: inline-block;
+    font-size: 10px;
+    line-height: 7px;
+    margin-right: 5px;
+    margin-bottom: 1px;
+    margin-left: 1px;
+    overflow: hidden;
     position: relative;
-    top: 0px;
-    float: bottom;
+    padding: 4px;
     white-space: nowrap;
-    position: relative;
 }
 
 .cursor.owner .name:after {
