@@ -328,9 +328,9 @@ input[type="range"]:hover {
     width: fit-content;
     line-height: 15px;
     text-align: center;
+    border-radius: 3px;
     left: 18px;
     top: 12px;
-    border-radius: 2px;
     pointer-events: none;
     color: #fff;
 }
@@ -353,6 +353,7 @@ input[type="range"]:hover {
     line-height: 7px;
     margin-right: 5px;
     margin-bottom: 1px;
+    border-radius: 5px;
     margin-left: 1px;
     overflow: hidden;
     position: relative;
