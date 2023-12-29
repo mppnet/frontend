@@ -1512,23 +1512,27 @@ $(function () {
 
         var div = document.createElement("div");
         div.className = "name";
-
-        var namep = document.createElement("p");
-        namep.textContent = part.name || "";
-        namep.style.backgroundColor = part.color || "#777"
-
-
-        div.appendChild(namep);
-        part.cursorDiv.appendChild(div);
+        div.style.backgroundColor = part.color || "#777"
 
         if(part.tag) {
-          var tagDiv = document.createElement("div");
-          tagDiv.className = "nametag";
+          var tagDiv = document.createElement("span");
+          tagDiv.className = "curtag";
           tagDiv.textContent = tagText || "";
           tagDiv.style.backgroundColor = tagColor(part.tag);
           tagDiv.id = 'nametag-' + part._id;
           div.appendChild(tagDiv);
         }
+
+        var namep = document.createElement("span");
+        namep.className = "nametext"
+        namep.textContent = part.name || "";
+        // namep.style.backgroundColor = part.color || "#777"
+
+
+        div.appendChild(namep);
+        part.cursorDiv.appendChild(div);
+
+
 
       } else {
         part.cursorDiv = undefined;
