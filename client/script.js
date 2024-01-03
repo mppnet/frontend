@@ -1497,6 +1497,7 @@ $(function () {
 
       part.displayX = 150;
       part.displayY = 50;
+      var tagText = typeof part.tag === 'object' ? part.tag.text : part.tag;
 
       // add nameDiv
       setupParticipantDivs(part);
@@ -1512,8 +1513,26 @@ $(function () {
         var div = document.createElement("div");
         div.className = "name";
         div.style.backgroundColor = part.color || "#777"
-        div.textContent = part.name || "";
+
+        if(part.tag) {
+          var tagDiv = document.createElement("span");
+          tagDiv.className = "curtag";
+          tagDiv.textContent = tagText || "";
+          tagDiv.style.backgroundColor = tagColor(part.tag);
+          tagDiv.id = 'nametag-' + part._id;
+          div.appendChild(tagDiv);
+        }
+
+        var namep = document.createElement("span");
+        namep.className = "nametext"
+        namep.textContent = part.name || "";
+        // namep.style.backgroundColor = part.color || "#777"
+
+
+        div.appendChild(namep);
         part.cursorDiv.appendChild(div);
+
+
 
       } else {
         part.cursorDiv = undefined;
@@ -1538,7 +1557,7 @@ $(function () {
       var color = part.color || "#777";
       setupParticipantDivs(part);
       $(part.cursorDiv)
-        .find(".name")
+        .find(".name p")
         .text(name)
         .css("background-color", color);
     });
