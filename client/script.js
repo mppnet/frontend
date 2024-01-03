@@ -1557,8 +1557,10 @@ $(function () {
       var color = part.color || "#777";
       setupParticipantDivs(part);
       $(part.cursorDiv)
-        .find(".name p")
+        .find(".name .nametext")
         .text(name)
+      $(part.cursorDiv)
+        .find(".name")
         .css("background-color", color);
     });
     gClient.on("ch", function (msg) {
