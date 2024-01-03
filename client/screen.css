@@ -144,6 +144,8 @@ table {
     line-height: 7px;
 }
 
+
+
 .nametext {
     white-space: pre;
     white-space: -moz-nowrap !important;
@@ -318,19 +320,45 @@ input[type="range"]:hover {
 }
 
 .cursor .name {
-    display: inline;
+    display: block;
+    align-items: center;
     position: relative;
-    left: 16px;
-    top: 8px;
+    white-space: nowrap;
+    height: fit-content;
+    width: fit-content;
+    line-height: 15px;
+    text-align: center;
+    border-radius: 3px;
+    left: 18px;
+    top: 12px;
     pointer-events: none;
     color: #fff;
-    background: #000;
+}
+
+.cursor .name span.nametext {
+    display: inline-block;
+    pointer-events: none;
+    color: #fff;
     border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
+    margin-bottom: 1px;
     white-space: nowrap;
-    padding: 1px;
+    flex-shrink: 0;
     font-size: 10px;
+}
+
+
+.cursor .name .curtag {
+    display: inline-block;
+    font-size: 10px;
+    line-height: 7px;
+    margin-right: 5px;
+    margin-bottom: 1px;
+    border-radius: 5px;
+    margin-left: 1px;
+    overflow: hidden;
+    position: relative;
+    padding: 4px;
+    white-space: nowrap;
 }
 
 .cursor.owner .name:after {
