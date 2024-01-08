@@ -1,87 +1,86 @@
-if(typeof module !== "undefined") {
-	module.exports = Color;
+if (typeof module !== "undefined") {
+  module.exports = Color;
 } else {
-	this.Color = Color;
+  this.Color = Color;
 }
 
 function Color() {
-	var r,g,b;
-	if(arguments.length === 1) {
-		var hexa = arguments[0].toLowerCase();
-		if(hexa.match(/^#[0-9a-f]{6}$/i)) {
-			hexa = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hexa);
-			if(hexa && hexa.length === 4) {
-				r = parseInt(hexa[1], 16);
-				g = parseInt(hexa[2], 16);
-				b = parseInt(hexa[3], 16);
-			}
-		}
-	} else if(arguments.length === 3) {
-		r = arguments[0];
-		g = arguments[1];
-		b = arguments[2];
-	}
-	this.r = ~~r || 0;
-	this.g = ~~g || 0;
-	this.b = ~~b || 0;
-};
-
-Color.prototype.distance = function(color) {
-	var d = 0;
-	d += Math.pow(this.r - color.r, 2);
-	d += Math.pow(this.g - color.g, 2);
-	d += Math.pow(this.b - color.b, 2);
-	return Math.abs(Math.sqrt(d));
-};
-
-Color.prototype.add = function(r, g, b) {
-	this.r += r;
-	this.g += g;
-	this.b += b;
-	if(this.r < 0) this.r = 0;
-	else if(this.r > 255) this.r = 255;
-	if(this.g < 0) this.g = 0;
-	else if(this.g > 255) this.g = 255;
-	if(this.b < 0) this.b = 0;
-	else if(this.b > 255) this.b = 255;
-};
-
-Color.prototype.toHexa = function() {
-	var r = (~~this.r || 0).toString(16), g = (~~this.g || 0).toString(16), b = (~~this.b || 0).toString(16);
-	if(r.length == 1) r = "0" + r;
-	if(g.length == 1) g = "0" + g;
-	if(b.length == 1) b = "0" + b;
-	return "#"+r+g+b;
+  var r, g, b;
+  if (arguments.length === 1) {
+    var hexa = arguments[0].toLowerCase();
+    if (hexa.match(/^#[0-9a-f]{6}$/i)) {
+      hexa = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hexa);
+      if (hexa && hexa.length === 4) {
+        r = parseInt(hexa[1], 16);
+        g = parseInt(hexa[2], 16);
+        b = parseInt(hexa[3], 16);
+      }
+    }
+  } else if (arguments.length === 3) {
+    r = arguments[0];
+    g = arguments[1];
+    b = arguments[2];
+  }
+  this.r = ~~r || 0;
+  this.g = ~~g || 0;
+  this.b = ~~b || 0;
 }
 
-Color.prototype.getName = function() {
-	var hexa = this.toHexa();
-	var low = 256;
-	var name;
-	for(var n in Color.map) {
-		if(!Color.map.hasOwnProperty(n))
-			continue;
-		var color = Color.map[n];
-		if(color.r === this.r && color.g === this.g && color.b === this.b) {
-			return n;
-		}
-		var dist = this.distance(color);
-		if(dist < low) {
-			low = dist;
-			name = n;
-		}
-	}
-	if(!name)
-		name = this.toHexa();
-	else
-		name = "A shade of " + name;
-	return name;
+Color.prototype.distance = function (color) {
+  var d = 0;
+  d += Math.pow(this.r - color.r, 2);
+  d += Math.pow(this.g - color.g, 2);
+  d += Math.pow(this.b - color.b, 2);
+  return Math.abs(Math.sqrt(d));
+};
+
+Color.prototype.add = function (r, g, b) {
+  this.r += r;
+  this.g += g;
+  this.b += b;
+  if (this.r < 0) this.r = 0;
+  else if (this.r > 255) this.r = 255;
+  if (this.g < 0) this.g = 0;
+  else if (this.g > 255) this.g = 255;
+  if (this.b < 0) this.b = 0;
+  else if (this.b > 255) this.b = 255;
+};
+
+Color.prototype.toHexa = function () {
+  var r = (~~this.r || 0).toString(16),
+    g = (~~this.g || 0).toString(16),
+    b = (~~this.b || 0).toString(16);
+  if (r.length == 1) r = "0" + r;
+  if (g.length == 1) g = "0" + g;
+  if (b.length == 1) b = "0" + b;
+  return "#" + r + g + b;
+};
+
+Color.prototype.getName = function () {
+  var hexa = this.toHexa();
+  var low = 256;
+  var name;
+  for (var n in Color.map) {
+    if (!Color.map.hasOwnProperty(n)) continue;
+    var color = Color.map[n];
+    if (color.r === this.r && color.g === this.g && color.b === this.b) {
+      return n;
+    }
+    var dist = this.distance(color);
+    if (dist < low) {
+      low = dist;
+      name = n;
+    }
+  }
+  if (!name) name = this.toHexa();
+  else name = "A shade of " + name;
+  return name;
 };
 
 Color.map = {};
 
-Color.addToMap = function(hexa, name) {
-	Color.map[name] = new Color(hexa);
+Color.addToMap = function (hexa, name) {
+  Color.map[name] = new Color(hexa);
 };
 
 Color.addToMap("#7CB9E8", "Aero");
