@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "license": "MIT",
   "devDependencies": {
-    "esbuild": "^0.17.5"
+    "esbuild": "^0.17.5",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.2"
   },
   "scripts": {
     "build": "esbuild --minify client/*.js client/*.css --outdir=client/ --allow-overwrite"
