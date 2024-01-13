@@ -1931,9 +1931,7 @@ $(function () {
     : true;
   var gVirtualPianoLayout = localStorage.virtualPianoLayout == "true";
   var gSmoothCursor = localStorage.smoothCursor == "true";
-  var gShowChatTooltips = localStorage.showChatTooltips
-    ? localStorage.showChatTooltips == "true"
-    : true;
+  var gShowChatTooltips = localStorage.showChatTooltips == "true";
   var gShowPianoNotes = localStorage.showPianoNotes == "true";
   var gHighlightScaleNotes = localStorage.highlightScaleNotes;
   var gCursorHides = (localStorage.cursorHides ? localStorage.cursorHides : "")
@@ -2488,6 +2486,9 @@ $(function () {
         .on("mousedown touchstart", (evt) => {
           navigator.clipboard.writeText(part._id);
           evt.target.innerText = "Copied!";
+          setTimeout(() => {
+            evt.target.innerText = part._id;
+          }, 2500);
         });
       // add menu items
       if (gPianoMutes.indexOf(part._id) == -1) {
@@ -3692,12 +3693,24 @@ $(function () {
                 ? msg.recipient._id
                 : msg.sender._id,
             );
+            li.find(".id").text("Copied");
+            setTimeout(() => {
+              li.find(".id").text((msg.sender._id === gClient.user._id ? msg.recipient._id : msg.sender._id).substring(0, 6));
+            }, 2500);
           } else {
             navigator.clipboard.writeText(msg.p._id);
+            li.find(".id").text("Copied");
+            setTimeout(() => {
+              li.find(".id").text(msg.p._id.substring(0, 6));
+            }, 2500);
           }
         });
         li.find(".id2").on("click", (evt) => {
           navigator.clipboard.writeText(msg.recipient._id);
+          li.find(".id2").text("Copied");
+          setTimeout(() => {
+            li.find(".id2").text(msg.recipient._id.substring(0, 6));
+          }, 2500)
         });
 
         //Reply button click event listener
