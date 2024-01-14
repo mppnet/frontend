@@ -1496,8 +1496,20 @@ input[type="range"]:hover {
     right: 36px;
 }
 
-.reddit-button {
+.github-button {
     right: 66px;
+    background-color: white;
+    filter: invert(100%);
+    border-color: #c6c6c6;
+}
+
+.github-button:hover {
+    background-color: #ddd;
+}
+
+.reddit-button {
+    right: 96px;
+    z-index: 500;
 }
 
 .mpp-rules-button {
