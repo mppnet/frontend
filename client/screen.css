@@ -1498,13 +1498,6 @@ input[type="range"]:hover {
 
 .github-button {
     right: 66px;
-    background-color: white;
-    filter: invert(100%);
-    border-color: #c6c6c6;
-}
-
-.github-button:hover {
-    background-color: #ddd;
 }
 
 .reddit-button {
