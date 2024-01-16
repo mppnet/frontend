@@ -1566,7 +1566,6 @@ $(function () {
       setupParticipantDivs(part);
       $(part.cursorDiv).find(".name .nametext").text(name);
       $(part.cursorDiv).find(".name").css("background-color", color);
-
     });
     gClient.on("ch", function (msg) {
       for (var id in gClient.ppl) {
@@ -3695,7 +3694,12 @@ $(function () {
             );
             li.find(".id").text("Copied");
             setTimeout(() => {
-              li.find(".id").text((msg.sender._id === gClient.user._id ? msg.recipient._id : msg.sender._id).substring(0, 6));
+              li.find(".id").text(
+                (msg.sender._id === gClient.user._id
+                  ? msg.recipient._id
+                  : msg.sender._id
+                ).substring(0, 6),
+              );
             }, 2500);
           } else {
             navigator.clipboard.writeText(msg.p._id);
@@ -3710,7 +3714,7 @@ $(function () {
           li.find(".id2").text("Copied");
           setTimeout(() => {
             li.find(".id2").text(msg.recipient._id.substring(0, 6));
-          }, 2500)
+          }, 2500);
         });
 
         //Reply button click event listener
