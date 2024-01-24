@@ -1,9 +1,20 @@
 {
     "people are playing": "personas están jugando",
     "people are playing_one": "persona está jugando",
+    "people are playing_many": "",
+    "people are playing_other": "",
     "New Room...": "Nueva sala de...",
     "room name": "sala de nombre",
     "Visible (open to everyone)": "Visible (abierto a todo el mundo)",
     "Enable Chat": "Habilitar chat",
-    "Play Alone": "Jugar Solo"
+    "Play Alone": "Jugar Solo",
+    "Multiplayer Piano Rules": "Reglas de Multiplayer Piano",
+    "Room Settings": "Ajustes de la sala",
+    "MIDI In/Out": "Entrada/salida MIDI",
+    "Synth": "Sintetizador",
+    "You can chat with this thing.": "Puedes chatear con esta cosa.",
+    "MPPNet Community Forum": "Foro de la comunidad MPPNet",
+    "MPPNet Reddit": "Reddit de MPPNet",
+    "Rules": "Reglas",
+    "MPPNet Discord": "Discord MPPNet"
 }
