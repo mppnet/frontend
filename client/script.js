@@ -1235,8 +1235,7 @@ $(function () {
           '<span class="number">' +
             count +
             "</span> " +
-            window.i18nextify.i18next.t('people are playing', {count}) +
-            " playing",
+            window.i18nextify.i18next.t('people are playing', {count})
         );
         if (!tabIsActive) {
           if (youreMentioned || youreReplied) {
