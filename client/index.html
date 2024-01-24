@@ -44,7 +44,7 @@
   </div>
   <div id="chat">
     <ul></ul>
-    <input id="chat-input" placeholder="You can chat with this thing." class="translate" maxlength="512"
+    <input id="chat-input" placeholder="You can chat with this thing." maxlength="512"
       autocomplete="off" />
   </div>
 
@@ -59,6 +59,16 @@
   <a href="https://mpp.community/" title="MPPNet Community Forum" target="_blank">
     <button class="mppcommunity-button icon-button top-button" aria-hidden="true">
       <img src="/mppcommunity.ico" style="vertical-align: middle;">
+    </button>
+  </a>
+  <a href="https://github.com/mppnet/frontend" title="MPPNet Frontend Repo" target="_blank">
+    <button class="github-button icon-button top-button" aria-hidden="true">
+      <img src="/github.ico" style="vertical-align: middle;">
+    </button>
+  </a>
+  <a href="https://www.reddit.com/r/multiplayerpianonet/" title="MPPNet Reddit" target="_blank">
+    <button class="reddit-button icon-button top-button" aria-hidden="true">
+      <img src="/reddit.ico" style="vertical-align: middle;">
     </button>
   </a>
   <a href="https://discord.gg/338D2xMufC" title="MPPNet Discord" target="_blank">
@@ -96,14 +106,14 @@
         <div class="info"></div>
         <div class="expand"></div>
         <div class="more">
-          <div class="new translate">New Room...</div>
+          <div class="new">New Room...</div>
         </div>
       </div>
-      <div id="new-room-btn" class="ugly-button translate">New Room...</div>
+      <div id="new-room-btn" class="ugly-button">New Room...</div>
       <div id="play-alone-btn" class="ugly-button">Play Alone</div>
       <div id="room-settings-btn" class="ugly-button">Room Settings</div>
-      <div id="midi-btn" class="ugly-button translate">MIDI In/Out</div>
-      <div id="synth-btn" class="ugly-button translate">Synth</div>
+      <div id="midi-btn" class="ugly-button">MIDI In/Out</div>
+      <div id="synth-btn" class="ugly-button">Synth</div>
       <div id="sound-btn" class="ugly-button sound-btn">Sound Select</div>
       <div id="client-settings-btn" class="ugly-button client-settings-btn">Client Settings</div>
       <div id="account-btn" class="ugly-button account-btn">Account</div>
@@ -129,16 +139,16 @@
         <button class="submit">PLAY</button>
       </div>
       <div id="new-room" class="dialog">
-        <p><input type="text" name="name" placeholder="room name" class="text translate" maxlength="512" /></p>
-        <p><label><input type="checkbox" name="visible" class="checkbox translate" checked>Visible (open to everyone)</label></p>
+        <p><input type="text" name="name" placeholder="room name" class="text" maxlength="512" /></p>
+        <p><label><input type="checkbox" name="visible" class="checkbox" checked>Visible (open to everyone)</label></p>
         <button class="submit">go</button>
       </div>
       <div id="room-settings" class="dialog">
         <p>
         <div class="ugly-button drop-crown">Drop crown</div>
         </p>
-        <p><label><input type="checkbox" name="visible" class="checkbox translate" checked>Visible (open to everyone)</label></p>
-        <p><label><input type="checkbox" name="chat" class="checkbox translate" checked>Enable Chat</label></p>
+        <p><label><input type="checkbox" name="visible" class="checkbox" checked>Visible (open to everyone)</label></p>
+        <p><label><input type="checkbox" name="chat" class="checkbox" checked>Enable Chat</label></p>
         <p><label><input type="checkbox" name="crownsolo" class="checkbox">Only Owner can Play</label></p>
         <p><label><input type="checkbox" name="nocussing" class="checkbox">No Cussing</label></p>
         <p><label><input type="checkbox" name="noindex" class="checkbox">Ask bots not to index this room</label></p>
@@ -227,6 +237,7 @@
   <script src="/NoteQuota.js"></script>
   <script src="/Color.js"></script>
   <!--<script src="/ebsprite.js"></script>-->
+  <script src="https://unpkg.com/i18nextify@^3.2.1" id="i18nextify" fallbacklng="en"></script>
   <script src="/script.js"></script>
 </body>
 
