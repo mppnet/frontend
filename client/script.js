@@ -1232,7 +1232,7 @@ $(function () {
     gClient.on("count", function (count) {
       if (count > 0) {
         $("#status").html(
-          '<span class="number">' +
+          '<span class="number" translated>' +
             count +
             "</span> " +
             window.i18nextify.i18next.t('people are playing', {count})
@@ -1361,6 +1361,7 @@ $(function () {
       textDiv.id = "nametext-" + part._id;
       if (hasOtherDiv) textDiv.style.float = "left";
       part.nameDiv.appendChild(textDiv);
+      part.nameDiv.setAttribute("translated", "")
 
       var arr = $("#names .name");
       arr.sort(function (a, b) {
@@ -1409,7 +1410,7 @@ $(function () {
         namep.className = "nametext";
         namep.textContent = part.name || "";
         // namep.style.backgroundColor = part.color || "#777"
-
+        div.setAttribute("translated", "")
         div.appendChild(namep);
         part.cursorDiv.appendChild(div);
       } else {
@@ -2580,7 +2581,7 @@ $(function () {
     }
     this.domElement = $(
       '<div class="notification"><div class="notification-body"><div class="title"></div>' +
-        '<div class="text"></div></div><div class="x">X</div></div>',
+        '<div class="text"></div></div><div class="x" translated>X</div></div>',
     );
     this.domElement[0].id = this.id;
     this.domElement.addClass(this["class"]);
@@ -2660,8 +2661,8 @@ $(function () {
     if (localStorage.volume) {
       volume_slider.value = localStorage.volume;
       gPiano.audio.setVolume(localStorage.volume);
-      $("#volume-label").text(
-        "Volume: " + Math.floor(gPiano.audio.volume * 100) + "%",
+      $("#volume-label").html(
+        "Volume<span translated>: " + Math.floor(gPiano.audio.volume * 100) + "%</span>",
       );
     } else localStorage.volume = gPiano.audio.volume;
 
@@ -2705,12 +2706,16 @@ $(function () {
           (room.id + "").replace(/[\\"']/g, "\\$&").replace(/\u0000/g, "\\0") +
           '"]',
       );
+
       if (info.length == 0) {
         info = $('<div class="info"></div>');
         info.attr("roomname", room._id);
         info.attr("roomid", room.id);
         $("#room .more").append(info);
       }
+
+      info.attr("translated", "");
+
       info.text(
         room.count +
           "/" +
@@ -3994,6 +3999,10 @@ $(function () {
             } else {
               outputs_ul.textContent = "(none)";
             }
+
+            outputs_ul.setAttribute("translated", "")
+            inputs_ul.setAttribute("translated", "")
+
             var div = document.createElement("div");
             var h1 = document.createElement("h1");
             h1.textContent = "Inputs";
