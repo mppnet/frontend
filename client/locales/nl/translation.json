@@ -28,7 +28,7 @@
     "Misc": "Overige",
     "No chat colors:": "Geen chat kleuren:",
     "Hide chat:": "Chat verstoppen:",
-    "Ok": "Ok",
+    "Ok": "OK",
     "Outputs": "Uitgangen",
     "Multiplayer Piano": "Multispeler piano",
     "Room Settings": "Kamer instellingen",
@@ -73,5 +73,12 @@
     "Show ID tooltips:": "Toon ID tooltips:",
     "Discord": "Discord",
     "MIDI Connections": "Midi connecties",
-    "Inputs": "Ingangen"
+    "Inputs": "Ingangen",
+    "Joining channel...": "Aan het connecteren …",
+    "Synthesize": "Synthetiseren",
+    "ON/OFF": "AAN/UIT",
+    "square": "vierkant",
+    "sine": "sinus",
+    "triangle": "driehoek",
+    "sawtooth": "zaaghaak"
 }
