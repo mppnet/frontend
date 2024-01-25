@@ -4534,7 +4534,8 @@ $(function () {
           var setting = document.createElement("select");
           setting.classList = "setting";
           setting.style = "color: inherit; width: calc(100% - 2px);";
-
+          setting.setAttribute("translated", "")
+          
           const keys = Object.keys(BASIC_PIANO_SCALES); // lol
           const option = document.createElement("option");
           option.value = option.innerText = "No highlighted notes";
