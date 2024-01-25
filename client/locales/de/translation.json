@@ -89,5 +89,7 @@
     "Ask bots not to index this room": "Bots bitten, diesen Raum nicht zu berühren",
     "sawtooth": "sawtooth",
     "Output own notes to MIDI:": "Eigene Noten auf MIDI ausgeben:",
-    "Disable MIDI Drum Channel (channel 10):": "Schalten Sie den MIDI drum kanal (kanal 10) aus:"
+    "Disable MIDI Drum Channel (channel 10):": "Schalten Sie den MIDI drum kanal (kanal 10) aus:",
+    "Don't use prevent default:": "Verwenden Sie nicht die Voreinstellung verhindern:",
+    "Force dark background:": "Dunklen Hintergrund erzwingen:"
 }
