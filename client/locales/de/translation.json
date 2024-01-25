@@ -79,11 +79,12 @@
     "Virtual Piano layout:": "Virtuellen Piano Anordnung:",
     "Hide piano:": "Verstecke das Piano:",
     "Highlighted notes:": "Markierte Noten:",
-    "Enable smooth cursors:": "Aktiever glatten Cursors:",
+    "Enable smooth cursors:": "Aktiviere glatten Cursors:",
     "Hide all cursors:": "Verstecke alle Cursor:",
     "Hide all bots:": "Verstecke alle Bots:",
     "MPPNet Discord": "MPPNet Discord",
     "Amount of unit...": "Menge von Einheit...",
     "sine": "Sinus",
-    "triangle": "dreieck"
+    "triangle": "dreieck",
+    "Ask bots not to index this room": "Bots bitten, diesen Raum nicht zu berühren"
 }
