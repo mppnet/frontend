@@ -64,7 +64,7 @@
     "Show ID tooltips:": "Zeig ID Infos:",
     "No chat colors:": "Keine Chat Farben:",
     "Hide chat:": "Versteck Chat:",
-    "Ok": "Ok",
+    "Ok": "OK",
     "MIDI Connections": "MIDI Verbindungen",
     "Inputs": "Eingaben",
     "Outputs": "Ausgaben",
@@ -86,5 +86,8 @@
     "Amount of unit...": "Menge von Einheit:",
     "sine": "Sinus",
     "triangle": "dreieck",
-    "Ask bots not to index this room": "Bots bitten, diesen Raum nicht zu berühren"
+    "Ask bots not to index this room": "Bots bitten, diesen Raum nicht zu berühren",
+    "sawtooth": "sawtooth",
+    "Output own notes to MIDI:": "Eigene Noten auf MIDI ausgeben:",
+    "Disable MIDI Drum Channel (channel 10):": "Schalten Sie den MIDI drum kanal (kanal 10) aus:"
 }
