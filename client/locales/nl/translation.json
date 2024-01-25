@@ -7,7 +7,7 @@
     "Visible (open to everyone)": "Zichtbaar (open voor iedereen)",
     "Enable Chat": "Chat inschakelen",
     "Play Alone": "Speel Alleen",
-    "MPPNet Community Forum": "MPPNet gemeenschapsforum",
+    "MPPNet Community Forum": "MPPNet Forum",
     "MPPNet Reddit": "MPPNet Reddit",
     "Rules": "Regels",
     "Multiplayer Piano Rules": "Multispeler Piano Regels",
@@ -80,5 +80,16 @@
     "square": "vierkant",
     "sine": "sinus",
     "triangle": "driehoek",
-    "sawtooth": "zaaghaak"
+    "sawtooth": "zaaghaak",
+    "Output own notes to MIDI:": "Output eigen noten tot MIDI:",
+    "Enable smooth cursors:": "Schakel vloeiende cursors:",
+    "Hide all bots:": "Verstop alle bots:",
+    "Disable MIDI Drum Channel (channel 10):": "Schakel midi drum kanaal uit (kanaal 10):",
+    "Show piano notes:": "Laat piano noten zien:",
+    "Virtual Piano layout:": "Virtueel piano indeling:",
+    "Hide piano:": "Verstop piano:",
+    "Highlighted notes:": "Gemarkeerde noten:",
+    "Don't use prevent default:": "Gebruik niet standaard default:",
+    "Force dark background:": "Forceer donker achtergrond:",
+    "Hide all cursors:": "Verstop alle cursors:"
 }
