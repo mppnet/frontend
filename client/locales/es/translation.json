@@ -1,8 +1,8 @@
 {
     "people are playing": "personas están jugando",
     "people are playing_one": "persona está jugando",
-    "people are playing_many": "",
-    "people are playing_other": "",
+    "people are playing_many": "personas están jugando",
+    "people are playing_other": "personas están jugando",
     "New Room...": "Nueva sala de...",
     "room name": "sala de nombre",
     "Visible (open to everyone)": "Visible (abierto a todo el mundo)",
@@ -72,5 +72,6 @@
     "Account": "Cuenta",
     "go": "ir",
     "Only Owner can Play": "Solo el dueño puede jugar",
-    "Permanent": "Permanente"
+    "Permanent": "Permanente",
+    "PLAY": "PLAY"
 }
