@@ -74,5 +74,20 @@
     "Inputs": "Ieejas",
     "Multiplayer Piano": "Vairākspēlētāju Klavieres",
     "You can play the piano with your keyboard, too.  Try it!": "Tu vari arī spelēt klavieres ar datora klavietūru.  Pamēģini!",
-    "Did you know!?!": "Vai tu zināji?!"
+    "Did you know!?!": "Vai tu zināji?!",
+    "Synthesize": "Sintizētšana",
+    "square": "kvadrātveida",
+    "Output own notes to MIDI:": "Izvadīt savas notis uz MIDI:",
+    "Disable MIDI Drum Channel (channel 10):": "Atspējot MIDI bungu kanālu (10. kanāls):",
+    "Virtual Piano layout:": "Virtuālo klavieru izkārtojums:",
+    "Don't use prevent default:": "Neizmantojiet noklusējuma novēršanu:",
+    "Force dark background:": "Piespiedu tumšs fons:",
+    "Enable smooth cursors:": "Ieslēgt gludus kursorus:",
+    "Joining channel...": "Pievienojas istabai...",
+    "ON/OFF": "IESLĒGT/IZSLĒGT",
+    "Show piano notes:": "Radīt klavieres notis:",
+    "Hide piano:": "Slēpt klavieres:",
+    "Hide all cursors:": "Noslēpt visus kursorus:",
+    "Hide all bots:": "Noslēpt visus robotus:",
+    "Highlighted notes:": "Izceltās notis:"
 }
