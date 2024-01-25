@@ -1,5 +1,7 @@
 {
-    "people are playing": "cilvēki spēlē",
+    "people are playing_zero": "cilvēki spēlē",
+    "people are playing_one": "cilvēks spelē",
+    "people are playing_other": "cilvēkī spelē",
     "New Room...": "Jauna Istaba...",
     "Visible (open to everyone)": "Redzams (atvērts visiem)",
     "Enable Chat": "Ieslēgt Chatu",
