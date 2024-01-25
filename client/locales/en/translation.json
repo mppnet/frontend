@@ -73,5 +73,20 @@
     "Outputs": "Outputs",
     "Multiplayer Piano": "Multiplayer Piano",
     "Did you know!?!": "Did you know!?!",
-    "You can play the piano with your keyboard, too.  Try it!": "You can play the piano with your keyboard, too.  Try it!"
+    "You can play the piano with your keyboard, too.  Try it!": "You can play the piano with your keyboard, too.  Try it!",
+    "Joining channel...": "Joining channel...",
+    "Synthesize": "Synthesize",
+    "ON/OFF": "ON/OFF",
+    "square": "square",
+    "Output own notes to MIDI:": "Output own notes to MIDI:",
+    "Disable MIDI Drum Channel (channel 10):": "Disable MIDI Drum Channel (channel 10):",
+    "Virtual Piano layout:": "Virtual Piano layout:",
+    "Show piano notes:": "Show piano notes:",
+    "Hide piano:": "Hide piano:",
+    "Highlighted notes:": "Highlighted notes:",
+    "Don't use prevent default:": "Don't use prevent default:",
+    "Force dark background:": "Force dark background:",
+    "Enable smooth cursors:": "Enable smooth cursors:",
+    "Hide all cursors:": "Hide all cursors:",
+    "Hide all bots:": "Hide all bots:"
 }
