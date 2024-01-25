@@ -88,5 +88,6 @@
     "Joining channel...": "Вход в канал…",
     "ON/OFF": "ВКЛ/ВЫКЛ",
     "Output own notes to MIDI:": "Выводить свои ноты в MIDI:",
-    "Enable smooth cursors:": "Включить плавные курсоры:"
+    "Enable smooth cursors:": "Включить плавные курсоры:",
+    "sine": ""
 }
