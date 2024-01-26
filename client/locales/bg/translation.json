@@ -1,6 +1,6 @@
 {
-    "people are playing_other": "Хора играят",
     "people are playing_one": "човек играе",
+    "people are playing_other": "Хора играят",
     "New Room...": "Нова стая...",
     "room name": "Име на Стаята",
     "Account": "Акаунт",
@@ -71,7 +71,7 @@
     "Misc": "Разни",
     "Show user IDs in chat:": "Покажи потребител ИД във чат:",
     "Show ID tooltips:": "Покажи ИД информации:",
-    "Outputs": "Входове",
+    "Outputs": "Изход",
     "Inputs": "Входове",
     "Joining channel...": "Влизане на канал…",
     "Synthesize": "Сънтезирай",
