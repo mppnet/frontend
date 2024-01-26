@@ -1,7 +1,7 @@
 {
     "people are playing_one": "person is playing",
     "people are playing_other": "people are playing",
-    "New Room...": "New Room...",
+    "New Room...": "New Room…",
     "room name": "room name",
     "Visible (open to everyone)": "Visible (open to everyone)",
     "Enable Chat": "Enable Chat",
@@ -90,5 +90,13 @@
     "Force dark background:": "Force dark background:",
     "Enable smooth cursors:": "Enable smooth cursors:",
     "Hide all cursors:": "Hide all cursors:",
-    "Hide all bots:": "Hide all bots:"
+    "Hide all bots:": "Hide all bots:",
+    "Hide Cursor": "Hide Cursor",
+    "Mute Notes": "Mute Notes",
+    "Mute Chat": "Mute Chat",
+    "Mute Completely": "Mute Completely",
+    "Direct Message": "Direct Message",
+    "Mention": "Mention",
+    "Give Crown": "Give Crown",
+    "Kickban": "Kickban"
 }
