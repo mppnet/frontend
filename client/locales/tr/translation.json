@@ -13,7 +13,7 @@
     "Sound Select": "Ses Seçimi",
     "Account": "Hesap",
     "Vanish": "Görünmezlik",
-    "Connecting...": "Bağlanılıyor...",
+    "Connecting...": "Bağlanılıyor…",
     "Volume": "Ses",
     "PLAY": "OYNA",
     "Only Owner can Play": "Sadece Sahip Oynayabilir",
@@ -23,7 +23,7 @@
     "APPLY": "UYGULA",
     "User ID:": "Kullanıcı Numarası:",
     "Reason:": "Neden:",
-    "Ban reason...": "Yasaklanma sebebi...",
+    "Ban reason...": "Yasaklanma sebebi:",
     "Duration:": "Uzunluk:",
     "Seconds": "Saniye",
     "Days": "Gün",
@@ -56,5 +56,5 @@
     "User's ID": "Kullanıcının Numarası",
     "Minutes": "Dakika",
     "Hours": "Saat",
-    "Optional note for staff...": "Yöneticiler için not..."
+    "Optional note for staff...": "Yöneticiler için not…"
 }
