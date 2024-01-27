@@ -890,6 +890,7 @@ $(function () {
         if (pack.name == self.soundSelection)
           pack.html.classList = "pack enabled";
         else pack.html.classList = "pack";
+        pack.html.setAttribute("translated", "");
         html.appendChild(pack.html);
       }
 
