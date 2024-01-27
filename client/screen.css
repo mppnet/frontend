@@ -65,9 +65,9 @@ table {
     left: 4px;
     font-size: 12px;
     width: 90%;
-    width: -webkit-calc(100% - 105px);
-    width: -moz-calc(100% - 105px);
-    width: calc(100% - 105px);
+    width: -webkit-calc(100% - 110px);
+    width: -moz-calc(100% - 110px);
+    width: calc(100% - 110px);
 }
 
 #names .name {
@@ -571,7 +571,6 @@ input[type="range"]:hover {
     border-radius: 2px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
-    width: 100px;
     overflow: hidden;
     white-space: nowrap;
 }
@@ -584,78 +583,14 @@ input[type="range"]:hover {
     background: rgba(204,187,170,.35);
 }
 
-#new-room-btn {
+.buttons {
     position: absolute;
     left: 300px;
     top: 4px;
-}
-
-#play-alone-btn {
-    position: absolute;
-    left: 420px;
-    top: 4px;
-}
-
-#sound-btn {
-    position: absolute;
-    left: 540px;
-    top: 4px;
-}
-
-#room-settings-btn {
-    position: absolute;
-    left: 660px;
-    top: 4px;
-    display: none;
-}
-
-#midi-btn {
-    position: absolute;
-    left: 300px;
-    top: 32px;
-}
-
-#record-btn {
-    position: absolute;
-    left: 420px;
-    top: 32px;
-}
-
-#synth-btn {
-    position: absolute;
-    left: 540px;
-    top: 32px;
-}
-#client-settings-btn {
-    position: absolute;
-    left: 660px;
-    top: 32px;
-}
-#account-btn {
-    position: absolute;
-    left: 780px;
-    top: 32px;
-}
-#clearchat-btn {
-    position: absolute;
-    left: 780px;
-    top: 4px;
-}
-#getcrown-btn {
-    position: absolute;
-    left: 900px;
-    top: 32px;
-}
-#vanish-btn {
-    position: absolute;
-    left: 900px;
-    top: 4px;
-}
-
-#logout-btn {
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin-right: 120px;
 }
 
 #client-settings-ok-btn {

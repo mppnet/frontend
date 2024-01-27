@@ -1,11 +1,14 @@
 {
-    "people are playing": "osób grają",
     "people are playing_one": "osoba gra",
-    "people are playing_few": "",
-    "people are playing_many": "",
+    "people are playing_few": "osób grają",
+    "people are playing_many": "osób grają",
     "New Room...": "Nowy pokój",
-    "room name": "nazwa pokój",
+    "room name": "nazwa pokoju",
     "Visible (open to everyone)": "Widoczne (otwarte dla wszystkich)",
     "Enable Chat": "Włącz czat",
-    "Play Alone": "Zagraj sam"
+    "Play Alone": "Zagraj sam",
+    "Rules": "Regulaminy",
+    "Multiplayer Piano Rules": "Regulaminy Multiplayer Piano",
+    "Room Settings": "Ustawienia Pokoju",
+    "Only Owner can Play": "Tylko właściciel pokoju może grać"
 }
