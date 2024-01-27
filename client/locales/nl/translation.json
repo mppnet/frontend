@@ -1,7 +1,7 @@
 {
     "people are playing_one": "men is aan het spelen",
     "people are playing_other": "mensen zijn aan het spelen",
-    "New Room...": "nieuwe Kamer...",
+    "New Room...": "Nieuwe Kamer…",
     "room name": "kamer naam",
     "Visible (open to everyone)": "Zichtbaar (open voor iedereen)",
     "Enable Chat": "Chat inschakelen",
@@ -51,7 +51,7 @@
     "Duration:": "Duratie:",
     "PLAY": "SPELEN",
     "Drop crown": "Kroon laten vallen",
-    "Ban reason...": "Ban reden:",
+    "Ban reason...": "Ban reden...",
     "go": "gaan",
     "Only Owner can Play": "Alleen eigenaar kan spelen",
     "No Cussing": "Niet schelden",
@@ -59,7 +59,7 @@
     "Minutes": "Minuten",
     "Days": "Dagen",
     "Months": "Maanden",
-    "Amount of unit...": "Hoeveel van eenheid:",
+    "Amount of unit...": "Hoeveel van eenheid...",
     "Hours": "Uren",
     "Weeks": "Weken",
     "Optional note for staff...": "Optionele opmerking voor het personeel…",
@@ -90,5 +90,14 @@
     "Highlighted notes:": "Gemarkeerde noten:",
     "Don't use prevent default:": "Gebruik niet standaard default:",
     "Force dark background:": "Forceer donker achtergrond:",
-    "Hide all cursors:": "Verstop alle cursors:"
+    "Hide all cursors:": "Verstop alle cursors:",
+    "Mute Completely": "Helemaal dempen",
+    "Mention": "Opnoemen",
+    "Give Crown": "Geef kroon",
+    "Kickban": "Temp ban",
+    "Hide Cursor": "Verstop Cursor",
+    "Mute Notes": "Noten dempen",
+    "Mute Chat": "Chat dempen",
+    "Direct Message": "Prive bericht",
+    "Me": "Ik"
 }
