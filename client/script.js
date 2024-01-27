@@ -1,3 +1,7 @@
+const translation = window.i18nextify.init({
+  autorun: false,
+});
+
 if (location.host === "multiplayerpiano.com") {
   const url = new URL("https://multiplayerpiano.net/" + location.search);
   if (localStorage.token) url.searchParams.set("token", localStorage.token);
@@ -22,6 +26,7 @@ if (location.host === "multiplayerpiano.net") {
 // 钢琴
 
 $(function () {
+  translation.start();
   console.log(
     "%cWelcome to MPP's developer console!",
     "color:blue; font-size:20px;",
@@ -2361,7 +2366,11 @@ $(function () {
         });
       // add menu items
       if (gPianoMutes.indexOf(part._id) == -1) {
-        $('<div class="menu-item">Mute Notes</div>')
+        $(
+          `<div class="menu-item">${window.i18nextify.i18next.t(
+            "Mute Notes",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             gPianoMutes.push(part._id);
@@ -2369,7 +2378,11 @@ $(function () {
             $(part.nameDiv).addClass("muted-notes");
           });
       } else {
-        $('<div class="menu-item">Unmute Notes</div>')
+        $(
+          `<div class="menu-item">${window.i18nextify.i18next.t(
+            "Unmute Notes",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             var i;
@@ -2380,7 +2393,11 @@ $(function () {
           });
       }
       if (gChatMutes.indexOf(part._id) == -1) {
-        $('<div class="menu-item">Mute Chat</div>')
+        $(
+          `<div class="menu-item">${window.i18nextify.i18next.t(
+            "Mute Chat",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             gChatMutes.push(part._id);
@@ -2388,7 +2405,11 @@ $(function () {
             $(part.nameDiv).addClass("muted-chat");
           });
       } else {
-        $('<div class="menu-item">Unmute Chat</div>')
+        $(
+          `<div class="menu-item">${window.i18nextify.i18next.t(
+            "Unmute Chat",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             var i;
@@ -2402,7 +2423,11 @@ $(function () {
         !(gPianoMutes.indexOf(part._id) >= 0) ||
         !(gChatMutes.indexOf(part._id) >= 0)
       ) {
-        $('<div class="menu-item">Mute Completely</div>')
+        $(
+          `<div class="menu-item">${window.i18nextify.i18next.t(
+            "Mute Completely",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             gPianoMutes.push(part._id);
@@ -2417,7 +2442,11 @@ $(function () {
         gPianoMutes.indexOf(part._id) >= 0 ||
         gChatMutes.indexOf(part._id) >= 0
       ) {
-        $('<div class="menu-item">Unmute Completely</div>')
+        $(
+          `<div class="menu-item">${window.i18nextify.i18next.t(
+            "Unmute Completely",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             var i;
@@ -2432,13 +2461,21 @@ $(function () {
           });
       }
       if (gIsDming && gDmParticipant._id === part._id) {
-        $('<div class="menu-item">End Direct Message</div>')
+        $(
+          `<div class="menu-item">${window.i18nextify.i18next.t(
+            "End Direct Message",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             chat.endDM();
           });
       } else {
-        $('<div class="menu-item">Direct Message</div>')
+        $(
+          `<div class="menu-item">${window.i18nextify.i18next.t(
+            "Direct Message",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             if (!gKnowsHowToDm) {
@@ -2447,15 +2484,21 @@ $(function () {
               new Notification({
                 target: "#piano",
                 duration: 20000,
-                title: "How to DM",
-                text: "After you click the button to direct message someone, future chat messages will be sent to them instead of to everyone. To go back to talking in public chat, send a blank chat message, or click the button again.",
+                title: window.i18nextify.i18next.t("How to DM"),
+                text: window.i18nextify.i18next.t(
+                  "After you click the button to direct message someone, future chat messages will be sent to them instead of to everyone. To go back to talking in public chat, send a blank chat message, or click the button again.",
+                ),
               });
             }
             chat.startDM(part);
           });
       }
       if (gCursorHides.indexOf(part._id) == -1) {
-        $('<div class="menu-item">Hide Cursor</div>')
+        $(
+          `<div class="menu-item">${window.i18nextify.i18next.t(
+            "Hide Cursor",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             gCursorHides.push(part._id);
@@ -2463,7 +2506,11 @@ $(function () {
             $(part.cursorDiv).hide();
           });
       } else {
-        $('<div class="menu-item">Show Cursor</div>')
+        $(
+          `<div class="menu-item">${window.i18nextify.i18next.t(
+            "Show Cursor",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             var i;
@@ -2474,7 +2521,11 @@ $(function () {
           });
       }
 
-      $('<div class="menu-item">Mention</div>')
+      $(
+        `<div class="menu-item">${window.i18nextify.i18next.t(
+          "Mention",
+        )}</div>`,
+      )
         .appendTo(menu)
         .on("mousedown touchstart", function (evt) {
           $("#chat-input")[0].value += "@" + part.id + " ";
@@ -2485,14 +2536,22 @@ $(function () {
 
       if (gClient.isOwner() || gClient.permissions.chownAnywhere) {
         if (!gClient.channel.settings.lobby) {
-          $('<div class="menu-item give-crown">Give Crown</div>')
+          $(
+            `<div class="menu-item give-crown">${window.i18nextify.i18next.t(
+              "Give Crown",
+            )}</div>`,
+          )
             .appendTo(menu)
             .on("mousedown touchstart", function (evt) {
               if (confirm("Give room ownership to " + part.name + "?"))
                 gClient.sendArray([{ m: "chown", id: part.id }]);
             });
         }
-        $('<div class="menu-item kickban">Kickban</div>')
+        $(
+          `<div class="menu-item kickban">${window.i18nextify.i18next.t(
+            "Kickban",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             var minutes = prompt("How many minutes? (0-300)", "30");
@@ -2503,7 +2562,11 @@ $(function () {
           });
       }
       if (gClient.permissions.siteBan) {
-        $('<div class="menu-item site-ban">Site Ban</div>')
+        $(
+          `<div class="menu-item site-ban">${window.i18nextify.i18next.t(
+            "Site Ban",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             openModal("#siteban");
@@ -2534,7 +2597,11 @@ $(function () {
           });
       }
       if (gClient.permissions.usersetOthers) {
-        $('<div class="menu-item set-color">Set Color</div>')
+        $(
+          `<div class="menu-item set-color">${window.i18nextify.i18next.t(
+            "Set Color",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             var color = prompt("What color?", part.color);
@@ -2543,7 +2610,11 @@ $(function () {
           });
       }
       if (gClient.permissions.usersetOthers) {
-        $('<div class="menu-item set-name">Set Name</div>')
+        $(
+          `<div class="menu-item set-name">${window.i18nextify.i18next.t(
+            "Set Name",
+          )}</div>`,
+        )
           .appendTo(menu)
           .on("mousedown touchstart", function (evt) {
             var name = prompt("What name?", part.name);
@@ -2648,8 +2719,10 @@ $(function () {
   if (!gKnowsYouCanUseKeyboard) {
     window.gKnowsYouCanUseKeyboardTimeout = setTimeout(function () {
       window.gKnowsYouCanUseKeyboardNotification = new Notification({
-        title: "Did you know!?!",
-        text: "You can play the piano with your keyboard, too.  Try it!",
+        title: window.i18nextify.i18next.t("Did you know!?!"),
+        text: window.i18nextify.i18next.t(
+          "You can play the piano with your keyboard, too.  Try it!",
+        ),
         target: "#piano",
         duration: 10000,
       });
@@ -2661,7 +2734,8 @@ $(function () {
       volume_slider.value = localStorage.volume;
       gPiano.audio.setVolume(localStorage.volume);
       $("#volume-label").html(
-        "Volume<span translated>: " +
+        window.i18nextify.i18next.t("Volume") +
+          "<span translated>: " +
           Math.floor(gPiano.audio.volume * 100) +
           "%</span>",
       );
@@ -2781,9 +2855,12 @@ $(function () {
     setTimeout(function () {
       new Notification({
         id: "share",
-        title: "Playing alone",
+        title: window.i18nextify.i18next.t("Playing alone"),
         html:
-          'You are playing alone in a room by yourself, but you can always invite friends by sending them the link.<br><a href="' +
+          window.i18nextify.i18next.t(
+            "You are playing alone in a room by yourself, but you can always invite friends by sending them the link.",
+          ) +
+          '<br><a href="' +
           location.href +
           '">' +
           location.href +
@@ -2862,9 +2939,12 @@ $(function () {
       setTimeout(function () {
         new Notification({
           id: "share",
-          title: "Created a Room",
+          title: window.i18nextify.i18next.t("Created a Room"),
           html:
-            'You can invite friends to your room by sending them the link.<br><a href="' +
+            window.i18nextify.i18next.t(
+              "You can invite friends to your room by sending them the link.",
+            ) +
+            '<br><a href="' +
             location.href +
             '">' +
             location.href +
@@ -3254,7 +3334,9 @@ $(function () {
 
       endDM: function () {
         gIsDming = false;
-        $("#chat-input")[0].placeholder = "You can chat with this thing.";
+        $("#chat-input")[0].placeholder = window.i18nextify.i18next.t(
+          "You can chat with this thing.",
+        );
       },
 
       startReply: function (part, id) {
@@ -3288,7 +3370,9 @@ $(function () {
           "background-color": "unset",
           border: "1px solid #00000000",
         });
-        $("#chat-input")[0].placeholder = `You can chat with this thing.`;
+        $("#chat-input")[0].placeholder = window.i18nextify.i18next.t(
+          `You can chat with this thing.`,
+        );
       },
 
       show: function () {
@@ -3494,7 +3578,9 @@ $(function () {
               if (user.id === gClient.getOwnParticipant().id) {
                 if (!tabIsActive) {
                   youreMentioned = true;
-                  document.title = "You were mentioned!";
+                  document.title = window.i18nextify.i18next.t(
+                    "You were mentioned!",
+                  );
                 }
                 return `<span class="mention" style="background-color: ${user.color};">${nick}</span>`;
               } else return `@${nick}`;
@@ -4193,7 +4279,7 @@ $(function () {
         var button = document.createElement("input");
         mixin(button, {
           type: "button",
-          value: "ON/OFF",
+          value: window.i18nextify.i18next.t("ON/OFF"),
           className: enableSynth ? "switched-on" : "switched-off",
         });
         button.addEventListener("click", function (evt) {
@@ -4238,12 +4324,12 @@ $(function () {
         var button = document.createElement("input");
         mixin(button, {
           type: "button",
-          value: osc_types[osc_type_index],
+          value: window.i18nextify.i18next.t(osc_types[osc_type_index]),
         });
         button.addEventListener("click", function (evt) {
           if (++osc_type_index >= osc_types.length) osc_type_index = 0;
           osc1_type = osc_types[osc_type_index];
-          button.value = osc1_type;
+          button.value = window.i18nextify.i18next.t(osc1_type);
         });
         html.appendChild(button);
       })();
@@ -4647,7 +4733,8 @@ $(function () {
         setting.onclick = onclickFunc;
 
         const label = document.createElement("label");
-        label.innerText = labelText + ": ";
+
+        label.innerText = window.i18nextify.i18next.t(labelText + ":") + " ";
 
         label.appendChild(setting);
         html.appendChild(label);
