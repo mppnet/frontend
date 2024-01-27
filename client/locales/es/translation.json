@@ -45,7 +45,7 @@
     "Years": "Años",
     "Note:": "Nota:",
     "Optional note for staff...": "Nota opcional para el personal…",
-    "BAN": "PROHIBICIÓN",
+    "BAN": "EXPULSIÓN",
     "Log in:": "Inicia sesión:",
     "Discord": "Discord",
     "Logged in as": "Conectado como",
@@ -72,5 +72,11 @@
     "go": "ir",
     "Only Owner can Play": "Solo el dueño puede jugar",
     "Permanent": "Permanente",
-    "PLAY": "PLAY"
+    "PLAY": "PLAY",
+    "Drop crown": "Tira la corona",
+    "Synthesize": "Sintetizar",
+    "square": "cuadrada",
+    "sine": "sinusoide",
+    "triangle": "triangulo",
+    "sawtooth": "diente de sierra"
 }
