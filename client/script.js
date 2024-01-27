@@ -117,7 +117,6 @@ $(function () {
     "Notes in G# / Ab Minor": ["A♭", "B♭", "B", "D♭", "E♭", "E", "G♭", "A♭"],
   };
 
-
   // AudioEngine classes
 
   ////////////////////////////////////////////////////////////////
@@ -1235,7 +1234,7 @@ $(function () {
           '<span class="number" translated>' +
             count +
             "</span> " +
-            window.i18nextify.i18next.t('people are playing', {count})
+            window.i18nextify.i18next.t("people are playing", { count }),
         );
         if (!tabIsActive) {
           if (youreMentioned || youreReplied) {
@@ -1361,7 +1360,7 @@ $(function () {
       textDiv.id = "nametext-" + part._id;
       if (hasOtherDiv) textDiv.style.float = "left";
       part.nameDiv.appendChild(textDiv);
-      part.nameDiv.setAttribute("translated", "")
+      part.nameDiv.setAttribute("translated", "");
 
       var arr = $("#names .name");
       arr.sort(function (a, b) {
@@ -1410,7 +1409,7 @@ $(function () {
         namep.className = "nametext";
         namep.textContent = part.name || "";
         // namep.style.backgroundColor = part.color || "#777"
-        div.setAttribute("translated", "")
+        div.setAttribute("translated", "");
         div.appendChild(namep);
         part.cursorDiv.appendChild(div);
       } else {
@@ -2662,7 +2661,9 @@ $(function () {
       volume_slider.value = localStorage.volume;
       gPiano.audio.setVolume(localStorage.volume);
       $("#volume-label").html(
-        "Volume<span translated>: " + Math.floor(gPiano.audio.volume * 100) + "%</span>",
+        "Volume<span translated>: " +
+          Math.floor(gPiano.audio.volume * 100) +
+          "%</span>",
       );
     } else localStorage.volume = gPiano.audio.volume;
 
@@ -4000,8 +4001,8 @@ $(function () {
               outputs_ul.textContent = "(none)";
             }
 
-            outputs_ul.setAttribute("translated", "")
-            inputs_ul.setAttribute("translated", "")
+            outputs_ul.setAttribute("translated", "");
+            inputs_ul.setAttribute("translated", "");
 
             var div = document.createElement("div");
             var h1 = document.createElement("h1");
@@ -4534,8 +4535,8 @@ $(function () {
           var setting = document.createElement("select");
           setting.classList = "setting";
           setting.style = "color: inherit; width: calc(100% - 2px);";
-          setting.setAttribute("translated", "")
-          
+          setting.setAttribute("translated", "");
+
           const keys = Object.keys(BASIC_PIANO_SCALES); // lol
           const option = document.createElement("option");
           option.value = option.innerText = "No highlighted notes";
