@@ -1256,7 +1256,7 @@ $(function () {
 
   // Show moderator buttons
   (function () {
-    gClient.on("hi", function (msg) {
+    gClient.once("hi", function (msg) {
       if (!msg.motd)
         msg.motd =
           "This site makes a lot of sound! You may want to adjust the volume before continuing.";
