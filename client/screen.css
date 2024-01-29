@@ -965,7 +965,10 @@ input[type="range"]:hover {
     height: 400px;
     margin-top: -200px;
 }
-
+ 
+#account > .ugly-button {
+    width: min-content;
+}
 #account {
     height: 300px;
     margin-top: -150px;
