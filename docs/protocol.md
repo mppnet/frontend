@@ -150,6 +150,7 @@ Contains information about a channel.
 - `"_id"`: The name of this channel. Identical to `"id"`.
 - `?"crown"`: The [crown](#crown) in this channel. This property is not present in lobbies because lobbies don't have crowns.
 - `"settings"`: This channel's [settings](#channel-settings).
+- `?"ppl"`: Contains the [participant infos](#participant-info) of the room. Is only present if the bot has a permission to see this property, and the room's [settings](#channel-settings) do not have the "noindex" property.
 #### Example
 ```json
 {
