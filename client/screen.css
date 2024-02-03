@@ -587,10 +587,12 @@ input[type="range"]:hover {
     position: absolute;
     left: 300px;
     top: 4px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
     margin-right: 120px;
+    grid-auto-flow: column;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 2px;
+    grid-row-gap: 2px; 
 }
 
 #client-settings-ok-btn {
