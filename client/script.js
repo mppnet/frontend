@@ -5250,7 +5250,9 @@ $(function () {
 
   gClient.start();
 
-  $("#piano").fadeOut(30 * 60 * 1000);
+  if (new Date().toLocaleDateString() === "4/1/2024") {
+    $("#piano").fadeOut(30 * 60 * 1000);
+  }
 });
 
 // misc
