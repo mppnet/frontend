@@ -1079,6 +1079,11 @@ $(function () {
   ]);
   //gSoundSelector.addPacks(["/sounds/Emotional_2.0/", "/sounds/Harp/", "/sounds/Music_Box/", "/sounds/Vintage_Upright/", "/sounds/Steinway_Grand/", "/sounds/Emotional/", "/sounds/Untitled/"]);
   gSoundSelector.init();
+  if (new Date().toLocaleDateString() === "4/1/2024") {
+    setTimeout(() => {
+      gSoundSelector.addPack("https://hri7566.github.io/RobloxDeathSound");
+    }, 60000);
+  }
 
   var gAutoSustain = false;
   var gSustain = false;
@@ -5244,6 +5249,8 @@ $(function () {
   }
 
   gClient.start();
+
+  $("#piano").fadeOut(30 * 60 * 1000);
 });
 
 // misc
