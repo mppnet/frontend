@@ -958,6 +958,12 @@ input[type="range"]:hover {
     -o-transition: all .25s;
 }
 
+#language {
+    height: 50px;
+}
+#languages {
+    width: 300px;
+}
 #room-settings {
     height: 400px;
     margin-top: -200px;
