@@ -5287,7 +5287,6 @@ $(function () {
         i18nextify.forceRerender();
         closeModal();
       });
-    console.log(translationIdsWithNames);
   })();
   gClient.start();
 });
