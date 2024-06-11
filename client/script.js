@@ -3192,6 +3192,7 @@ $(function () {
   (function () {
     function logout() {
       delete localStorage.token;
+      delete gClient.accountInfo;
       gClient.stop();
       gClient.start();
       closeModal();
