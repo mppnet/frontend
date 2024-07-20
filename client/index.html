@@ -3,49 +3,66 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <title>Multiplayer Piano</title>
+
+  <title>Multiplayer Piano - interactive piano!</title>
+  <meta name="title" content="Multiplayer Piano - interactive piano!" />
   <meta name="description"
-    content="An online piano you can play alone or with others in real-time. MIDI support, 88 keys, velocity sensitive.  You can show off your skill or chat while listening to others play." />
+    content="An online piano you can play alone or with others in real-time. MIDI support, 88 keys, velocity sensitive.  You can show off your skill or chat while listening to others play!" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://multiplayerpiano.net" />
+  <meta property="og:title" content="Multiplayer Piano - interactive piano!" />
+  <meta property="og:description"
+    content="An online piano you can play alone or with others in real-time. MIDI support, 88 keys, velocity sensitive.  You can show off your skill or chat while listening to others play!" />
+  <meta property="og:image" content="https://multiplayerpiano.net/screenshot.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://multiplayerpiano.net" />
+  <meta property="twitter:title" content="Multiplayer Piano - interactive piano!" />
+  <meta property="twitter:description"
+    content="An online piano you can play alone or with others in real-time. MIDI support, 88 keys, velocity sensitive.  You can show off your skill or chat while listening to others play!" />
+  <meta property="twitter:image" content="https://multiplayerpiano.net/screenshot.png" />
+
   <link rel="stylesheet" href="/screen.css" />
 </head>
 
 <body>
   <div class="snowflakes" aria-hidden="true" translated>
     <div class="snowflake">
-    ❅
+      ❅
     </div>
     <div class="snowflake">
-    ❅
+      ❅
     </div>
     <div class="snowflake">
-    ❆
+      ❆
     </div>
     <div class="snowflake">
-    ❄
+      ❄
     </div>
     <div class="snowflake">
-    ❅
+      ❅
     </div>
     <div class="snowflake">
-    ❆
+      ❆
     </div>
     <div class="snowflake">
-    ❄
+      ❄
     </div>
     <div class="snowflake">
-    ❅
+      ❅
     </div>
     <div class="snowflake">
-    ❆
+      ❆
     </div>
     <div class="snowflake">
-    ❄
+      ❄
     </div>
   </div>
   <div id="chat">
     <ul translated></ul>
-    <input id="chat-input" placeholder="You can chat with this thing." maxlength="512"
-      autocomplete="off" />
+    <input id="chat-input" placeholder="You can chat with this thing." maxlength="512" autocomplete="off" />
   </div>
 
   <div id="room-notice"></div>
@@ -76,7 +93,8 @@
       <img src="/discord.ico" style="vertical-align: middle;">
     </button>
   </a>
-  <a href="https://docs.google.com/document/d/1wQvGwQdaI8PuEjSWxKDDThVIoAlCYIxQOyfyi4o6HcM/edit?usp=sharing" title="Multiplayer Piano Rules" target="_blank">
+  <a href="https://docs.google.com/document/d/1wQvGwQdaI8PuEjSWxKDDThVIoAlCYIxQOyfyi4o6HcM/edit?usp=sharing"
+    title="Multiplayer Piano Rules" target="_blank">
     <button class="mpp-rules-button top-button" aria-hidden="true">
       Rules
     </button>
@@ -160,8 +178,10 @@
         <p><label><input type="checkbox" name="crownsolo" class="checkbox">Only Owner can Play</label></p>
         <p><label><input type="checkbox" name="nocussing" class="checkbox">No Cussing</label></p>
         <p><label><input type="checkbox" name="noindex" class="checkbox">Ask bots not to index this room</label></p>
-        <p><label>Inner color: &nbsp;<input type="color" name="color" placeholder="" maxlength="7" class="color"></label></p>
-        <p><label>Outer color: &nbsp;<input type="color" name="color2" placeholder="" maxlength="7" class="color"></label></p>
+        <p><label>Inner color: &nbsp;<input type="color" name="color" placeholder="" maxlength="7"
+              class="color"></label></p>
+        <p><label>Outer color: &nbsp;<input type="color" name="color2" placeholder="" maxlength="7"
+              class="color"></label></p>
         <p><label>Player limit: &nbsp;<input type="text" name="limit" maxlength="2" value="50"></label></p>
         <button class="submit">APPLY</button>
       </div>
@@ -172,7 +192,8 @@
         <button class="submit">USER SET</button>
       </div>
       <div id="siteban" class="dialog">
-        <p><label>User ID: <input type="text" name="id" placeholder="User's ID" maxlength="24" class="text" /></label></p>
+        <p><label>User ID: <input type="text" name="id" placeholder="User's ID" maxlength="24" class="text" /></label>
+        </p>
         <p><label>Reason: <select name="reasonSelect" translated>
               <option value="Discrimination against others">Discrimination</option>
               <option value="Discussion of inappropriate topics through chat or names">Inappropriate discussion</option>
@@ -187,18 +208,25 @@
               <option value="Abusing bots or scripts">Abusing bots or scripts</option>
               <option value="Promoting violence or illegal activities">Promoting violence/illegal activities</option>
               <option value="Promoting breaking the rules">Promoting breaking the rules</option>
-              <option value="Giving out another user's personal information without their consent">Giving other user's personal information</option>
-              <option value="Sending similar messages throughout multiple rooms">Sending the same message in many rooms</option>
-              <option value="Spamming the piano throughout multiple rooms to annoy users">Spamming the piano in many rooms</option>
-              <option value="Holding the crown in a room that does not belong to you">Holding the crown in someone else's room</option>
+              <option value="Giving out another user's personal information without their consent">Giving other user's
+                personal information</option>
+              <option value="Sending similar messages throughout multiple rooms">Sending the same message in many rooms
+              </option>
+              <option value="Spamming the piano throughout multiple rooms to annoy users">Spamming the piano in many
+                rooms</option>
+              <option value="Holding the crown in a room that does not belong to you">Holding the crown in someone
+                else's room</option>
               <option value="Abusing permissions or higher quotas">Abusing permissions/quotas</option>
               <option value="Misleading others through impersonation">Impersonation</option>
-              <option value="Lying about users on the site in a way that negatively affects them">Lying about other users</option>
+              <option value="Lying about users on the site in a way that negatively affects them">Lying about other
+                users</option>
               <option value="custom">Custom...</option>
             </select>
-            <input type="text" name="reasonText" placeholder="Ban reason..." maxlength="512" class="text" style="width: 100%;" /></label>
+            <input type="text" name="reasonText" placeholder="Ban reason..." maxlength="512" class="text"
+              style="width: 100%;" /></label>
           </label></p>
-        <p><label>Duration: <br><input type="number" name="durationNumber" placeholder="Amount of unit..." value="5" class="text" style="width: 60%" />
+        <p><label>Duration: <br><input type="number" name="durationNumber" placeholder="Amount of unit..." value="5"
+              class="text" style="width: 60%" />
             <select name="durationUnit">
               <option value="seconds">Seconds</option>
               <option value="minutes">Minutes</option>
@@ -212,7 +240,8 @@
           </label>
           </label>
         </p>
-        <p><label>Note: <textarea name="note" cols="49" rows="5" maxlength="512" placeholder="Optional note for staff..."></textarea></label></p>
+        <p><label>Note: <textarea name="note" cols="49" rows="5" maxlength="512"
+              placeholder="Optional note for staff..."></textarea></label></p>
         <p name="errorText" style="color:red; font-size: 16px;"></p>
         <button class="submit">BAN</button>
       </div>
@@ -228,10 +257,14 @@
         <div id="logout-btn" class="ugly-button logout-btn">Log out</div>
       </div>
       <div id="client-settings" class="dialog">
-        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'Chat')">Chat</div>
-        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'MIDI')">MIDI</div>
-        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'Piano')">Piano</div>
-        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'Misc')">Misc</div>
+        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'Chat')">
+          Chat</div>
+        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'MIDI')">
+          MIDI</div>
+        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'Piano')">
+          Piano</div>
+        <div class="client-settings-tablink client-settings-button" onclick="changeClientSettingsTab(event, 'Misc')">
+          Misc</div>
         <br>
         <div id="client-settings-content"></div>
         <div id="client-settings-ok-btn" class="client-settings-button">Ok</div>
@@ -245,12 +278,9 @@
   <script src="/NoteQuota.js"></script>
   <script src="/Color.js"></script>
   <!--<script src="/ebsprite.js"></script>-->
-  <script src="https://unpkg.com/i18nextify@3.3.1/i18nextify.min.js" 
-          id="i18nextify" 
-          fallbacklng="en" 
-          integrity="sha256-Qe0fuK8+CJ5rVsP5a0+1dGBHLDJa7SOe5Aa5I0XUrws=" 
-          crossorigin="anonymous">
-  </script>
+  <script src="https://unpkg.com/i18nextify@3.3.1/i18nextify.min.js" id="i18nextify" fallbacklng="en"
+    integrity="sha256-Qe0fuK8+CJ5rVsP5a0+1dGBHLDJa7SOe5Aa5I0XUrws=" crossorigin="anonymous">
+    </script>
   <script src="/script.js"></script>
 </body>
 
