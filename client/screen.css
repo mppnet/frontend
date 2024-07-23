@@ -1511,6 +1511,16 @@ code {
     -o-transition: color .25s, text-shadow .25s, background .25s, opacity .25s;
 }
 
+@keyframes spin {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0);
