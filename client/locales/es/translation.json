@@ -100,5 +100,6 @@
     "Joining channel...": "Conectando al canal…",
     "Mute Notes": "Silenciar Notas",
     "Mute Chat": "Silenciar Chat",
-    "Don't use prevent default:": "No use \"prevent default\":"
+    "Don't use prevent default:": "No use \"prevent default\":",
+    "Language": "Idioma"
 }
