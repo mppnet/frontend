@@ -32,7 +32,7 @@
     "Outputs": "Saídas",
     "Multiplayer Piano": "Multiplayer Piano",
     "Did you know!?!": "Você sabia!?!",
-    "Player limit:": "Limite de Pessoas:",
+    "Player limit:": "Limite de Pessoas",
     "APPLY": "APLICAR",
     "My Fancy New Name": "Meu Maravilhoso Novo Nome",
     "User ID:": "ID do Usuário:",
@@ -100,5 +100,6 @@
     "Mute Chat": "Mutar Chat",
     "Direct Message": "Mensagem Direta",
     "Me": "Você",
-    "Output own notes to MIDI:": "Enviar suas próprias notas para o MIDI:"
+    "Output own notes to MIDI:": "Enviar suas próprias notas para o MIDI:",
+    "Language": "Idioma"
 }
