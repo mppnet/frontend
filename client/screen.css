@@ -1434,27 +1434,16 @@ input[type="range"]:hover {
     padding: 0;
 }
 
-.mppcommunity-button {
+.discord-button {
     right: 6px;
 }
 
-.discord-button {
+.github-button {
     right: 36px;
 }
 
-.github-button {
-    right: 66px;
-    background-color: white;
-    filter: invert(100%);
-    border-color: #c6c6c6;
-}
-
-.github-button:hover {
-    background-color: #ddd;
-}
-
 .reddit-button {
-    right: 96px;
+    right: 66px;
     z-index: 500;
 }
 
