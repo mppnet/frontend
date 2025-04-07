@@ -1328,6 +1328,9 @@ $(function() {
       if (tagText === "MEDIA")
         nameDiv.title =
           "This is a well known person on Twitch, Youtube, or another platform.";
+      if (tagText === "DEV")
+        nameDiv.title =
+          "This user has contributed code to the site."
 
       updateLabels(part);
 
