@@ -2,6 +2,9 @@ const translation = window.i18nextify.init({
   autorun: false,
 });
 
+if (localStorage.noPreventDefault == undefined) {
+  localStorage.setItem("noPreventDefault", false)
+}
 if (location.host === "multiplayerpiano.com") {
   const url = new URL("https://multiplayerpiano.net/" + location.search);
   if (localStorage.token) url.searchParams.set("token", localStorage.token);
@@ -4955,7 +4958,7 @@ $(function() {
               html,
               () => {
                 gNoPreventDefault = !gNoPreventDefault;
-                localStorage.noPreventDefault = noPreventDefault;
+                localStorage.noPreventDefault = gNoPreventDefault;
               },
             );
 
