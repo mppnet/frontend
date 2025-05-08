@@ -2,8 +2,8 @@ const translation = window.i18nextify.init({
   autorun: false,
 });
 
-if (localStorage.noPreventDefault == undefined) {
-  localStorage.setItem("noPreventDefault", false)
+if (!("noPreventDefault" in localStorage)) {
+  localStorage.noPreventDefault = "false"
 }
 if (location.host === "multiplayerpiano.com") {
   const url = new URL("https://multiplayerpiano.net/" + location.search);
@@ -4957,12 +4957,8 @@ $(function() {
               true,
               html,
               () => {
-                // invert gNoPreventDefault variable
                 gNoPreventDefault = !gNoPreventDefault;
-                // set localStorage.noPreventDefault to gNoPreventDefault
-                localStorage.setItem('noPreventDefault', gNoPreventDefault);
-                // set gNoPreventDefault to localStorage.noPreventDefault to check if the process worked
-                gNoPreventDefault = localStorage.noPreventDefault == "true";
+                localStorage.noPreventDefault = gNoPreventDefault
               },
             );
 
