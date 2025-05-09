@@ -2,9 +2,6 @@ const translation = window.i18nextify.init({
   autorun: false,
 });
 
-if (!("noPreventDefault" in localStorage)) {
-  localStorage.noPreventDefault = "false"
-}
 if (location.host === "multiplayerpiano.com") {
   const url = new URL("https://multiplayerpiano.net/" + location.search);
   if (localStorage.token) url.searchParams.set("token", localStorage.token);
