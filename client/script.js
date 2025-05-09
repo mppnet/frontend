@@ -4955,7 +4955,7 @@ $(function() {
               html,
               () => {
                 gNoPreventDefault = !gNoPreventDefault;
-                localStorage.noPreventDefault = noPreventDefault;
+                localStorage.noPreventDefault = gNoPreventDefault;
               },
             );
 
