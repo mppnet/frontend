@@ -192,6 +192,7 @@ Channel settings are an object with properties for each setting.
 - `"chat"`: Whether chat is enabled in this channel (boolean).
 - `"crownsolo"`: Whether anyone can play the piano (boolean). If this is false, only the crown holder can play the piano.
 - `"noindex"`: Whether bots are disallowed from automatically joining this room (e.g. to gather information about current users). **If this property is set to `true`, do not automatically join this room.**
+- `"allowBots"`: Whether bots are allowed to join this room at all. If this property is enabled, bots will be met with a warning notification and will be prevented from joining the room.
 - `?"no cussing"`: Whether no cussing is enabled (boolean). If this is enabled, some things in chat will get replaced with asterisks for users who don't have the crown. If this property isn't present, "no cussing" is disabled.
 - `"limit"`: The maximum amount of users that can join this channel (number). This is an integer between 0-99. If this is lowered while more users are in the channel, users won't get kicked. The crown holder and users who already have a participant in the channel bypass this limit.
 - `?"minOnlineTime"`: The minimum amount of time that a user needs to have been online to join this channel (number). It's measured in milliseconds and is between 0 and 86400000. If this field is not present, the restriction does not apply. If a user holds the crown in this channel or if they already have a participant in the channel, they bypass this restriction.
@@ -205,6 +206,7 @@ Channel settings are an object with properties for each setting.
   "color2":"#273546",
   "visible":true,
   "noindex":false,
+  "allowBots": true,
   "chat":true,
   "crownsolo":false
 }
