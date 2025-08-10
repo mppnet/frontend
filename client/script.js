@@ -1896,52 +1896,11 @@ $(function() {
 
       var bottom = document.getElementById("bottom");
 
-      var duration = 500;
-      var step = 0;
-      var steps = 30;
-      var step_ms = duration / steps;
-      var difference = new Color(color1.r, color1.g, color1.b);
-      difference.r -= old_color1.r;
-      difference.g -= old_color1.g;
-      difference.b -= old_color1.b;
-      var inc1 = new Color(
-        difference.r / steps,
-        difference.g / steps,
-        difference.b / steps,
-      );
-      difference = new Color(color2.r, color2.g, color2.b);
-      difference.r -= old_color2.r;
-      difference.g -= old_color2.g;
-      difference.b -= old_color2.b;
-      var inc2 = new Color(
-        difference.r / steps,
-        difference.g / steps,
-        difference.b / steps,
-      );
-      var iv;
-      iv = setInterval(function() {
-        old_color1.add(inc1.r, inc1.g, inc1.b);
-        old_color2.add(inc2.r, inc2.g, inc2.b);
-        document.body.style.background =
-          "radial-gradient(ellipse at center, " +
-          old_color1.toHexa() +
-          " 0%," +
-          old_color2.toHexa() +
-          " 100%)";
-        bottom.style.background = old_color2.toHexa();
-        if (++step >= steps) {
-          clearInterval(iv);
-          old_color1 = color1;
-          old_color2 = color2;
-          document.body.style.background =
-            "radial-gradient(ellipse at center, " +
-            color1.toHexa() +
-            " 0%," +
-            color2.toHexa() +
-            " 100%)";
-          bottom.style.background = color2.toHexa();
-        }
-      }, step_ms);
+      document.body.style.setProperty("--color", color1.toHexa());
+      document.body.style.setProperty("--color2", color2.toHexa());
+
+      bottom.style.setProperty("--color", color1.toHexa());
+      bottom.style.setProperty("--color2", color2.toHexa());
     }
 
     function setColorToDefault() {
@@ -4955,7 +4914,7 @@ $(function() {
               html,
               () => {
                 gNoPreventDefault = !gNoPreventDefault;
-                localStorage.noPreventDefault = noPreventDefault;
+                localStorage.noPreventDefault = gNoPreventDefault;
               },
             );
 
