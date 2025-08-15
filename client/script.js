@@ -5004,7 +5004,7 @@ $(function() {
               },
             );
 
-            if (new Date().getMonth() >= 11) {
+            if (new Date().getMonth() === 11) {
               createSetting(
                 "snowflakes",
                 "Enable snowflakes",
