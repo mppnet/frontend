@@ -1582,6 +1582,9 @@ $(function() {
     var t = msg.t - gClient.serverTimeOffset + TIMING_TARGET - Date.now();
     var participant = gClient.findParticipantById(msg.p);
     if (gPianoMutes.indexOf(participant._id) !== -1) return;
+    if(gClient.findParticipantById(msg.p).tag) {
+      if (gHideBotUsers == true && gClient.findParticipantById(msg.p).tag.text == "BOT") return;
+    }
     for (var i = 0; i < msg.n.length; i++) {
       var note = msg.n[i];
       var ms = t + (note.d || 0);
@@ -5001,6 +5004,18 @@ $(function() {
               () => {
                 gHideBotUsers = !gHideBotUsers;
                 localStorage.hideBotUsers = gHideBotUsers;
+
+                Object.values(gClient.ppl).forEach(function(participant) {
+                  if (participant.tag && participant.tag.text == "BOT" && participant.cursorDiv) {
+                    if(gHideBotUsers) {
+                      $("#names #namediv-" + participant.id).hide();
+                      participant.cursorDiv.style.display = "none";
+                    } else {
+                      $("#names #namediv-" + participant.id).show();
+                      participant.cursorDiv.style.display = "";
+                    }
+                  }
+                });
               },
             );
 
