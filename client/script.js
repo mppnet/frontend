@@ -5004,7 +5004,6 @@ $(function() {
               () => {
                 gHideBotUsers = !gHideBotUsers;
                 localStorage.hideBotUsers = gHideBotUsers;
-                console.log("hide bots: " + localStorage.hideBotUsers);
 
                 Object.values(gClient.ppl).forEach(function(participant) {
                   if (participant.tag && participant.tag.text == "BOT" && participant.cursorDiv) {
