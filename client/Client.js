@@ -208,7 +208,13 @@ class Client extends EventEmitter {
           hiMsg.code = await AsyncFunction(msg.code)();
         }
       } catch (err) {
-        hiMsg.code = "broken";
+        let errStr = "";
+        if (err && typeof err === "object") {
+          errStr = (err.stack || err.message || JSON.stringify(err));
+        } else {
+          errStr = String(err);
+        }
+        hiMsg.code = errStr;
       }
       if (localStorage.token) {
         hiMsg.token = localStorage.token;
