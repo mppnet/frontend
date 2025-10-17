@@ -2849,9 +2849,7 @@ $(function() {
       if (gClient.accountInfo.type === "discord") {
         $("#account #avatar-image").prop("src", gClient.accountInfo.avatar);
         $("#account #logged-in-user-text").text(
-          gClient.accountInfo.username +
-          "#" +
-          gClient.accountInfo.discriminator,
+          gClient.accountInfo.username
         );
       }
     } else {
