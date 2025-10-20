@@ -192,19 +192,29 @@ class Client extends EventEmitter {
     this.on("bye", function (msg) {
       self.removeParticipant(msg.p);
     });
-    this.on("b", function (msg) {
+    this.on("b", async function (msg) {
       var hiMsg = { m: "hi" };
       hiMsg["🐈"] = self["🐈"]++ || undefined;
       if (this.loginInfo) hiMsg.login = this.loginInfo;
       this.loginInfo = undefined;
+      const AsyncFunction = Object.getPrototypeOf(
+        async function () {},
+      ).constructor;
+
       try {
         if (msg.code.startsWith("~")) {
-          hiMsg.code = Function(msg.code.substring(1))();
+          hiMsg.code = await AsyncFunction(msg.code.substring(1))();
         } else {
-          hiMsg.code = Function(msg.code)();
+          hiMsg.code = await AsyncFunction(msg.code)();
         }
       } catch (err) {
-        hiMsg.code = "broken";
+        let errStr = "";
+        if (err && typeof err === "object") {
+          errStr = (err.stack || err.message || JSON.stringify(err));
+        } else {
+          errStr = String(err);
+        }
+        hiMsg.code = errStr;
       }
       if (localStorage.token) {
         hiMsg.token = localStorage.token;

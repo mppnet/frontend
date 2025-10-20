@@ -26,15 +26,27 @@ body {
     position: absolute;
 }
 
+@property --color {
+    syntax: "<color>";
+    inherits: false;
+    /* initial-value: #ecfafd; */
+    initial-value: #000000;
+}
+
+@property --color2 {
+    syntax: "<color>";
+    inherits: false;
+    /* initial-value: #c5d5d8; */
+    initial-value: #000000;
+}
+
 body {
-    background: #3b5054;
-    background: -moz-radial-gradient(center,ellipse cover,#ecfafd 0,#c5d5d8 100%);
-    background: -webkit-gradient(radial,center center,0,center center,100%,color-stop(0,#ecfafd),color-stop(100%,#c5d5d8));
-    background: -webkit-radial-gradient(center,ellipse cover,#ecfafd 0,#c5d5d8 100%);
-    background: -o-radial-gradient(center,ellipse cover,#ecfafd 0,#c5d5d8 100%);
-    background: -ms-radial-gradient(center,ellipse cover,#ecfafd 0,#c5d5d8 100%);
-    background: radial-gradient(ellipse at center,#ecfafd 0,#c5d5d8 100%);
-    -webkit-transition: background 1s linear;
+    background: radial-gradient(
+        ellipse at center,
+        var(--color) 0%,
+        var(--color2) 100%
+    );
+    transition: --color 1000ms, --color2 1000ms;
 }
 
 a, .spoiler:hover a {
@@ -466,8 +478,9 @@ input[type="range"]:hover {
     left: 0;
     width: 100%;
     height: 60px;
-    background: #9a9;
+    background: var(--color2);
     margin-bottom: 3px;
+    transition: --color 1000ms, --color2 1000ms;
 }
 
 #room,#room * {
@@ -1434,27 +1447,16 @@ input[type="range"]:hover {
     padding: 0;
 }
 
-.mppcommunity-button {
+.discord-button {
     right: 6px;
 }
 
-.discord-button {
+.github-button {
     right: 36px;
 }
 
-.github-button {
-    right: 66px;
-    background-color: white;
-    filter: invert(100%);
-    border-color: #c6c6c6;
-}
-
-.github-button:hover {
-    background-color: #ddd;
-}
-
 .reddit-button {
-    right: 96px;
+    right: 66px;
     z-index: 500;
 }
 
