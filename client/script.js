@@ -1330,7 +1330,7 @@ $(function() {
           "This is a well known person on Twitch, Youtube, or another platform.";
       if (tagText === "DEV")
         nameDiv.title =
-          "This user has contributed code to the site."
+          "This user has contributed considerable code to the site."
 
       updateLabels(part);
 
