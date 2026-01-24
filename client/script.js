@@ -2734,6 +2734,8 @@ $(function() {
     var channel = msg.ch;
     var info = $("#room > .info");
     info.text(channel._id);
+    if (channel._id == "cheez") info.addClass("cheez");
+    else info.removeClass("cheez");
     if (channel.settings.lobby) info.addClass("lobby");
     else info.removeClass("lobby");
     if (!channel.settings.chat) info.addClass("no-chat");
@@ -2771,6 +2773,8 @@ $(function() {
         " " +
         room._id,
       );
+      if (room._id == "cheez") info.addClass("cheez");
+      else info.removeClass("cheez");
       if (room.settings.lobby) info.addClass("lobby");
       else info.removeClass("lobby");
       if (!room.settings.chat) info.addClass("no-chat");
