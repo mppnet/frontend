@@ -6396,11 +6396,11 @@ $(function() {
   }
 
   var wssport = 8443;
-  //if (window.location.hostname === "localhost") {
-    //var gClient = new Client("ws://localhost:8443");
-  //} else {
+  if (window.location.hostname === "localhost") {
+    var gClient = new Client("ws://localhost:8443");
+  } else {
     var gClient = new Client("wss://mppclone.com");
-  //}
+  }
   if (loginInfo) {
     gClient.setLoginInfo(loginInfo);
   }
