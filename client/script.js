@@ -1827,7 +1827,7 @@ $(function() {
   var gHideChat = localStorage.hideChat == "true";
   var gNoPreventDefault = localStorage.noPreventDefault == "true";
   var gHideBotUsers = localStorage.hideBotUsers == "true";
-  var gCancelDMs = localStorage.cancelDMs ? localStorage.cancelDMs == "true" : true;
+  var gCancelDMs = localStorage.cancelDMs == "true";
   var gSnowflakes =
     new Date().getMonth() === 11 && localStorage.snowflakes !== "false";
 
