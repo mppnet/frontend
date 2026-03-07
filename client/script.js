@@ -1450,7 +1450,7 @@ $(function() {
       if (part.tag != null) {
         var tagSpan = $(part.cursorDiv).find('.name .curtag').get(0);
         tagSpan.text(part.tag.text);
-        tagSpan.css("background-color", part.tag.color)
+        tagSpan.css("background-color", part.tag.color);
       }
     });
     gClient.on("ch", function(msg) {
