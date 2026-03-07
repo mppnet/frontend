@@ -1447,6 +1447,11 @@ $(function() {
       setupParticipantDivs(part);
       $(part.cursorDiv).find(".name .nametext").text(name);
       $(part.cursorDiv).find(".name").css("background-color", color);
+      if (part.tag != null) {
+        var tagSpan = $(bb.cursorDiv).find('.name .curtag').get(0);
+        tagSpan.textContent = part.tag.text;
+        tagSpan.style.backgroundColor = part.tag.color;
+      }
     });
     gClient.on("ch", function(msg) {
       for (var id in gClient.ppl) {
