@@ -1449,8 +1449,8 @@ $(function() {
       $(part.cursorDiv).find(".name").css("background-color", color);
       if (part.tag != null) {
         var tagSpan = $(part.cursorDiv).find('.name .curtag').get(0);
-        tagSpan = part.tag.text;
-        tagSpan.style.backgroundColor = part.tag.color;
+        tagSpan.text(part.tag.text);
+        tagSpan.css("background-color", part.tag.color)
       }
     });
     gClient.on("ch", function(msg) {
