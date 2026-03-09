@@ -1407,7 +1407,7 @@ input[type="range"]:hover {
     z-index: 900;
 }
 
-.participant-menu {
+.participant-menu, .top {
     z-index: 1000;
 }
 
