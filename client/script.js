@@ -1264,7 +1264,7 @@ $(function() {
           "This site makes a lot of sound! You may want to adjust the volume before continuing.";
       document.getElementById("motd-text").innerHTML = msg.motd;
       openModal("#motd");
-      $(document).off("keydown", modalHandleEsc);
+      $(document).on("keydown", modalHandleEsc);
       var user_interact = function(evt) {
         if (
           (evt.path || (evt.composedPath && evt.composedPath())).includes(
@@ -2890,7 +2890,7 @@ $(function() {
   var gModal;
 
   function modalHandleEsc(evt) {
-    if (evt.keyCode == 27 || (evt.keyCode == 32 || evt.keyCode == 13) && document.activeElement.type === "text") {
+    if (evt.keyCode == 27 || (evt.keyCode == 32 || evt.keyCode == 13) && document.activeElement.type !== "text") {
       closeModal();
       if (!gNoPreventDefault) evt.preventDefault();
       evt.stopPropagation();
@@ -2911,7 +2911,7 @@ $(function() {
   }
 
   function closeModal() {
-    $(document).on("keydown", modalHandleEsc);
+    $(document).off("keydown", modalHandleEsc);
     $("#modal").fadeOut(100);
     $("#modal #modals > *").hide();
     captureKeyboard();
