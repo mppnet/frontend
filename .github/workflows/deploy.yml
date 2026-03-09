@@ -20,21 +20,20 @@ jobs:
 
       - name: Deploy via Git
         run: |
-          if [ "${GITHUB_REF##*/}" = "main" ]; then
-            TARGET_PATH="${{ secrets.DEPLOY_PATH }}"
-          elif [ "${GITHUB_REF##*/}" = "dev" ]; then
-            TARGET_PATH="${{ secrets.DEPLOY_PATH_DEV }}"
-          else
-            echo "Branch not configured for deployment. Exiting."
+          BRANCH=${GITHUB_REF##*/}
+          if [ "$BRANCH" != "main" ] && [ "$BRANCH" != "dev" ]; then
+            echo "Branch $BRANCH not configured for deployment. Exiting."
             exit 0
           fi
 
+          DEPLOY_PATH=$([[ "$BRANCH" == "main" ]] && echo "${{ secrets.DEPLOY_PATH }}" || echo "${{ secrets.DEPLOY_PATH_DEV }}")
+
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
-          "mkdir -p \"\$TARGET_PATH\"; \
-          if [ -d \"\$TARGET_PATH/.git\" ]; then \
+          "mkdir -p \"$DEPLOY_PATH\"; \
+          if [ -d \"$DEPLOY_PATH/.git\" ]; then \
             echo 'Pulling latest changes...'; \
-            cd \"\$TARGET_PATH\" && git fetch --all && git reset --hard origin/${GITHUB_REF##*/}; \
+            cd \"$DEPLOY_PATH\" && git fetch --all && git reset --hard origin/$BRANCH; \
           else \
             echo 'Cloning repo...'; \
-            git clone -b ${GITHUB_REF##*/} https://github.com/mppnet/frontend.git \"\$TARGET_PATH\"; \
+            git clone -b $BRANCH https://github.com/mppnet/frontend.git \"$DEPLOY_PATH\"; \
           fi"
