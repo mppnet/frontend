@@ -60,7 +60,7 @@ This protocol has been recreated in [protocol.js](https://github.com/mppnet/fron
 
 ## Websocket Information
 ### Connecting
-The websocket server is on `wss://mppclone.com/`.
+The websocket server is on `wss://backend.multiplayerpiano.net/`.
 ### Messages
 All messages sent by the client and the server are JSON arrays. Socket messages are strings, not binary. Each array can contain one or more individual message objects. Each individual message object has a "m" property where its value is a string signaling which message type it is.
 #### Example socket message:

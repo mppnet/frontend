@@ -1197,7 +1197,7 @@ $(function() {
   if (window.location.hostname === "localhost") {
     var gClient = new Client("ws://localhost:8443");
   } else {
-    var gClient = new Client("wss://mppclone.com");
+    var gClient = new Client("wss://backend.multiplayerpiano.net");
   }
   if (loginInfo) {
     gClient.setLoginInfo(loginInfo);
