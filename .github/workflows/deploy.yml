@@ -1,0 +1,40 @@
+name: Deploy Client
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via Git
+        run: |
+          if [ "${GITHUB_REF##*/}" = "main" ]; then
+            TARGET_PATH="${{ secrets.DEPLOY_PATH }}"
+          elif [ "${GITHUB_REF##*/}" = "dev" ]; then
+            TARGET_PATH="${{ secrets.DEPLOY_PATH_DEV }}"
+          else
+            echo "Branch not configured for deployment. Exiting."
+            exit 0
+          fi
+
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+          "mkdir -p \"\$TARGET_PATH\"; \
+          if [ -d \"\$TARGET_PATH/.git\" ]; then \
+            echo 'Pulling latest changes...'; \
+            cd \"\$TARGET_PATH\" && git fetch --all && git reset --hard origin/${GITHUB_REF##*/}; \
+          else \
+            echo 'Cloning repo...'; \
+            git clone -b ${GITHUB_REF##*/} https://github.com/mppnet/frontend.git \"\$TARGET_PATH\"; \
+          fi"
