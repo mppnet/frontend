@@ -826,10 +826,10 @@ This is sent when a client sends a [custom](#custom-server-bound) message.
   ],
   "p":"e597eb458dd0da2b05edb1b1",
   "u":{
-    afk: false,
-    color: "#4ac0e8",
-    name: "cheezburger0",
-    _id: "e597eb458dd0da2b05edb1b1"
+    "afk": false,
+    "color": "#4ac0e8",
+    "name": "cheezburger0",
+    "_id": "e597eb458dd0da2b05edb1b1"
   }
 }
 ```
