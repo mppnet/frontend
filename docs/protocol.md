@@ -814,6 +814,7 @@ This is sent when a client sends a [custom](#custom-server-bound) message.
 #### Properties
 - `"data"`: The data sent in this custom message. Can be any valid JSON.
 - `"p"`: The user id of the client who sent this custom message.
+- `"u"`: The full user info of the client who sent this custom message.
 #### Example
 ```json
 {
@@ -823,7 +824,13 @@ This is sent when a client sends a [custom](#custom-server-bound) message.
     "hello",
     "how are you"
   ],
-  "p":"1dbe9eb24f0f4668cc72ac79"
+  "p":"e597eb458dd0da2b05edb1b1",
+  "u":{
+    afk: false,
+    color: "#4ac0e8",
+    name: "cheezburger0",
+    _id: "e597eb458dd0da2b05edb1b1"
+  }
 }
 ```
 
