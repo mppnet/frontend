@@ -79,5 +79,15 @@
     "Outputs": "アウトプット",
     "Multiplayer Piano": "マルチプレイヤー ピアノ",
     "Did you know!?!": "知っていましたか！？",
-    "You can play the piano with your keyboard, too.  Try it!": "キーボードでもピアノを演奏できますよ。試してみてください！"
+    "You can play the piano with your keyboard, too.  Try it!": "キーボードでもピアノを演奏できますよ。試してみてください！",
+    "Don't use prevent default:": "",
+    "Show piano notes:": "",
+    "Force dark background:": "",
+    "Hide all cursors:": "",
+    "Enable smooth cursors:": "",
+    "Highlighted notes:": "",
+    "Virtual Piano layout:": "",
+    "Hide all bots:": "",
+    "Hide piano:": "",
+    "Language": ""
 }
