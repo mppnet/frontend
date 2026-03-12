@@ -1264,7 +1264,7 @@ $(function() {
           "This site makes a lot of sound! You may want to adjust the volume before continuing.";
       document.getElementById("motd-text").innerHTML = msg.motd;
       openModal("#motd");
-      $(document).off("keydown", modalHandleEsc);
+      $(document).on("keydown", modalHandleEsc);
       var user_interact = function(evt) {
         if (
           (evt.path || (evt.composedPath && evt.composedPath())).includes(
@@ -1835,6 +1835,7 @@ $(function() {
   var gHideChat = localStorage.hideChat == "true";
   var gNoPreventDefault = localStorage.noPreventDefault == "true";
   var gHideBotUsers = localStorage.hideBotUsers == "true";
+  var gCancelDMs = localStorage.cancelDMs == "true";
   var gSnowflakes =
     new Date().getMonth() === 11 && localStorage.snowflakes !== "false";
 
@@ -2247,8 +2248,32 @@ $(function() {
   gClient.on("participant removed", (part) => {
     if (gIsDming && part._id === gDmParticipant._id) {
       chat.endDM();
-      chat.endDM();
-    }
+      if (!gCancelDMs) {
+        new Notification({title: 'DM Cancelled', 
+          html: gHasSeenDMWarning ?
+          `Your message is still in the chat input field, but will send as a public message.<br/>
+          You can disable this in Client Settings.` 
+          : `Your message is still in the chatbox, but it will send as a public message.<br/>
+          You can disable this in Client Settings.<br/>
+          Enabling "Cancel DMs when recipient leaves" will clear your message from the text input<br/>
+          and unfocus the textbox when the person you're typing to leaves the channel.`,
+          target: "#room",
+          duration: 20000,
+          class: "top"
+        });
+        if (!localStorage.hasSeenDMWarning) gHasSeenDMWarning = true; localStorage.hasSeenDMWarning = true;
+        $("#chat-input").blur();
+      }
+        if (gCancelDMs) {
+          chat.blur();
+          $("#chat input").value = "";
+          new Notification({title: "DM Cancelled",
+            text: `${part.name} left the room.`,
+            target: "#room",
+            duration: 10000
+          });
+        }
+      }
   });
 
   //Replies
@@ -2256,11 +2281,6 @@ $(function() {
   var gReplyParticipant;
   var gIsReplying = false;
   var gMessageId;
-  gClient.on(`participant removed`, (part) => {
-    if (gIsReplying && part._id === gReplyParticipant._id) {
-      MPP.chat.cancelReply();
-    }
-  });
 
   // click participant names
   (function() {
@@ -2805,7 +2825,8 @@ $(function() {
       $("#room .more").fadeOut(250);
       var selected_name = $(evt.target).attr("roomname");
       if (typeof selected_name != "undefined") {
-        changeRoom(selected_name, "right");
+        if (!evt.ctrlKey) changeRoom(selected_name, "right");
+        else window.open(`?c=${selected_name}`)
       }
       return false;
     }
@@ -2861,7 +2882,7 @@ $(function() {
       if (gClient.accountInfo.type === "discord") {
         $("#account #avatar-image").prop("src", gClient.accountInfo.avatar);
         $("#account #logged-in-user-text").text(
-          "@" + gClient.accountInfo.username
+          `@${gClient.accountInfo.username}`
         );
       }
     } else {
@@ -2872,7 +2893,7 @@ $(function() {
   var gModal;
 
   function modalHandleEsc(evt) {
-    if (evt.keyCode == 27) {
+    if (evt.keyCode == 27 || (evt.keyCode == 32 || evt.keyCode == 13) && document.activeElement.type !== "text") {
       closeModal();
       if (!gNoPreventDefault) evt.preventDefault();
       evt.stopPropagation();
@@ -3258,7 +3279,7 @@ $(function() {
               chat.endDM();
             }
             if (gIsReplying) {
-              chat.cancelReply();
+              chat.cancelReply(part);
             }
             setTimeout(function() {
               chat.blur();
@@ -3344,15 +3365,14 @@ $(function() {
         $("#chat-input")[0].placeholder = `Replying to ${part.name} in a DM.`;
       },
 
-      cancelReply: function() {
-        if (gIsDming) gIsDming = false;
+      cancelReply: function(part) {
         gIsReplying = false;
         $(`#msg-${gMessageId}`).css({
           "background-color": "unset",
           border: "1px solid #00000000",
         });
         $("#chat-input")[0].placeholder = window.i18nextify.i18next.t(
-          `You can chat with this thing.`,
+          (gIsDming ? `Direct messaging ${part.name}` : `You can chat with this thing.`),
         );
       },
 
@@ -3394,7 +3414,7 @@ $(function() {
               },
             ]);
             setTimeout(() => {
-              MPP.chat.cancelReply();
+              MPP.chat.cancelReply(gReplyParticipant);
             }, 100);
           } else {
             gClient.sendArray([
@@ -3406,7 +3426,7 @@ $(function() {
               },
             ]);
             setTimeout(() => {
-              MPP.chat.cancelReply();
+              MPP.chat.cancelReply(gReplyParticipant);
             }, 100);
           }
         } else {
@@ -4782,7 +4802,7 @@ $(function() {
               "hide-chat",
               "Hide chat",
               gHideChat,
-              false,
+              true,
               html,
               () => {
                 gHideChat = !gHideChat;
@@ -4793,6 +4813,18 @@ $(function() {
                 } else {
                   $("#chat").show();
                 }
+              },
+            );
+
+            createSetting(
+              "cancel-dms",
+              "Cancel DMs when recipient leaves",
+              gCancelDMs,
+              false,
+              html,
+              () => {
+                gCancelDMs = !gCancelDMs;
+                localStorage.cancelDMs = gCancelDMs;
               },
             );
 
