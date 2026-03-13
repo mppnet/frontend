@@ -90,5 +90,15 @@
     "sawtooth": "sagtann",
     "Output own notes to MIDI:": "Send ut egne noter til MIDI:",
     "Show piano notes:": "Vis pianonoter:",
-    "Don't use prevent default:": "Ikke bruk forhindringsforvalg:"
+    "Don't use prevent default:": "Ikke bruk forhindringsforvalg:",
+    "Me": "",
+    "Hide Cursor": "",
+    "Give Crown": "",
+    "Direct Message": "",
+    "Kickban": "",
+    "Mute Completely": "",
+    "Mute Notes": "",
+    "Mute Chat": "",
+    "Mention": "",
+    "Language": ""
 }
