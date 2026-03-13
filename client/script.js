@@ -3279,7 +3279,7 @@ $(function() {
               chat.endDM();
             }
             if (gIsReplying) {
-              chat.cancelReply(part);
+              chat.cancelReply(gReplyParticipant);
             }
             setTimeout(function() {
               chat.blur();
