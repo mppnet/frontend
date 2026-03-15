@@ -1394,8 +1394,7 @@ $(function() {
       // add cursorDiv
       if (
         (gClient.participantId !== part.id || gSeeOwnCursor) &&
-        !gCursorHides.includes(part.id) &&
-        !gHideAllCursors
+        !gCursorHides.includes(part.id)
       ) {
         var div = document.createElement("div");
         div.className = "cursor";
@@ -1502,6 +1501,7 @@ $(function() {
       return "#777";
     }
     function updateCursor(msg) {
+      if (gHideAllCursors) return;
       const part = gClient.ppl[msg.id];
       if (shouldHideUser(part)) return;
       if (part && part.cursorDiv) {
