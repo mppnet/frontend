@@ -2249,10 +2249,10 @@ $(function() {
     if (gIsDming && part._id === gDmParticipant._id) {
       chat.endDM();
       if (!gCancelDMs) {
-        new Notification({title: 'DM Cancelled', 
+        new Notification({title: 'DM Cancelled',
           html: gHasSeenDMWarning ?
           `Your message is still in the chat input field, but will send as a public message.<br/>
-          You can disable this in Client Settings.` 
+          You can disable this in Client Settings.`
           : `Your message is still in the chatbox, but it will send as a public message.<br/>
           You can disable this in Client Settings.<br/>
           Enabling "Cancel DMs when recipient leaves" will clear your message from the text input<br/>
@@ -2759,8 +2759,6 @@ $(function() {
     var channel = msg.ch;
     var info = $("#room > .info");
     info.text(channel._id);
-    if (channel._id == "cheez") info.addClass("cheez");
-    else info.removeClass("cheez");
     if (channel.settings.lobby) info.addClass("lobby");
     else info.removeClass("lobby");
     if (!channel.settings.chat) info.addClass("no-chat");
@@ -2798,8 +2796,6 @@ $(function() {
         " " +
         room._id,
       );
-      if (room._id == "cheez") info.addClass("cheez");
-      else info.removeClass("cheez");
       if (room.settings.lobby) info.addClass("lobby");
       else info.removeClass("lobby");
       if (!room.settings.chat) info.addClass("no-chat");
