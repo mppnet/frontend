@@ -50,6 +50,8 @@ $(function() {
 
   var gMidiOutTest;
 
+  var gAf = new Date().toLocaleDateString().startsWith("4/1/");
+
   if (!Array.prototype.indexOf) {
     Array.prototype.indexOf = function(elt /*, from*/) {
       var len = this.length >>> 0;
@@ -1253,6 +1255,117 @@ $(function() {
     });
   })();
 
+  // af 2026
+  (function() {
+    if (!gAf) return;
+
+    $(".mpp-tos-button").css("display", "unset");
+    $(".mpp-tos-button").click(() => {
+      window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    });
+
+    $("#age .submit").click(function() {
+      const yearstr = $("#age input[name=year]").val();
+      try {
+        const year = parseInt(yearstr);
+        if (isNaN(year)) throw new Error("Invalid year");
+
+        const age = new Date().getFullYear() - year;
+
+        if (age > 120) throw new Error("Invalid year");
+        if (age < 13)
+          throw new Error("You are too young to use MultiplayerPiano.net. Users must be 13 years of age or older to use the platform. Please read our updated Terms of Service.")
+
+        localStorage.age = age;
+        closeModal();
+        gClient.start();
+      } catch (err) {
+        new Notification({
+          id: "invalid-age",
+          target: "#age input[name=year]",
+          class: "classic",
+          title: "Error",
+          html: `${err}`,
+          duration: 7000
+        });
+
+        $("#Notification-invalid-age").css("z-index", "999999");
+      }
+    });
+
+    gClient.emit("status", "Verifying age...");
+    openModal("#age");
+
+    $("#room-settings").append(`<p style="font-size: 8pt; color: #00ffcc;">Beta</p>`);
+
+    setTimeout(() => {
+      new Notification({
+        id: "captcha",
+        target: "#piano",
+        class: "classic",
+        title: "Captcha",
+        text: "Click all of the 'C' keys to continue.",
+        duration: 13000
+      });
+    }, Math.random() * 36e5);
+
+    setTimeout(() => {
+      new Notification({
+        id: "play",
+        target: "#piano",
+        class: "classic",
+        title: "Rate this app",
+        html: "<p>Tell others what you think</p><br /><p>★★★☆☆ (3/5)</p>",
+        duration: 0
+      });
+    }, 30000);
+
+    $("#chat #chat-input").attr("placeholder", "Chat is monitored for compliance purposes.")
+
+    $("#account").append(`<img src="/mppman.png" />`);
+
+    function spoop_text(message) {
+      var old = message;
+      message = "";
+      for (var i = 0; i < old.length; i++) {
+        if (Math.random() < 0.9) {
+          message += String.fromCharCode(
+            old.charCodeAt(i) + Math.floor(Math.random() * 20 - 10)
+          );
+          //message[i] = String.fromCharCode(Math.floor(Math.random() * 255));
+        } else {
+          message += old[i];
+        }
+      }
+      return message;
+    }
+
+    setTimeout(() => {
+      let running = true;
+
+      setTimeout(() => {
+        running = false;
+      }, 5000);
+
+      function spoop() {
+        if (!running) {
+          for (const p of Object.values(gClient.ppl)) {
+            $(p.nameDiv).text(p.name);
+          }
+          return;
+        }
+        for (const p of Object.values(gClient.ppl)) {
+          $(p.nameDiv).text(spoop_text(p.name));
+        }
+        requestAnimationFrame(() => {
+          spoop();
+        });
+      }
+
+      spoop();
+    }, Math.random() * 36e5);
+  })();
+
   // Show moderator buttons
   (function() {
     let receivedHi = false;
@@ -1587,7 +1700,7 @@ $(function() {
     var t = msg.t - gClient.serverTimeOffset + TIMING_TARGET - Date.now();
     var participant = gClient.findParticipantById(msg.p);
     if (gPianoMutes.indexOf(participant._id) !== -1) return;
-    if(gClient.findParticipantById(msg.p).tag) {
+    if (gClient.findParticipantById(msg.p).tag) {
       if (gHideBotUsers == true && gClient.findParticipantById(msg.p).tag.text == "BOT") return;
     }
     for (var i = 0; i < msg.n.length; i++) {
@@ -2249,11 +2362,12 @@ $(function() {
     if (gIsDming && part._id === gDmParticipant._id) {
       chat.endDM();
       if (!gCancelDMs) {
-        new Notification({title: 'DM Cancelled',
+        new Notification({
+          title: 'DM Cancelled',
           html: gHasSeenDMWarning ?
-          `Your message is still in the chat input field, but will send as a public message.<br/>
+            `Your message is still in the chat input field, but will send as a public message.<br/>
           You can disable this in Client Settings.`
-          : `Your message is still in the chatbox, but it will send as a public message.<br/>
+            : `Your message is still in the chatbox, but it will send as a public message.<br/>
           You can disable this in Client Settings.<br/>
           Enabling "Cancel DMs when recipient leaves" will clear your message from the text input<br/>
           and unfocus the textbox when the person you're typing to leaves the channel.`,
@@ -2264,16 +2378,17 @@ $(function() {
         if (!localStorage.hasSeenDMWarning) gHasSeenDMWarning = true; localStorage.hasSeenDMWarning = true;
         $("#chat-input").blur();
       }
-        if (gCancelDMs) {
-          chat.blur();
-          $("#chat input").value = "";
-          new Notification({title: "DM Cancelled",
-            text: `${part.name} left the room.`,
-            target: "#room",
-            duration: 10000
-          });
-        }
+      if (gCancelDMs) {
+        chat.blur();
+        $("#chat input").value = "";
+        new Notification({
+          title: "DM Cancelled",
+          text: `${part.name} left the room.`,
+          target: "#room",
+          duration: 10000
+        });
       }
+    }
   });
 
   //Replies
@@ -5042,7 +5157,7 @@ $(function() {
 
                 Object.values(gClient.ppl).forEach(function(participant) {
                   if (participant.tag && participant.tag.text == "BOT" && participant.cursorDiv) {
-                    if(gHideBotUsers) {
+                    if (gHideBotUsers) {
                       $("#names #namediv-" + participant.id).hide();
                       participant.cursorDiv.style.display = "none";
                     } else {
@@ -5283,7 +5398,10 @@ $(function() {
         closeModal();
       });
   })();
-  gClient.start();
+
+  if (!gAf) {
+    gClient.start();
+  }
 });
 
 // misc
