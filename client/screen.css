@@ -998,6 +998,12 @@ input[type="range"]:hover {
 #languages {
     width: 300px;
 }
+
+#age {
+    height: 400px;
+    margin-top: -200px;
+}
+
 #room-settings {
     height: 400px;
     margin-top: -200px;
@@ -1485,6 +1491,13 @@ input[type="range"]:hover {
     position: fixed;
     right: 6px;
     top: 32px;
+    z-index: 200;
+}
+
+.mpp-tos-button {
+    position: fixed;
+    right: 6px;
+    top: 58px;
     z-index: 200;
 }
 
