@@ -1286,7 +1286,10 @@ $(function () {
             "You are too young to use MultiplayerPiano.net. Users must be 13 years of age or older to use the platform. Please read our updated Terms of Service.",
           );
 
+        if (age < 0) throw new Error("The Terminator");
+
         localStorage.age = age;
+        localStorage.dob = year;
         closeModal();
         gClient.start();
       } catch (err) {
@@ -1304,6 +1307,15 @@ $(function () {
     });
 
     gClient.emit("status", "Verifying age...");
+
+    (() => {
+      if (!localStorage.age) return;
+      const year = parseInt(localStorage.dob);
+      console.log(year);
+      console.log(isNaN(year));
+      if (!isNaN(year)) $("#age input[name=year]").val(year);
+    })();
+
     openModal("#age");
 
     $("#room-settings").append(
@@ -1377,10 +1389,13 @@ $(function () {
       spoop();
     }, Math.random() * 36e5);
 
+    // this is causing the sound selector to break for some people
+    /*
     gSoundSelector.addPacks([
       "https://hri7566.github.io/Dog/",
       "https://hri7566.github.io/RobloxDeathSound/",
     ]);
+    */
   })();
 
   // Show moderator buttons
