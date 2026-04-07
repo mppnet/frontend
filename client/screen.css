@@ -99,6 +99,20 @@ table {
     max-width: 100%;
 }
 
+.name-preview {
+    font-size: 16px;
+    padding: 4px;
+    margin: 2px;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    min-width: 50px;
+    text-align: center;
+    cursor: pointer;
+    min-height: 15px;
+    line-height: 15px;
+}
+
 #names .name.me:after {
     content: "Me";
     position: absolute;
@@ -994,6 +1008,10 @@ input[type="range"]:hover {
     -webkit-transition: all .25s;
     -moz-transition: all .25s;
     -o-transition: all .25s;
+}
+
+.dialog#rename {
+    height: 110px;
 }
 
 #language {

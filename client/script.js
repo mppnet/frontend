@@ -1411,6 +1411,7 @@ $(function () {
       document.getElementById("motd-text").innerHTML = msg.motd;
       openModal("#motd");
       $(document).on("keydown", modalHandleEsc);
+      updatePreview(msg.u)
       var user_interact = function (evt) {
         if (
           (evt.path || (evt.composedPath && evt.composedPath())).includes(
@@ -1436,6 +1437,63 @@ $(function () {
   })();
 
   var participantTouchhandler; //declare this outside of the smaller functions so it can be used below and setup later
+
+  // Handle Preview
+  function updatePreview(userObject) {
+    var previewDiv = document.querySelector("#namediv-preview")
+    var previewTag = document.querySelector("#nametag-preview")
+    var previewName = document.querySelector("#nametext-preview")
+
+    if(!userObject.name && !userObject.color) return;
+
+    previewName.innerText = userObject.name;
+    previewDiv.style["background-color"] = userObject.color;
+
+    if(userObject.tag) {
+      switch (typeof userObject.tag) {
+        case "object":
+          if(!userObject.tag.text || !userObject.tag.color) return;
+          previewTag.innerText = userObject.tag.text;
+          previewTag["background-color"] = userObject.tag.color;
+          break;
+        case "string": 
+          previewTag.innerText = userObject.tag;
+          previewTag["background-color"] = tagColor(userObject.tag)
+          break;
+        default:
+          previewTag.style.display = "none"; //don't render because userobject is broken or there's just nothing there
+          break;
+      }
+    } else {
+      previewTag.style.display = "none";
+    }
+  }
+
+  //event handlers for preview
+  (function () {
+    const nameInput = document.querySelector("#rename input[name=name]");
+    const colorInput = document.querySelector("#rename input[name=color]");
+
+    nameInput?.addEventListener("input", (v) => {
+      const target = v.target;
+      
+      updatePreview({
+        name: target.value, 
+        color: colorInput.value,
+        tag: gClient.user.tag || null
+      });
+    });
+
+    colorInput?.addEventListener("input", (v) => {
+      const target = v.target;
+      
+      updatePreview({
+        name: nameInput.value, 
+        color: target.value,
+        tag: gClient.user.tag || null
+      });
+    })
+  })();
 
   // Handle changes to participants
   (function () {
@@ -1674,6 +1732,9 @@ $(function () {
       if (shouldHideUser(part)) return;
       var name = part.name || "";
       var color = part.color || "#777";
+      if(part.id == gClient.user.id) {
+        updatePreview(part)
+      }
       setupParticipantDivs(part);
       $(part.cursorDiv).find(".name .nametext").text(name);
       $(part.cursorDiv).find(".name").css("background-color", color);
