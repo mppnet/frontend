@@ -3890,7 +3890,7 @@ $(function () {
                   );
                 }
                 return `<span class="mention" style="background-color: ${user.color};">${nick}</span>`;
-              } else return `@${nick}`;
+              } else return `<span class="mention" style="background-color: ${user.color};">${nick}</span>`;
             } else return match;
           },
         );
