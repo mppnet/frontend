@@ -87,7 +87,7 @@ table {
     float: left;
     position: relative;
     padding: 4px;
-    margin: 2px;
+    margin: auto;
     border-radius: 2px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -100,17 +100,26 @@ table {
 }
 
 .name-preview {
-    font-size: 16px;
+    font-size: 12px;
     padding: 4px;
     margin: 2px;
     border-radius: 2px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     min-width: 50px;
+    width: fit-content;
     text-align: center;
     cursor: pointer;
     min-height: 15px;
     line-height: 15px;
+}
+
+.name-preview::after {
+    content: "Preview";
+    position: absolute;
+    top: 1px;
+    font-size: 10px;
+    left: 45%;
 }
 
 #names .name.me:after {
