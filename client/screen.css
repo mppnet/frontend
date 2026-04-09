@@ -87,7 +87,7 @@ table {
     float: left;
     position: relative;
     padding: 4px;
-    margin: auto;
+    margin: 2px;
     border-radius: 2px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -102,7 +102,7 @@ table {
 .name-preview {
     font-size: 12px;
     padding: 4px;
-    margin: 2px;
+    margin: auto;
     border-radius: 2px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -1020,7 +1020,23 @@ input[type="range"]:hover {
 }
 
 .dialog#rename {
-    height: 110px;
+    height: 113px;
+}
+
+.rename-hex {
+    width: 60px;
+}
+
+.rename-random, .rename-hex {
+    background: #333;
+    color: white;
+    border: 1px solid #fff;
+    border-radius: 2px;
+}
+
+.rename-hex.wrong {
+    border: 1px solid #fff;
+    color: red;
 }
 
 #language {

@@ -1444,9 +1444,16 @@ $(function () {
     var previewTag = document.querySelector("#nametag-preview")
     var previewName = document.querySelector("#nametext-preview")
 
+    const nameInput = document.querySelector("#rename input[name=name]");
+    const colorInput = document.querySelector("#rename input[name=color]");
+    const hexInput = document.querySelector("#rename input[name=hexColor]");
+
     if(!userObject.name && !userObject.color) return;
 
     previewName.innerText = userObject.name;
+    nameInput.value = userObject.name;
+    hexInput.value = userObject.color;
+    colorInput.value = userObject.color;
     previewDiv.style["background-color"] = userObject.color;
 
     if(userObject.tag) {
@@ -1471,8 +1478,52 @@ $(function () {
 
   //event handlers for preview
   (function () {
+    function isValidHex(hex) {
+      if (typeof hex !== 'string' || hex[0] !== '#' || (hex.length !== 4 && hex.length !== 7)) {
+        return false;
+      }
+      const validChars = '0123456789abcdefABCDEF';
+      for (let i = 1; i < hex.length; i++) {
+        if (validChars.indexOf(hex[i]) === -1) {
+          return false;
+        }
+      }
+      return true;
+    }
+
     const nameInput = document.querySelector("#rename input[name=name]");
     const colorInput = document.querySelector("#rename input[name=color]");
+    const hexInput = document.querySelector("#rename input[name=hexColor]");
+    const randomHexBtn = document.querySelector("#rename button[id=rename-random-color]");
+
+    randomHexBtn.addEventListener("click", () => {
+      const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+
+      hexInput.value = randomColor;
+
+      updatePreview({
+        name: nameInput.value, 
+        color: hexInput.value,
+        tag: gClient.user.tag || null
+      });
+    })
+
+    hexInput?.addEventListener("input", (v) => {
+      const target = v.target;
+      
+      if(!isValidHex(target.value)) {
+        hexInput.classList.add("wrong")
+        return;
+      } else {
+        hexInput.classList.remove("wrong")
+      }
+
+      updatePreview({
+        name: nameInput.value, 
+        color: target.value,
+        tag: gClient.user.tag || null
+      });
+    });
 
     nameInput?.addEventListener("input", (v) => {
       const target = v.target;
