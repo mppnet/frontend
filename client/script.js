@@ -2643,6 +2643,11 @@ $(function () {
         var id = target.participantId;
         if (id == gClient.participantId) {
           openModal("#rename", "input[name=name]");
+          updatePreview({
+            name: gClient.user.name,
+            color: gClient.user.color,
+            tag: gClient.user.tag || null
+          })
           setTimeout(function () {
             $("#rename input[name=name]").val(
               gClient.ppl[gClient.participantId].name,
