@@ -1411,6 +1411,7 @@ $(function () {
       document.getElementById("motd-text").innerHTML = msg.motd;
       openModal("#motd");
       $(document).on("keydown", modalHandleEsc);
+      updatePreview(msg.u)
       var user_interact = function (evt) {
         if (
           (evt.path || (evt.composedPath && evt.composedPath())).includes(
@@ -1436,6 +1437,114 @@ $(function () {
   })();
 
   var participantTouchhandler; //declare this outside of the smaller functions so it can be used below and setup later
+
+  // Handle Preview
+  function updatePreview(userObject) {
+    var previewDiv = document.querySelector("#namediv-preview")
+    var previewTag = document.querySelector("#nametag-preview")
+    var previewName = document.querySelector("#nametext-preview")
+
+    const nameInput = document.querySelector("#rename input[name=name]");
+    const colorInput = document.querySelector("#rename input[name=color]");
+    const hexInput = document.querySelector("#rename input[name=hexColor]");
+
+    if(!userObject.name && !userObject.color) return;
+
+    previewName.innerText = userObject.name;
+    nameInput.value = userObject.name;
+    hexInput.value = userObject.color;
+    colorInput.value = userObject.color;
+    previewDiv.style["background-color"] = userObject.color;
+
+    if(userObject.tag) {
+      switch (typeof userObject.tag) {
+        case "object":
+          if(!userObject.tag.text || !userObject.tag.color) return;
+          previewTag.innerText = userObject.tag.text;
+          previewTag["background-color"] = userObject.tag.color;
+          break;
+        case "string": 
+          previewTag.innerText = userObject.tag;
+          previewTag["background-color"] = tagColor(userObject.tag)
+          break;
+        default:
+          previewTag.style.display = "none"; //don't render because userobject is broken or there's just nothing there
+          break;
+      }
+    } else {
+      previewTag.style.display = "none";
+    }
+  }
+
+  //event handlers for preview
+  (function () {
+    function isValidHex(hex) {
+      if (typeof hex !== 'string' || hex[0] !== '#' || (hex.length !== 4 && hex.length !== 7)) {
+        return false;
+      }
+      const validChars = '0123456789abcdefABCDEF';
+      for (let i = 1; i < hex.length; i++) {
+        if (validChars.indexOf(hex[i]) === -1) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    const nameInput = document.querySelector("#rename input[name=name]");
+    const colorInput = document.querySelector("#rename input[name=color]");
+    const hexInput = document.querySelector("#rename input[name=hexColor]");
+    const randomHexBtn = document.querySelector("#rename button[id=rename-random-color]");
+
+    randomHexBtn.addEventListener("click", () => {
+      const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+
+      hexInput.value = randomColor;
+
+      updatePreview({
+        name: nameInput.value, 
+        color: hexInput.value,
+        tag: gClient.user.tag || null
+      });
+    })
+
+    hexInput?.addEventListener("input", (v) => {
+      const target = v.target;
+      
+      if(!isValidHex(target.value)) {
+        hexInput.classList.add("wrong")
+        return;
+      } else {
+        hexInput.classList.remove("wrong")
+      }
+
+      updatePreview({
+        name: nameInput.value, 
+        color: target.value,
+        tag: gClient.user.tag || null
+      });
+    });
+
+    nameInput?.addEventListener("input", (v) => {
+      const target = v.target;
+      
+      updatePreview({
+        name: target.value, 
+        color: colorInput.value,
+        tag: gClient.user.tag || null
+      });
+    });
+
+    colorInput?.addEventListener("input", (v) => {
+      const target = v.target;
+      
+      updatePreview({
+        name: nameInput.value, 
+        color: target.value,
+        tag: gClient.user.tag || null
+      });
+    })
+  })();
 
   // Handle changes to participants
   (function () {
@@ -1674,6 +1783,9 @@ $(function () {
       if (shouldHideUser(part)) return;
       var name = part.name || "";
       var color = part.color || "#777";
+      if(part.id == gClient.user.id) {
+        updatePreview(part)
+      }
       setupParticipantDivs(part);
       $(part.cursorDiv).find(".name .nametext").text(name);
       $(part.cursorDiv).find(".name").css("background-color", color);
@@ -2531,6 +2643,11 @@ $(function () {
         var id = target.participantId;
         if (id == gClient.participantId) {
           openModal("#rename", "input[name=name]");
+          updatePreview({
+            name: gClient.user.name,
+            color: gClient.user.color,
+            tag: gClient.user.tag || null
+          })
           setTimeout(function () {
             $("#rename input[name=name]").val(
               gClient.ppl[gClient.participantId].name,

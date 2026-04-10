@@ -99,6 +99,29 @@ table {
     max-width: 100%;
 }
 
+.name-preview {
+    font-size: 12px;
+    padding: 4px;
+    margin: auto;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    min-width: 50px;
+    width: fit-content;
+    text-align: center;
+    cursor: pointer;
+    min-height: 15px;
+    line-height: 15px;
+}
+
+.name-preview::after {
+    content: "Preview";
+    position: absolute;
+    top: 1px;
+    font-size: 10px;
+    left: 45%;
+}
+
 #names .name.me:after {
     content: "Me";
     position: absolute;
@@ -994,6 +1017,26 @@ input[type="range"]:hover {
     -webkit-transition: all .25s;
     -moz-transition: all .25s;
     -o-transition: all .25s;
+}
+
+.dialog#rename {
+    height: 113px;
+}
+
+.rename-hex {
+    width: 60px;
+}
+
+.rename-random, .rename-hex {
+    background: #333;
+    color: white;
+    border: 1px solid #fff;
+    border-radius: 2px;
+}
+
+.rename-hex.wrong {
+    border: 1px solid #fff;
+    color: red;
 }
 
 #language {
