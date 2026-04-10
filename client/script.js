@@ -2071,6 +2071,7 @@ $(function () {
   var gNoPreventDefault = localStorage.noPreventDefault == "true";
   var gHideBotUsers = localStorage.hideBotUsers == "true";
   var gCancelDMs = localStorage.cancelDMs == "true";
+  var gHasSeenDMWarning = localStorage.hasSeenDMWarning == "true";
   var gSnowflakes =
     new Date().getMonth() === 11 && localStorage.snowflakes !== "false";
 
@@ -3132,7 +3133,8 @@ $(function () {
       evt.keyCode == 27 ||
       ((evt.keyCode == 32 || evt.keyCode == 13) &&
         document.activeElement.type !== "text" &&
-        gModal != "#age")
+        gModal != "#age" &&
+        gModal != "#siteban")
     ) {
       closeModal();
       if (!gNoPreventDefault) evt.preventDefault();
