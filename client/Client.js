@@ -1,6 +1,6 @@
 WebSocket.prototype.send = new Proxy(WebSocket.prototype.send, {
   apply: (target, thisArg, args) => {
-    if (localStorage.token && !args[0].startsWith(`[{"m":"hi"`))
+    if (!(args[0] instanceof ArrayBuffer) && localStorage.token && !args[0].startsWith(`[{"m":"hi"`))
       args[0] = args[0].replace(localStorage.token, "[REDACTED]");
     return target.apply(thisArg, args);
   },
@@ -70,6 +70,19 @@ class Client extends EventEmitter {
     this.ws.close();
   }
 
+  decodeBinaryMessage(buffer) {
+    const view = new DataView(buffer);
+  
+    const metaLength = view.getUint32(0);
+  
+    const metaBytes = new Uint8Array(buffer, 4, metaLength);
+    const meta = JSON.parse(new TextDecoder().decode(metaBytes));
+  
+    const binary = buffer.slice(4 + metaLength);
+  
+    return { meta, binary };
+  }
+
   connect() {
     if (
       !this.canConnect ||
@@ -88,6 +101,8 @@ class Client extends EventEmitter {
       // browseroni
       this.ws = new WebSocket(this.uri);
     }
+    this.ws.binaryType = "arraybuffer";
+
     var self = this;
     this.ws.addEventListener("close", function (evt) {
       self.user = undefined;
@@ -141,10 +156,15 @@ class Client extends EventEmitter {
       self.emit("status", "Joining channel...");
     });
     this.ws.addEventListener("message", async function (evt) {
-      var transmission = JSON.parse(evt.data);
-      for (var i = 0; i < transmission.length; i++) {
-        var msg = transmission[i];
-        self.emit(msg.m, msg);
+      if (evt.data instanceof ArrayBuffer) {
+        const { meta, binary } = self.decodeBinaryMessage(evt.data);
+        self.emit(meta.m, {...meta, binary});
+      } else {
+        var transmission = JSON.parse(evt.data);
+        for (var i = 0; i < transmission.length; i++) {
+          var msg = transmission[i];
+          self.emit(msg.m, msg);
+        }
       }
     });
   }
