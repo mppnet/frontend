@@ -89,7 +89,7 @@ class Client extends EventEmitter {
       this.ws = new WebSocket(this.uri);
     }
     var self = this;
-    this.ws.addEventListener("close", function(evt) {
+    this.ws.addEventListener("close", function (evt) {
       self.user = undefined;
       self.participantId = undefined;
       self.channel = undefined;
@@ -113,17 +113,17 @@ class Client extends EventEmitter {
       var ms = ms_lut[idx];
       setTimeout(self.connect.bind(self), ms);
     });
-    this.ws.addEventListener("error", function(err) {
+    this.ws.addEventListener("error", function (err) {
       self.emit("wserror", err);
       self.ws.close(); // self.ws.emit("close");
     });
-    this.ws.addEventListener("open", function(evt) {
-      self.pingInterval = setInterval(function() {
+    this.ws.addEventListener("open", function (evt) {
+      self.pingInterval = setInterval(function () {
         self.sendPing();
       }, 20000);
       self.noteBuffer = [];
       self.noteBufferTime = 0;
-      self.noteFlushInterval = setInterval(function() {
+      self.noteFlushInterval = setInterval(function () {
         if (self.noteBufferTime && self.noteBuffer.length > 0) {
           self.sendArray([
             {
@@ -140,7 +140,7 @@ class Client extends EventEmitter {
       self.emit("connect");
       self.emit("status", "Joining channel...");
     });
-    this.ws.addEventListener("message", async function(evt) {
+    this.ws.addEventListener("message", async function (evt) {
       var transmission = JSON.parse(evt.data);
       for (var i = 0; i < transmission.length; i++) {
         var msg = transmission[i];
@@ -151,7 +151,7 @@ class Client extends EventEmitter {
 
   bindEventListeners() {
     var self = this;
-    this.on("hi", function(msg) {
+    this.on("hi", function (msg) {
       self.connectionTime = Date.now();
       self.user = msg.u;
       self.receiveServerTime(msg.t, msg.e || undefined);
@@ -170,35 +170,35 @@ class Client extends EventEmitter {
         self.accountInfo = undefined;
       }
     });
-    this.on("t", function(msg) {
+    this.on("t", function (msg) {
       self.receiveServerTime(msg.t, msg.e || undefined);
     });
-    this.on("ch", function(msg) {
+    this.on("ch", function (msg) {
       self.desiredChannelId = msg.ch._id;
       self.desiredChannelSettings = msg.ch.settings;
       self.channel = msg.ch;
       if (msg.p) self.participantId = msg.p;
       self.setParticipants(msg.ppl);
     });
-    this.on("p", function(msg) {
+    this.on("p", function (msg) {
       self.participantUpdate(msg);
       self.emit("participant update", self.findParticipantById(msg.id));
     });
-    this.on("m", function(msg) {
+    this.on("m", function (msg) {
       if (self.ppl.hasOwnProperty(msg.id)) {
         self.participantMoveMouse(msg);
       }
     });
-    this.on("bye", function(msg) {
+    this.on("bye", function (msg) {
       self.removeParticipant(msg.p);
     });
-    this.on("b", async function(msg) {
+    this.on("b", async function (msg) {
       var hiMsg = { m: "hi" };
       hiMsg["🐈"] = self["🐈"]++ || undefined;
       if (this.loginInfo) hiMsg.login = this.loginInfo;
       this.loginInfo = undefined;
       const AsyncFunction = Object.getPrototypeOf(
-        async function() { },
+        async function () {},
       ).constructor;
 
       try {
@@ -218,9 +218,6 @@ class Client extends EventEmitter {
       }
       if (localStorage.token) {
         hiMsg.token = localStorage.token;
-      }
-      if (localStorage.age) {
-        hiMsg.age = localStorage.age;
       }
       self.sendArray([hiMsg]);
     });
@@ -371,7 +368,7 @@ class Client extends EventEmitter {
     var difference = target - this.serverTimeOffset;
     var inc = difference / steps;
     var iv;
-    iv = setInterval(function() {
+    iv = setInterval(function () {
       self.serverTimeOffset += inc;
       if (++step >= steps) {
         clearInterval(iv);

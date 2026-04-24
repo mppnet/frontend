@@ -25,7 +25,7 @@ if (location.host === "multiplayerpiano.net") {
 
 // 钢琴
 
-$(function () {
+$(function() {
   translation.start();
   console.log(
     "%cWelcome to MPP's developer console!",
@@ -50,17 +50,8 @@ $(function () {
 
   var gMidiOutTest;
 
-  var gAf =
-    (new Date() >= new Date("2026/04/01") &&
-      new Date() < new Date("2026/04/02") &&
-      typeof localStorage.noAf === "undefined") ||
-    (window.location.hash &&
-      window.location.hash.match(/^(?:#.+)*#af(?:#.+)*$/i));
-
-  var gAfChatPlaceholder = "Chat is monitored for compliance purposes.";
-
   if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function (elt /*, from*/) {
+    Array.prototype.indexOf = function(elt /*, from*/) {
       var len = this.length >>> 0;
       var from = Number(arguments[1]) || 0;
       from = from < 0 ? Math.ceil(from) : Math.floor(from);
@@ -77,7 +68,7 @@ $(function () {
     window.mozRequestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.msRequestAnimationFrame ||
-    function (cb) {
+    function(cb) {
       setTimeout(cb, 1000 / 30);
     };
 
@@ -89,7 +80,7 @@ $(function () {
 
   ////////////////////////////////////////////////////////////////
 
-  var Rect = function (x, y, w, h) {
+  var Rect = function(x, y, w, h) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -97,7 +88,7 @@ $(function () {
     this.x2 = x + w;
     this.y2 = y + h;
   };
-  Rect.prototype.contains = function (x, y) {
+  Rect.prototype.contains = function(x, y) {
     return x >= this.x && x <= this.x2 && y >= this.y && y <= this.y2;
   };
 
@@ -135,34 +126,34 @@ $(function () {
 
   ////////////////////////////////////////////////////////////////
 
-  var AudioEngine = function () {};
+  var AudioEngine = function() { };
 
-  AudioEngine.prototype.init = function (cb) {
+  AudioEngine.prototype.init = function(cb) {
     this.volume = 0.6;
     this.sounds = {};
     this.paused = true;
     return this;
   };
 
-  AudioEngine.prototype.load = function (id, url, cb) {};
+  AudioEngine.prototype.load = function(id, url, cb) { };
 
-  AudioEngine.prototype.play = function () {};
+  AudioEngine.prototype.play = function() { };
 
-  AudioEngine.prototype.stop = function () {};
+  AudioEngine.prototype.stop = function() { };
 
-  AudioEngine.prototype.setVolume = function (vol) {
+  AudioEngine.prototype.setVolume = function(vol) {
     this.volume = vol;
   };
 
-  AudioEngine.prototype.resume = function () {
+  AudioEngine.prototype.resume = function() {
     this.paused = false;
   };
 
-  AudioEngineWeb = function () {
+  AudioEngineWeb = function() {
     this.threshold = 0;
     this.worker = new Worker("/workerTimer.js");
     var self = this;
-    this.worker.onmessage = function (event) {
+    this.worker.onmessage = function(event) {
       if (event.data.args)
         if (event.data.args.action == 0) {
           self.actualPlay(
@@ -183,7 +174,7 @@ $(function () {
 
   AudioEngineWeb.prototype = new AudioEngine();
 
-  AudioEngineWeb.prototype.init = function (cb) {
+  AudioEngineWeb.prototype.init = function(cb) {
     AudioEngine.prototype.init.call(this);
 
     this.context = new AudioContext({ latencyHint: "interactive" });
@@ -214,15 +205,15 @@ $(function () {
     return this;
   };
 
-  AudioEngineWeb.prototype.load = function (id, url, cb) {
+  AudioEngineWeb.prototype.load = function(id, url, cb) {
     var audio = this;
     var req = new XMLHttpRequest();
     req.open("GET", url);
     req.responseType = "arraybuffer";
-    req.addEventListener("readystatechange", function (evt) {
+    req.addEventListener("readystatechange", function(evt) {
       if (req.readyState !== 4) return;
       try {
-        audio.context.decodeAudioData(req.response, function (buffer) {
+        audio.context.decodeAudioData(req.response, function(buffer) {
           audio.sounds[id] = buffer;
           if (cb) cb();
         });
@@ -248,7 +239,7 @@ $(function () {
     req.send();
   };
 
-  AudioEngineWeb.prototype.actualPlay = function (id, vol, time, part_id) {
+  AudioEngineWeb.prototype.actualPlay = function(id, vol, time, part_id) {
     //the old play(), but with time insted of delay_ms.
     if (this.paused) return;
     if (!this.sounds.hasOwnProperty(id)) return;
@@ -276,7 +267,7 @@ $(function () {
     }
   };
 
-  AudioEngineWeb.prototype.play = function (id, vol, delay_ms, part_id) {
+  AudioEngineWeb.prototype.play = function(id, vol, delay_ms, part_id) {
     if (!this.sounds.hasOwnProperty(id)) return;
     var time = this.context.currentTime + delay_ms / 1000; //calculate time on note receive.
     var delay = delay_ms - this.threshold;
@@ -295,7 +286,7 @@ $(function () {
     }
   };
 
-  AudioEngineWeb.prototype.actualStop = function (id, time, part_id) {
+  AudioEngineWeb.prototype.actualStop = function(id, time, part_id) {
     if (
       this.playings.hasOwnProperty(id) &&
       this.playings[id] &&
@@ -315,7 +306,7 @@ $(function () {
     }
   };
 
-  AudioEngineWeb.prototype.stop = function (id, delay_ms, part_id) {
+  AudioEngineWeb.prototype.stop = function(id, delay_ms, part_id) {
     var time = this.context.currentTime + delay_ms / 1000;
     var delay = delay_ms - this.threshold;
     if (delay <= 0) this.actualStop(id, time, part_id);
@@ -332,12 +323,12 @@ $(function () {
     }
   };
 
-  AudioEngineWeb.prototype.setVolume = function (vol) {
+  AudioEngineWeb.prototype.setVolume = function(vol) {
     AudioEngine.prototype.setVolume.call(this, vol);
     this.masterGain.gain.value = this.volume;
   };
 
-  AudioEngineWeb.prototype.resume = function () {
+  AudioEngineWeb.prototype.resume = function() {
     this.paused = false;
     this.context.resume();
   };
@@ -346,15 +337,15 @@ $(function () {
 
   ////////////////////////////////////////////////////////////////
 
-  var Renderer = function () {};
+  var Renderer = function() { };
 
-  Renderer.prototype.init = function (piano) {
+  Renderer.prototype.init = function(piano) {
     this.piano = piano;
     this.resize();
     return this;
   };
 
-  Renderer.prototype.resize = function (width, height) {
+  Renderer.prototype.resize = function(width, height) {
     if (typeof width == "undefined") width = $(this.piano.rootElement).width();
     if (typeof height == "undefined") height = Math.floor(width * 0.2);
     $(this.piano.rootElement).css({
@@ -365,15 +356,15 @@ $(function () {
     this.height = height * window.devicePixelRatio;
   };
 
-  Renderer.prototype.visualize = function (key, color) {};
+  Renderer.prototype.visualize = function(key, color) { };
 
-  var CanvasRenderer = function () {
+  var CanvasRenderer = function() {
     Renderer.call(this);
   };
 
   CanvasRenderer.prototype = new Renderer();
 
-  CanvasRenderer.prototype.init = function (piano) {
+  CanvasRenderer.prototype.init = function(piano) {
     this.canvas = document.createElement("canvas");
     this.ctx = this.canvas.getContext("2d");
     piano.rootElement.appendChild(this.canvas);
@@ -382,7 +373,7 @@ $(function () {
 
     // create render loop
     var self = this;
-    var render = function () {
+    var render = function() {
       self.redraw();
       requestAnimationFrame(render);
     };
@@ -391,7 +382,7 @@ $(function () {
     // add event listeners
     var mouse_down = false;
     var last_key = null;
-    $(piano.rootElement).mousedown(function (event) {
+    $(piano.rootElement).mousedown(function(event) {
       mouse_down = true;
       //event.stopPropagation();
       if (!gNoPreventDefault) event.preventDefault();
@@ -405,7 +396,7 @@ $(function () {
     });
     piano.rootElement.addEventListener(
       "touchstart",
-      function (event) {
+      function(event) {
         mouse_down = true;
         //event.stopPropagation();
         if (!gNoPreventDefault) event.preventDefault();
@@ -420,7 +411,7 @@ $(function () {
       },
       false,
     );
-    $(window).mouseup(function (event) {
+    $(window).mouseup(function(event) {
       if (last_key) {
         release(last_key.note);
       }
@@ -440,7 +431,7 @@ $(function () {
     return this;
   };
 
-  CanvasRenderer.prototype.resize = function (width, height) {
+  CanvasRenderer.prototype.resize = function(width, height) {
     Renderer.prototype.resize.call(this, width, height);
     if (this.width < 52 * 2) this.width = 52 * 2;
     if (this.height < this.width * 0.2)
@@ -571,8 +562,8 @@ $(function () {
         if (key.sharp) {
           ctx.fillRect(
             this.blackKeyOffset +
-              this.whiteKeyWidth * key.spatial +
-              ctx.lineWidth / 2,
+            this.whiteKeyWidth * key.spatial +
+            ctx.lineWidth / 2,
             y + ctx.lineWidth / 2,
             this.blackKeyWidth - ctx.lineWidth,
             this.blackKeyHeight - ctx.lineWidth,
@@ -610,12 +601,12 @@ $(function () {
     }
   };
 
-  CanvasRenderer.prototype.visualize = function (key, color) {
+  CanvasRenderer.prototype.visualize = function(key, color) {
     key.timePlayed = Date.now();
     key.blips.push({ time: key.timePlayed, color: color });
   };
 
-  CanvasRenderer.prototype.redraw = function () {
+  CanvasRenderer.prototype.redraw = function() {
     var now = Date.now();
     var timeLoadedEnd = now - 1000;
     var timePlayedEnd = now - 100;
@@ -644,7 +635,7 @@ $(function () {
         if (key.timePlayed > timePlayedEnd) {
           y = Math.floor(
             this.keyMovement -
-              ((now - key.timePlayed) / 100) * this.keyMovement,
+            ((now - key.timePlayed) / 100) * this.keyMovement,
           );
         }
         var x = Math.floor(
@@ -660,9 +651,8 @@ $(function () {
         keyName += key.octave + 1;
 
         if (gShowPianoNotes) {
-          this.ctx.font = `${
-            (key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2
-          }px Arial`;
+          this.ctx.font = `${(key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2
+            }px Arial`;
           this.ctx.fillStyle = key.sharp ? "white" : "black";
           this.ctx.textAlign = "center";
 
@@ -672,9 +662,9 @@ $(function () {
               keyName,
               x + (key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2,
               y +
-                (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) -
-                30 -
-                this.ctx.lineWidth,
+              (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) -
+              30 -
+              this.ctx.lineWidth,
             );
           }
 
@@ -688,9 +678,9 @@ $(function () {
             keyName,
             x + (key.sharp ? this.blackKeyWidth : this.whiteKeyWidth) / 2,
             y +
-              (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) -
-              10 -
-              this.ctx.lineWidth,
+            (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight) -
+            10 -
+            this.ctx.lineWidth,
           );
         }
 
@@ -748,7 +738,7 @@ $(function () {
     this.ctx.restore();
   };
 
-  CanvasRenderer.prototype.renderNoteLyrics = function () {
+  CanvasRenderer.prototype.renderNoteLyrics = function() {
     // render lyric
     for (var part_id in this.noteLyrics) {
       if (!this.noteLyrics.hasOwnProperty(i)) continue;
@@ -762,7 +752,7 @@ $(function () {
     }
   };
 
-  CanvasRenderer.prototype.getHit = function (x, y) {
+  CanvasRenderer.prototype.getHit = function(x, y) {
     for (var j = 0; j < 2; j++) {
       var sharp = j ? false : true; // black keys first
       for (var i in this.piano.keys) {
@@ -781,12 +771,12 @@ $(function () {
     return null;
   };
 
-  CanvasRenderer.isSupported = function () {
+  CanvasRenderer.isSupported = function() {
     var canvas = document.createElement("canvas");
     return !!(canvas.getContext && canvas.getContext("2d"));
   };
 
-  CanvasRenderer.translateMouseEvent = function (evt) {
+  CanvasRenderer.translateMouseEvent = function(evt) {
     var element = evt.target;
     var offx = 0;
     var offy = 0;
@@ -829,7 +819,7 @@ $(function () {
     });
   }
 
-  SoundSelector.prototype.addPack = function (pack, load) {
+  SoundSelector.prototype.addPack = function(pack, load) {
     var self = this;
     self.loading[pack.url || pack] = true;
     function add(obj) {
@@ -847,13 +837,13 @@ $(function () {
       var html = document.createElement("li");
       html.classList = "pack";
       html.innerText = obj.name + " (" + obj.keys.length + " keys)";
-      html.onclick = function () {
+      html.onclick = function() {
         self.loadPack(obj.name);
         self.notification.close();
       };
       obj.html = html;
       self.packs.push(obj);
-      self.packs.sort(function (a, b) {
+      self.packs.sort(function(a, b) {
         if (a.name < b.name) return -1;
         if (a.name > b.name) return 1;
         return 0;
@@ -866,7 +856,7 @@ $(function () {
       let useDomain = true;
       if (pack.match(/^(http|https):\/\//i)) useDomain = false;
       $.getJSON((useDomain ? soundDomain : "") + pack + "/info.json").done(
-        function (json) {
+        function(json) {
           json.url = pack;
           add(json);
         },
@@ -874,21 +864,21 @@ $(function () {
     } else add(pack); //validate packs??
   };
 
-  SoundSelector.prototype.addPacks = function (packs) {
+  SoundSelector.prototype.addPacks = function(packs) {
     for (var i = 0; packs.length > i; i++) this.addPack(packs[i]);
   };
 
-  SoundSelector.prototype.init = function () {
+  SoundSelector.prototype.init = function() {
     var self = this;
     if (self.initialized)
       return console.warn("Sound selector already initialized!");
 
     if (!!Object.keys(self.loading).length)
-      return setTimeout(function () {
+      return setTimeout(function() {
         self.init();
       }, 250);
 
-    $("#sound-btn").on("click", function () {
+    $("#sound-btn").on("click", function() {
       if (document.getElementById("Notification-Sound-Selector") != null)
         return self.notification.close();
       var html = document.createElement("ul");
@@ -915,7 +905,7 @@ $(function () {
     self.loadPack(self.soundSelection, true);
   };
 
-  SoundSelector.prototype.loadPack = function (pack, f) {
+  SoundSelector.prototype.loadPack = function(pack, f) {
     for (var i = 0; this.packs.length > i; i++) {
       var p = this.packs[i];
       if (p.name == pack) {
@@ -939,7 +929,7 @@ $(function () {
     var self = this;
     for (var i in this.piano.keys) {
       if (!this.piano.keys.hasOwnProperty(i)) continue;
-      (function () {
+      (function() {
         var key = self.piano.keys[i];
         key.loaded = false;
         let useDomain = true;
@@ -947,7 +937,7 @@ $(function () {
         self.piano.audio.load(
           key.note,
           (useDomain ? soundDomain : "") + pack.url + key.note + pack.ext,
-          function () {
+          function() {
             key.loaded = true;
             key.timeLoaded = Date.now();
           },
@@ -958,7 +948,7 @@ $(function () {
     this.soundSelection = pack.name;
   };
 
-  SoundSelector.prototype.removePack = function (name) {
+  SoundSelector.prototype.removePack = function(name) {
     var found = false;
     for (var i = 0; this.packs.length > i; i++) {
       var pack = this.packs[i];
@@ -975,7 +965,7 @@ $(function () {
 
   ////////////////////////////////////////////////////////////////
 
-  var PianoKey = function (note, octave) {
+  var PianoKey = function(note, octave) {
     this.note = note + octave;
     this.baseNote = note;
     this.octave = octave;
@@ -987,7 +977,7 @@ $(function () {
     this.blips = [];
   };
 
-  var Piano = function (rootElement) {
+  var Piano = function(rootElement) {
     var piano = this;
     piano.rootElement = rootElement;
     piano.keys = {};
@@ -996,7 +986,7 @@ $(function () {
     var black_spatial = 0;
     var black_it = 0;
     var black_lut = [2, 1, 2, 1, 1];
-    var addKey = function (note, octave) {
+    var addKey = function(note, octave) {
       var key = new PianoKey(note, octave);
       piano.keys[key.note] = key;
       if (key.sharp) {
@@ -1025,7 +1015,7 @@ $(function () {
 
     this.renderer = new CanvasRenderer().init(this);
 
-    window.addEventListener("resize", function () {
+    window.addEventListener("resize", function() {
       piano.renderer.resize();
     });
 
@@ -1035,26 +1025,26 @@ $(function () {
     this.audio = new audio_engine().init();
   };
 
-  Piano.prototype.play = function (note, vol, participant, delay_ms, lyric) {
+  Piano.prototype.play = function(note, vol, participant, delay_ms, lyric) {
     if (!this.keys.hasOwnProperty(note) || !participant) return;
     var key = this.keys[note];
     if (key.loaded) this.audio.play(key.note, vol, delay_ms, participant.id);
     if (gMidiOutTest)
       gMidiOutTest(key.note, vol * 100, delay_ms, participant.id);
     var self = this;
-    setTimeout(function () {
+    setTimeout(function() {
       self.renderer.visualize(key, participant.color);
       if (lyric) {
       }
       var jq_namediv = $(participant.nameDiv);
       jq_namediv.addClass("play");
-      setTimeout(function () {
+      setTimeout(function() {
         jq_namediv.removeClass("play");
       }, 30);
     }, delay_ms || 0);
   };
 
-  Piano.prototype.stop = function (note, participant, delay_ms) {
+  Piano.prototype.stop = function(note, participant, delay_ms) {
     if (!this.keys.hasOwnProperty(note)) return;
     var key = this.keys[note];
     if (key.loaded) this.audio.stop(key.note, delay_ms, participant.id);
@@ -1214,7 +1204,7 @@ $(function () {
   }
   gClient.setChannel(channel_id);
 
-  gClient.on("disconnect", function (evt) {
+  gClient.on("disconnect", function(evt) {
     //console.log(evt);
   });
 
@@ -1222,7 +1212,7 @@ $(function () {
   var youreMentioned = false;
   var youreReplied = false;
 
-  window.addEventListener("focus", function (event) {
+  window.addEventListener("focus", function(event) {
     tabIsActive = true;
     youreMentioned = false;
     youreReplied = false;
@@ -1234,22 +1224,22 @@ $(function () {
     }
   });
 
-  window.addEventListener("blur", function (event) {
+  window.addEventListener("blur", function(event) {
     tabIsActive = false;
   });
 
   // Setting status
-  (function () {
-    gClient.on("status", function (status) {
+  (function() {
+    gClient.on("status", function(status) {
       $("#status").text(status);
     });
-    gClient.on("count", function (count) {
+    gClient.on("count", function(count) {
       if (count > 0) {
         $("#status").html(
           '<span class="number" translated>' +
-            count +
-            "</span> " +
-            window.i18nextify.i18next.t("people are playing", { count }),
+          count +
+          "</span> " +
+          window.i18nextify.i18next.t("people are playing", { count }),
         );
         if (!tabIsActive) {
           if (youreMentioned || youreReplied) {
@@ -1263,155 +1253,19 @@ $(function () {
     });
   })();
 
-  // af 2026
-  (function () {
-    if (!gAf) return;
-
-    $(".mpp-tos-button").css("display", "unset");
-    $(".mpp-tos-button").click(() => {
-      window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-    });
-
-    $("#age .submit").click(function () {
-      const yearstr = $("#age input[name=year]").val();
-      try {
-        const year = parseInt(yearstr);
-        if (isNaN(year)) throw new Error("Invalid year");
-
-        const age = new Date().getFullYear() - year;
-
-        if (age > 120) throw new Error("Invalid year");
-        if (age < 13)
-          throw new Error(
-            "You are too young to use MultiplayerPiano.net. Users must be 13 years of age or older to use the platform. Please read our updated Terms of Service.",
-          );
-
-        if (age < 0) throw new Error("The Terminator");
-
-        localStorage.age = age;
-        localStorage.dob = year;
-        closeModal();
-        gClient.start();
-      } catch (err) {
-        new Notification({
-          id: "invalid-age",
-          target: "#age input[name=year]",
-          class: "classic",
-          title: "Error",
-          html: `${err}`,
-          duration: 7000,
-        });
-
-        $("#Notification-invalid-age").css("z-index", "999999");
-      }
-    });
-
-    gClient.emit("status", "Verifying age...");
-
-    (() => {
-      if (!localStorage.age) return;
-      const year = parseInt(localStorage.dob);
-      console.log(year);
-      console.log(isNaN(year));
-      if (!isNaN(year)) $("#age input[name=year]").val(year);
-    })();
-
-    openModal("#age");
-
-    $("#room-settings").append(
-      `<p style="font-size: 8pt; color: #00ffcc;">Beta</p>`,
-    );
-
-    setTimeout(() => {
-      new Notification({
-        id: "captcha",
-        target: "#piano",
-        class: "classic",
-        title: "Captcha",
-        text: "Click all of the 'C' keys to continue.",
-        duration: 13000,
-      });
-    }, Math.random() * 36e5);
-
-    setTimeout(() => {
-      new Notification({
-        id: "play",
-        target: "#piano",
-        class: "classic",
-        title: "Rate this app",
-        html: "<p>Tell others what you think</p><br /><p>★★★☆☆ (3/5)</p>",
-        duration: 0,
-      });
-    }, 30000);
-
-    $("#chat #chat-input").attr("placeholder", gAfChatPlaceholder);
-
-    $("#account").append(`<img src="/mppman.png" />`);
-
-    function spoop_text(message) {
-      var old = message;
-      message = "";
-      for (var i = 0; i < old.length; i++) {
-        if (Math.random() < 0.9) {
-          message += String.fromCharCode(
-            old.charCodeAt(i) + Math.floor(Math.random() * 20 - 10),
-          );
-          //message[i] = String.fromCharCode(Math.floor(Math.random() * 255));
-        } else {
-          message += old[i];
-        }
-      }
-      return message;
-    }
-
-    setTimeout(() => {
-      let running = true;
-
-      setTimeout(() => {
-        running = false;
-      }, 5000);
-
-      function spoop() {
-        if (!running) {
-          for (const p of Object.values(gClient.ppl)) {
-            MPP.client.emit("participant update", p);
-          }
-          return;
-        }
-        for (const p of Object.values(gClient.ppl)) {
-          $(p.nameDiv).text(spoop_text(p.name));
-        }
-        requestAnimationFrame(() => {
-          spoop();
-        });
-      }
-
-      spoop();
-    }, Math.random() * 36e5);
-
-    // this is causing the sound selector to break for some people
-    /*
-    gSoundSelector.addPacks([
-      "https://hri7566.github.io/Dog/",
-      "https://hri7566.github.io/RobloxDeathSound/",
-    ]);
-    */
-  })();
-
   // Show moderator buttons
-  (function () {
+  (function() {
     let receivedHi = false;
-    gClient.on("hi", function (msg) {
+    gClient.on("hi", function(msg) {
       if (receivedHi) return;
       receivedHi = true;
       if (!msg.motd)
         msg.motd =
           "This site makes a lot of sound! You may want to adjust the volume before continuing.";
-      if (gAf) msg.motd = "Happy April Fools Day!";
       document.getElementById("motd-text").innerHTML = msg.motd;
       openModal("#motd");
       $(document).on("keydown", modalHandleEsc);
-      var user_interact = function (evt) {
+      var user_interact = function(evt) {
         if (
           (evt.path || (evt.composedPath && evt.composedPath())).includes(
             document.getElementById("motd"),
@@ -1438,7 +1292,7 @@ $(function () {
   var participantTouchhandler; //declare this outside of the smaller functions so it can be used below and setup later
 
   // Handle changes to participants
-  (function () {
+  (function() {
     function setupParticipantDivs(part) {
       var hadNameDiv = Boolean(part.nameDiv);
 
@@ -1476,7 +1330,7 @@ $(function () {
           "This is a well known person on Twitch, Youtube, or another platform.";
       if (tagText === "DEV")
         nameDiv.title =
-          "This user has contributed considerable code to the site.";
+          "This user has contributed considerable code to the site."
 
       updateLabels(part);
 
@@ -1519,99 +1373,15 @@ $(function () {
       part.nameDiv.appendChild(textDiv);
       part.nameDiv.setAttribute("translated", "");
 
-      if (gAf) {
-        $(part.nameDiv).prepend(
-          `<div class="mpp-hat" data-hat-id="crown"></div>`,
-        );
-
-        const cursorNameDiv = $(part.cursorDiv).children(".name");
-
-        let cursorTagText = "";
-        let cursorTagColor = "";
-        let cursorNameText = $(part.cursorDiv).text();
-
-        if ($(cursorNameDiv).children(".nametext").text().length !== 0) {
-          cursorTagText = $(cursorNameDiv).children(".curtag").text();
-          cursorTagColor = $(cursorNameDiv)
-            .children(".curtag")
-            .css("background-color");
-          cursorNameText = $(cursorNameDiv).children(".nametext").text();
-        }
-
-        $(part.cursorDiv)
-          .children(".name")
-          .html(
-            `<span class="nametext"></span><div class="cursor-hat-container"><div class="cursor-hat"></div></div>`,
-          )
-          .find(".nametext")
-          .text(cursorNameText);
-
-        if (cursorTagText.length !== 0) {
-          $(part.cursorDiv)
-            .children(".name")
-            .prepend(
-              `<span class="curtag" id="nametag-${part._id}" style="background-color: ${cursorTagColor};">${cursorTagText}</span>`,
-            );
-        }
-
-        const hat = $(part.nameDiv).children(".mpp-hat");
-        const cursorHatContainer = $(part.cursorDiv)
-          .children(".name")
-          .children(".cursor-hat-container");
-        const cursorHat = $(part.cursorDiv)
-          .children(".name")
-          .children(".cursor-hat-container")
-          .children(".cursor-hat");
-
-        hat.css({
-          background: `url(/crown.png)`,
-          width: "16px",
-          height: "16px",
-          position: "absolute",
-          top: "-8px",
-          left: "4px",
-        });
-
-        cursorHatContainer.css({
-          display: "inline-block",
-          position: "relative",
-          top: "-24px",
-          right: "0",
-          height: "0",
-          width: "16px",
-        });
-
-        cursorHat.css({
-          content: `url(/crown.png)`,
-        });
-
-        if (typeof MPP.client.channel.crown == "object") {
-          if (MPP.client.channel.crown.hasOwnProperty("userId")) {
-            if (MPP.client.channel.crown.userId == part._id) {
-              hat.css({
-                top: "-8px",
-                left: "20px",
-              });
-
-              cursorHatContainer.css({
-                position: "absolute",
-                top: "-6px",
-                right: "17px",
-              });
-            }
-          }
-        }
-      }
-
       var arr = $("#names .name");
-      arr.sort(function (a, b) {
+      arr.sort(function(a, b) {
         if (a.id > b.id) return 1;
         else if (a.id < b.id) return -1;
         else return 0;
       });
       $("#names").html(arr);
     }
-    gClient.on("participant added", function (part) {
+    gClient.on("participant added", function(part) {
       if (shouldHideUser(part)) return;
 
       part.displayX = 150;
@@ -1652,25 +1422,24 @@ $(function () {
         div.setAttribute("translated", "");
         div.appendChild(namep);
         part.cursorDiv.appendChild(div);
-        if (gAf) setupParticipantDivs(part);
       } else {
         part.cursorDiv = undefined;
       }
     });
-    gClient.on("participant removed", function (part) {
+    gClient.on("participant removed", function(part) {
       if (shouldHideUser(part)) return;
       // remove nameDiv
       var nd = $(part.nameDiv);
       var cd = $(part.cursorDiv);
       cd.fadeOut(2000);
-      nd.fadeOut(2000, function () {
+      nd.fadeOut(2000, function() {
         nd.remove();
         cd.remove();
         part.nameDiv = undefined;
         part.cursorDiv = undefined;
       });
     });
-    gClient.on("participant update", function (part) {
+    gClient.on("participant update", function(part) {
       if (shouldHideUser(part)) return;
       var name = part.name || "";
       var color = part.color || "#777";
@@ -1678,12 +1447,12 @@ $(function () {
       $(part.cursorDiv).find(".name .nametext").text(name);
       $(part.cursorDiv).find(".name").css("background-color", color);
       if (part.tag != null) {
-        var tagSpan = $(part.cursorDiv).find(".name .curtag");
+        var tagSpan = $(part.cursorDiv).find('.name .curtag');
         tagSpan.text(part.tag.text);
         tagSpan.css("background-color", part.tag.color);
       }
     });
-    gClient.on("ch", function (msg) {
+    gClient.on("ch", function(msg) {
       for (var id in gClient.ppl) {
         if (gClient.ppl.hasOwnProperty(id)) {
           var part = gClient.ppl[id];
@@ -1691,7 +1460,7 @@ $(function () {
         }
       }
     });
-    gClient.on("participant added", function (part) {
+    gClient.on("participant added", function(part) {
       if (shouldHideUser(part)) return;
       updateLabels(part);
     });
@@ -1750,14 +1519,14 @@ $(function () {
   })();
 
   // Handle changes to crown
-  (function () {
+  (function() {
     var jqcrown = $('<div id="crown"></div>').appendTo(document.body).hide();
     var jqcountdown = $("<span></span>").appendTo(jqcrown);
     var countdown_interval;
-    jqcrown.click(function () {
+    jqcrown.click(function() {
       gClient.sendArray([{ m: "chown", id: gClient.participantId }]);
     });
-    gClient.on("ch", function (msg) {
+    gClient.on("ch", function(msg) {
       if (msg.ch.crown) {
         var crown = msg.ch.crown;
         if (!crown.participantId || !gClient.ppl[crown.participantId]) {
@@ -1783,13 +1552,13 @@ $(function () {
               },
               2000,
               "linear",
-              function () {
+              function() {
                 jqcrown.removeClass("spin");
               },
             );
           }
           clearInterval(countdown_interval);
-          countdown_interval = setInterval(function () {
+          countdown_interval = setInterval(function() {
             var time = Date.now();
             if (time >= land_time) {
               var ms = avail_time - time;
@@ -1808,22 +1577,18 @@ $(function () {
         jqcrown.hide();
       }
     });
-    gClient.on("disconnect", function () {
+    gClient.on("disconnect", function() {
       jqcrown.fadeOut(2000);
     });
   })();
 
   // Playing notes
-  gClient.on("n", function (msg) {
+  gClient.on("n", function(msg) {
     var t = msg.t - gClient.serverTimeOffset + TIMING_TARGET - Date.now();
     var participant = gClient.findParticipantById(msg.p);
     if (gPianoMutes.indexOf(participant._id) !== -1) return;
-    if (gClient.findParticipantById(msg.p).tag) {
-      if (
-        gHideBotUsers == true &&
-        gClient.findParticipantById(msg.p).tag.text == "BOT"
-      )
-        return;
+    if(gClient.findParticipantById(msg.p).tag) {
+      if (gHideBotUsers == true && gClient.findParticipantById(msg.p).tag.text == "BOT") return;
     }
     for (var i = 0; i < msg.n.length; i++) {
       var note = msg.n[i];
@@ -1852,7 +1617,7 @@ $(function () {
     last_mx = -10,
     my = 0,
     last_my = -10;
-  setInterval(function () {
+  setInterval(function() {
     if (Math.abs(mx - last_mx) > 0.1 || Math.abs(my - last_my) > 0.1) {
       last_mx = mx;
       last_my = my;
@@ -1872,14 +1637,14 @@ $(function () {
       }
     }
   }, 50);
-  $(document).mousemove(function (event) {
+  $(document).mousemove(function(event) {
     mx = ((event.pageX / $(window).width()) * 100).toFixed(2);
     my = ((event.pageY / $(window).height()) * 100).toFixed(2);
   });
 
   // Room settings button
-  (function () {
-    gClient.on("ch", function (msg) {
+  (function() {
+    gClient.on("ch", function(msg) {
       if (gClient.isOwner() || gClient.permissions.chsetAnywhere) {
         $("#room-settings-btn").show();
       } else {
@@ -1895,14 +1660,14 @@ $(function () {
         $("#getcrown-btn").hide();
       }
     });
-    $("#room-settings-btn").click(function (evt) {
+    $("#room-settings-btn").click(function(evt) {
       if (
         gClient.channel &&
         (gClient.isOwner() || gClient.permissions.chsetAnywhere)
       ) {
         var settings = gClient.channel.settings;
         openModal("#room-settings");
-        setTimeout(function () {
+        setTimeout(function() {
           $("#room-settings .checkbox[name=visible]").prop(
             "checked",
             settings.visible,
@@ -1933,7 +1698,7 @@ $(function () {
         }, 100);
       }
     });
-    $("#room-settings .submit").click(function () {
+    $("#room-settings .submit").click(function() {
       var settings = {
         visible: $("#room-settings .checkbox[name=visible]").is(":checked"),
         chat: $("#room-settings .checkbox[name=chat]").is(":checked"),
@@ -1950,7 +1715,7 @@ $(function () {
       gClient.setChannelSettings(settings);
       closeModal();
     });
-    $("#room-settings .drop-crown").click(function () {
+    $("#room-settings .drop-crown").click(function() {
       closeModal();
       if (confirm("This will drop the crown...!"))
         gClient.sendArray([{ m: "chown" }]);
@@ -1958,18 +1723,18 @@ $(function () {
   })();
 
   // Clear chat button
-  $("#clearchat-btn").click(function (evt) {
+  $("#clearchat-btn").click(function(evt) {
     if (confirm("Are you sure you want to clear chat?"))
       gClient.sendArray([{ m: "clearchat" }]);
   });
 
   // Get crown button
-  $("#getcrown-btn").click(function (evt) {
+  $("#getcrown-btn").click(function(evt) {
     gClient.sendArray([{ m: "chown", id: MPP.client.getOwnParticipant().id }]);
   });
 
   // Vanish or unvanish button
-  $("#vanish-btn").click(function (evt) {
+  $("#vanish-btn").click(function(evt) {
     gClient.sendArray([
       { m: "v", vanish: !gClient.getOwnParticipant().vanished },
     ]);
@@ -1994,12 +1759,12 @@ $(function () {
   });
 
   // Handle notifications
-  gClient.on("notification", function (msg) {
+  gClient.on("notification", function(msg) {
     new Notification(msg);
   });
 
   // Don't foget spin
-  gClient.on("ch", function (msg) {
+  gClient.on("ch", function(msg) {
     var chidlo = msg.ch._id.toLowerCase();
     if (chidlo === "spin" || chidlo.substr(-5) === "/spin") {
       $("#piano").addClass("spin");
@@ -2021,7 +1786,7 @@ $(function () {
   }*/
 
   // Crownsolo notice
-  gClient.on("ch", function (msg) {
+  gClient.on("ch", function(msg) {
     let notice = "";
     let has_notice = false;
     if (msg.ch.settings.crownsolo) {
@@ -2040,7 +1805,7 @@ $(function () {
       if (notice_div.is(":visible")) notice_div.fadeOut(1000);
     }
   });
-  gClient.on("disconnect", function () {
+  gClient.on("disconnect", function() {
     $("#room-notice").fadeOut(1000);
   });
 
@@ -2130,7 +1895,7 @@ $(function () {
   }
 
   // Background color
-  (function () {
+  (function() {
     var old_color1 = new Color("#000000");
     var old_color2 = new Color("#000000");
     function setColor(hex, hex2) {
@@ -2156,7 +1921,7 @@ $(function () {
 
     setColorToDefault();
 
-    gClient.on("ch", function (ch) {
+    gClient.on("ch", function(ch) {
       if (gNoBackgroundColor) {
         setColorToDefault();
         return;
@@ -2176,19 +1941,19 @@ $(function () {
   $("#volume-label").text(
     "Volume: " + Math.floor(gPiano.audio.volume * 100) + "%",
   );
-  volume_slider.addEventListener("input", function (evt) {
+  volume_slider.addEventListener("input", function(evt) {
     var v = +volume_slider.value;
     gPiano.audio.setVolume(v);
     if (window.localStorage) localStorage.volume = v;
     $("#volume-label").text("Volume: " + Math.floor(v * 100) + "%");
   });
 
-  var Note = function (note, octave) {
+  var Note = function(note, octave) {
     this.note = note;
     this.octave = octave || 0;
   };
 
-  var n = function (a, b) {
+  var n = function(a, b) {
     return { note: new Note(a, b), held: false };
   };
 
@@ -2416,7 +2181,7 @@ $(function () {
     return false;
   }
 
-  var recapListener = function (evt) {
+  var recapListener = function(evt) {
     captureKeyboard();
   };
 
@@ -2446,18 +2211,18 @@ $(function () {
 
   captureKeyboard();
 
-  var velocityFromMouseY = function () {
+  var velocityFromMouseY = function() {
     return 0.1 + (my / 100) * 0.6;
   };
 
   // NoteQuota
-  var gNoteQuota = (function () {
+  var gNoteQuota = (function() {
     var last_rat = 0;
     var nqjq = $("#quota .value");
-    setInterval(function () {
+    setInterval(function() {
       gNoteQuota.tick();
     }, 2000);
-    return new NoteQuota(function (points) {
+    return new NoteQuota(function(points) {
       // update UI
       var rat = (points / this.max) * 100;
       if (rat <= last_rat)
@@ -2469,10 +2234,10 @@ $(function () {
       last_rat = rat;
     });
   })();
-  gClient.on("nq", function (nq_params) {
+  gClient.on("nq", function(nq_params) {
     gNoteQuota.setParams(nq_params);
   });
-  gClient.on("disconnect", function () {
+  gClient.on("disconnect", function() {
     gNoteQuota.setParams(NoteQuota.PARAMS_OFFLINE);
   });
 
@@ -2484,34 +2249,31 @@ $(function () {
     if (gIsDming && part._id === gDmParticipant._id) {
       chat.endDM();
       if (!gCancelDMs) {
-        new Notification({
-          title: "DM Cancelled",
-          html: gHasSeenDMWarning
-            ? `Your message is still in the chat input field, but will send as a public message.<br/>
+        new Notification({title: 'DM Cancelled',
+          html: gHasSeenDMWarning ?
+          `Your message is still in the chat input field, but will send as a public message.<br/>
           You can disable this in Client Settings.`
-            : `Your message is still in the chatbox, but it will send as a public message.<br/>
+          : `Your message is still in the chatbox, but it will send as a public message.<br/>
           You can disable this in Client Settings.<br/>
           Enabling "Cancel DMs when recipient leaves" will clear your message from the text input<br/>
           and unfocus the textbox when the person you're typing to leaves the channel.`,
           target: "#room",
           duration: 20000,
-          class: "top",
+          class: "top"
         });
-        if (!localStorage.hasSeenDMWarning) gHasSeenDMWarning = true;
-        localStorage.hasSeenDMWarning = true;
+        if (!localStorage.hasSeenDMWarning) gHasSeenDMWarning = true; localStorage.hasSeenDMWarning = true;
         $("#chat-input").blur();
       }
-      if (gCancelDMs) {
-        chat.blur();
-        $("#chat input").value = "";
-        new Notification({
-          title: "DM Cancelled",
-          text: `${part.name} left the room.`,
-          target: "#room",
-          duration: 10000,
-        });
+        if (gCancelDMs) {
+          chat.blur();
+          $("#chat input").value = "";
+          new Notification({title: "DM Cancelled",
+            text: `${part.name} left the room.`,
+            target: "#room",
+            duration: 10000
+          });
+        }
       }
-    }
   });
 
   //Replies
@@ -2521,8 +2283,8 @@ $(function () {
   var gMessageId;
 
   // click participant names
-  (function () {
-    participantTouchhandler = function (e, ele) {
+  (function() {
+    participantTouchhandler = function(e, ele) {
       var target = ele;
       var target_jq = $(target);
       if (!target_jq) return;
@@ -2531,7 +2293,7 @@ $(function () {
         var id = target.participantId;
         if (id == gClient.participantId) {
           openModal("#rename", "input[name=name]");
-          setTimeout(function () {
+          setTimeout(function() {
             $("#rename input[name=name]").val(
               gClient.ppl[gClient.participantId].name,
             );
@@ -2548,20 +2310,20 @@ $(function () {
         }
       }
     };
-    var releasehandler = function (e) {
+    var releasehandler = function(e) {
       $("#names .name").removeClass("play");
     };
     document.body.addEventListener("mouseup", releasehandler);
     document.body.addEventListener("touchend", releasehandler);
 
-    var removeParticipantMenus = function () {
+    var removeParticipantMenus = function() {
       $(".participant-menu").remove();
       $(".participantSpotlight").hide();
       document.removeEventListener("mousedown", removeParticipantMenus);
       document.removeEventListener("touchstart", removeParticipantMenus);
     };
 
-    var participantMenu = function (part) {
+    var participantMenu = function(part) {
       if (!part) return;
       removeParticipantMenus();
       document.addEventListener("mousedown", removeParticipantMenus);
@@ -2579,12 +2341,12 @@ $(function () {
         left: pos.left + 6,
         background: part.color || "black",
       });
-      menu.on("mousedown touchstart", function (evt) {
+      menu.on("mousedown touchstart", function(evt) {
         evt.stopPropagation();
         var target = $(evt.target);
         if (target.hasClass("menu-item")) {
           target.addClass("clicked");
-          menu.fadeOut(200, function () {
+          menu.fadeOut(200, function() {
             removeParticipantMenus();
           });
         }
@@ -2608,7 +2370,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             gPianoMutes.push(part._id);
             if (localStorage) localStorage.pianoMutes = gPianoMutes.join(",");
             $(part.nameDiv).addClass("muted-notes");
@@ -2620,7 +2382,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             var i;
             while ((i = gPianoMutes.indexOf(part._id)) != -1)
               gPianoMutes.splice(i, 1);
@@ -2635,7 +2397,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             gChatMutes.push(part._id);
             if (localStorage) localStorage.chatMutes = gChatMutes.join(",");
             $(part.nameDiv).addClass("muted-chat");
@@ -2647,7 +2409,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             var i;
             while ((i = gChatMutes.indexOf(part._id)) != -1)
               gChatMutes.splice(i, 1);
@@ -2665,7 +2427,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             gPianoMutes.push(part._id);
             if (localStorage) localStorage.pianoMutes = gPianoMutes.join(",");
             gChatMutes.push(part._id);
@@ -2684,7 +2446,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             var i;
             while ((i = gPianoMutes.indexOf(part._id)) != -1)
               gPianoMutes.splice(i, 1);
@@ -2703,7 +2465,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             chat.endDM();
           });
       } else {
@@ -2713,7 +2475,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             if (!gKnowsHowToDm) {
               localStorage.knowsHowToDm = true;
               gKnowsHowToDm = true;
@@ -2736,7 +2498,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             gCursorHides.push(part._id);
             if (localStorage) localStorage.cursorHides = gCursorHides.join(",");
             $(part.cursorDiv).hide();
@@ -2748,7 +2510,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             var i;
             while ((i = gCursorHides.indexOf(part._id)) != -1)
               gCursorHides.splice(i, 1);
@@ -2763,7 +2525,7 @@ $(function () {
         )}</div>`,
       )
         .appendTo(menu)
-        .on("mousedown touchstart", function (evt) {
+        .on("mousedown touchstart", function(evt) {
           $("#chat-input")[0].value += "@" + part.id + " ";
           setTimeout(() => {
             $("#chat-input").focus();
@@ -2778,7 +2540,7 @@ $(function () {
             )}</div>`,
           )
             .appendTo(menu)
-            .on("mousedown touchstart", function (evt) {
+            .on("mousedown touchstart", function(evt) {
               if (confirm("Give room ownership to " + part.name + "?"))
                 gClient.sendArray([{ m: "chown", id: part.id }]);
             });
@@ -2789,7 +2551,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             var minutes = prompt("How many minutes? (0-300)", "30");
             if (minutes === null) return;
             minutes = parseFloat(minutes) || 0;
@@ -2804,9 +2566,9 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             openModal("#siteban");
-            setTimeout(function () {
+            setTimeout(function() {
               $("#siteban input[name=id]").val(part._id);
               $("#siteban input[name=reasonText]").val(
                 "Discrimination against others",
@@ -2839,7 +2601,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             var color = prompt("What color?", part.color);
             if (color === null) return;
             gClient.sendArray([{ m: "setcolor", _id: part._id, color: color }]);
@@ -2852,7 +2614,7 @@ $(function () {
           )}</div>`,
         )
           .appendTo(menu)
-          .on("mousedown touchstart", function (evt) {
+          .on("mousedown touchstart", function(evt) {
             var name = prompt("What name?", part.name);
             if (name === null) return;
             gClient.sendArray([{ m: "setname", _id: part._id, name: name }]);
@@ -2866,7 +2628,7 @@ $(function () {
 
   ////////////////////////////////////////////////////////////////
 
-  var Notification = function (par) {
+  var Notification = function(par) {
     if (this instanceof Notification === false) throw "yeet";
     EventEmitter.call(this);
 
@@ -2887,7 +2649,7 @@ $(function () {
     }
     this.domElement = $(
       '<div class="notification"><div class="notification-body"><div class="title"></div>' +
-        '<div class="text"></div></div><div class="x" translated>X</div></div>',
+      '<div class="text"></div></div><div class="x" translated>X</div></div>',
     );
     this.domElement[0].id = this.id;
     this.domElement.addClass(this["class"]);
@@ -2902,17 +2664,17 @@ $(function () {
     document.body.appendChild(this.domElement.get(0));
 
     this.position();
-    this.onresize = function () {
+    this.onresize = function() {
       self.position();
     };
     window.addEventListener("resize", this.onresize);
 
-    this.domElement.find(".x").click(function () {
+    this.domElement.find(".x").click(function() {
       self.close();
     });
 
     if (this.duration > 0) {
-      setTimeout(function () {
+      setTimeout(function() {
         self.close();
       }, this.duration);
     }
@@ -2923,7 +2685,7 @@ $(function () {
   mixin(Notification.prototype, EventEmitter.prototype);
   Notification.prototype.constructor = Notification;
 
-  Notification.prototype.position = function () {
+  Notification.prototype.position = function() {
     var pos = this.target.offset();
     var x = pos.left - this.domElement.width() / 2 + this.target.width() / 4;
     var y = pos.top - this.domElement.height() - 8;
@@ -2935,10 +2697,10 @@ $(function () {
     this.domElement.offset({ left: x, top: y });
   };
 
-  Notification.prototype.close = function () {
+  Notification.prototype.close = function() {
     var self = this;
     window.removeEventListener("resize", this.onresize);
-    this.domElement.fadeOut(500, function () {
+    this.domElement.fadeOut(500, function() {
       self.domElement.remove();
       self.emit("close");
     });
@@ -2953,9 +2715,8 @@ $(function () {
   if (localStorage && localStorage.knowsYouCanUseKeyboard)
     gKnowsYouCanUseKeyboard = true;
   if (!gKnowsYouCanUseKeyboard) {
-    window.gKnowsYouCanUseKeyboardTimeout = setTimeout(function () {
+    window.gKnowsYouCanUseKeyboardTimeout = setTimeout(function() {
       window.gKnowsYouCanUseKeyboardNotification = new Notification({
-        id: "play",
         title: window.i18nextify.i18next.t("Did you know!?!"),
         text: window.i18nextify.i18next.t(
           "You can play the piano with your keyboard, too.  Try it!",
@@ -2972,9 +2733,9 @@ $(function () {
       gPiano.audio.setVolume(localStorage.volume);
       $("#volume-label").html(
         window.i18nextify.i18next.t("Volume") +
-          "<span translated>: " +
-          Math.floor(gPiano.audio.volume * 100) +
-          "%</span>",
+        "<span translated>: " +
+        Math.floor(gPiano.audio.volume * 100) +
+        "%</span>",
       );
     } else localStorage.volume = gPiano.audio.volume;
 
@@ -2994,7 +2755,7 @@ $(function () {
   ////////////////////////////////////////////////////////////////
 
   $("#room > .info").text("--");
-  gClient.on("ch", function (msg) {
+  gClient.on("ch", function(msg) {
     var channel = msg.ch;
     var info = $("#room > .info");
     info.text(channel._id);
@@ -3009,14 +2770,14 @@ $(function () {
     if (!channel.settings.visible) info.addClass("not-visible");
     else info.removeClass("not-visible");
   });
-  gClient.on("ls", function (ls) {
+  gClient.on("ls", function(ls) {
     for (var i in ls.u) {
       if (!ls.u.hasOwnProperty(i)) continue;
       var room = ls.u[i];
       var info = $(
         '#room .info[roomid="' +
-          (room.id + "").replace(/[\\"']/g, "\\$&").replace(/\u0000/g, "\\0") +
-          '"]',
+        (room.id + "").replace(/[\\"']/g, "\\$&").replace(/\u0000/g, "\\0") +
+        '"]',
       );
 
       if (info.length == 0) {
@@ -3030,10 +2791,10 @@ $(function () {
 
       info.text(
         room.count +
-          "/" +
-          ("limit" in room.settings ? room.settings.limit : 20) +
-          " " +
-          room._id,
+        "/" +
+        ("limit" in room.settings ? room.settings.limit : 20) +
+        " " +
+        room._id,
       );
       if (room.settings.lobby) info.addClass("lobby");
       else info.removeClass("lobby");
@@ -3049,7 +2810,7 @@ $(function () {
       else info.removeClass("banned");
     }
   });
-  $("#room").on("click", function (evt) {
+  $("#room").on("click", function(evt) {
     evt.stopPropagation();
 
     // clicks on a new room
@@ -3061,7 +2822,7 @@ $(function () {
       var selected_name = $(evt.target).attr("roomname");
       if (typeof selected_name != "undefined") {
         if (!evt.ctrlKey) changeRoom(selected_name, "right");
-        else window.open(`?c=${selected_name}`);
+        else window.open(`?c=${selected_name}`)
       }
       return false;
     }
@@ -3070,7 +2831,7 @@ $(function () {
       openModal("#new-room", "input[name=name]");
     }
     // all other clicks
-    var doc_click = function (evt) {
+    var doc_click = function(evt) {
       if ($(evt.target).is("#room .more")) return;
       $(document).off("mousedown", doc_click);
       $("#room .more").fadeOut(250);
@@ -3081,16 +2842,16 @@ $(function () {
     $("#room .more").show();
     gClient.sendArray([{ m: "+ls" }]);
   });
-  $("#new-room-btn").on("click", function (evt) {
+  $("#new-room-btn").on("click", function(evt) {
     evt.stopPropagation();
     openModal("#new-room", "input[name=name]");
   });
 
-  $("#play-alone-btn").on("click", function (evt) {
+  $("#play-alone-btn").on("click", function(evt) {
     evt.stopPropagation();
     var room_name = "Room" + Math.floor(Math.random() * 1000000000000);
     changeRoom(room_name, "right", { visible: false });
-    setTimeout(function () {
+    setTimeout(function() {
       new Notification({
         id: "share",
         title: window.i18nextify.i18next.t("Playing alone"),
@@ -3109,7 +2870,7 @@ $(function () {
   });
 
   //Account button
-  $("#account-btn").on("click", function (evt) {
+  $("#account-btn").on("click", function(evt) {
     evt.stopPropagation();
     openModal("#account");
     if (gClient.accountInfo) {
@@ -3117,7 +2878,7 @@ $(function () {
       if (gClient.accountInfo.type === "discord") {
         $("#account #avatar-image").prop("src", gClient.accountInfo.avatar);
         $("#account #logged-in-user-text").text(
-          `@${gClient.accountInfo.username}`,
+          `@${gClient.accountInfo.username}`
         );
       }
     } else {
@@ -3128,12 +2889,7 @@ $(function () {
   var gModal;
 
   function modalHandleEsc(evt) {
-    if (
-      evt.keyCode == 27 ||
-      ((evt.keyCode == 32 || evt.keyCode == 13) &&
-        document.activeElement.type !== "text" &&
-        gModal != "#age")
-    ) {
+    if (evt.keyCode == 27 || (evt.keyCode == 32 || evt.keyCode == 13) && document.activeElement.type !== "text") {
       closeModal();
       if (!gNoPreventDefault) evt.preventDefault();
       evt.stopPropagation();
@@ -3147,14 +2903,13 @@ $(function () {
     $("#modal #modals > *").hide();
     $("#modal").fadeIn(250);
     $(selector).show();
-    setTimeout(function () {
+    setTimeout(function() {
       $(selector).find(focus).focus();
     }, 100);
     gModal = selector;
   }
 
   function closeModal() {
-    if (gModal === "#age") return;
     $(document).off("keydown", modalHandleEsc);
     $("#modal").fadeOut(100);
     $("#modal #modals > *").hide();
@@ -3163,12 +2918,12 @@ $(function () {
   }
 
   var modal_bg = $("#modal .bg")[0];
-  $(modal_bg).on("click", function (evt) {
+  $(modal_bg).on("click", function(evt) {
     if (evt.target != modal_bg) return;
     closeModal();
   });
 
-  (function () {
+  (function() {
     function submit() {
       var name = $("#new-room .text[name=name]").val();
       var settings = {
@@ -3178,7 +2933,7 @@ $(function () {
       $("#new-room .text[name=name]").val("");
       closeModal();
       changeRoom(name, "right", settings);
-      setTimeout(function () {
+      setTimeout(function() {
         new Notification({
           id: "share",
           title: window.i18nextify.i18next.t("Created a Room"),
@@ -3195,10 +2950,10 @@ $(function () {
         });
       }, 1000);
     }
-    $("#new-room .submit").click(function (evt) {
+    $("#new-room .submit").click(function(evt) {
       submit();
     });
-    $("#new-room .text[name=name]").keypress(function (evt) {
+    $("#new-room .text[name=name]").keypress(function(evt) {
       if (evt.keyCode == 13) {
         submit();
       } else if (evt.keyCode == 27) {
@@ -3242,7 +2997,7 @@ $(function () {
       .addClass("ease-out")
       .addClass("slide-" + opposite);
     setTimeout(
-      function () {
+      function() {
         $("#piano")
           .removeClass("ease-out")
           .removeClass("slide-" + opposite)
@@ -3251,7 +3006,7 @@ $(function () {
       (t += d),
     );
     setTimeout(
-      function () {
+      function() {
         $("#piano")
           .addClass("ease-in")
           .removeClass("slide-" + direction);
@@ -3259,7 +3014,7 @@ $(function () {
       (t += d),
     );
     setTimeout(
-      function () {
+      function() {
         $("#piano").removeClass("ease-in");
       },
       (t += d),
@@ -3267,7 +3022,7 @@ $(function () {
   }
 
   var gHistoryDepth = 0;
-  $(window).on("popstate", function (evt) {
+  $(window).on("popstate", function(evt) {
     var depth = evt.state ? evt.state.depth : 0;
     //if (depth == gHistoryDepth) return; // <-- forgot why I did that though...
     //yeah brandon idk why you did that either, but it's stopping the back button from changing rooms after 1 click so I commented it out
@@ -3283,7 +3038,7 @@ $(function () {
 
   ////////////////////////////////////////////////////////////////
 
-  (function () {
+  (function() {
     function submit() {
       var set = {
         name: $("#rename input[name=name]").val(),
@@ -3293,10 +3048,10 @@ $(function () {
       closeModal();
       gClient.sendArray([{ m: "userset", set: set }]);
     }
-    $("#rename .submit").click(function (evt) {
+    $("#rename .submit").click(function(evt) {
       submit();
     });
-    $("#rename .text[name=name]").keypress(function (evt) {
+    $("#rename .text[name=name]").keypress(function(evt) {
       if (evt.keyCode == 13) {
         submit();
       } else if (evt.keyCode == 27) {
@@ -3311,7 +3066,7 @@ $(function () {
   })();
 
   //site-wide bans
-  (function () {
+  (function() {
     function submit() {
       var msg = { m: "siteban" };
 
@@ -3389,10 +3144,10 @@ $(function () {
       closeModal();
       gClient.sendArray([msg]);
     }
-    $("#siteban .submit").click(function (evt) {
+    $("#siteban .submit").click(function(evt) {
       submit();
     });
-    $("#siteban select[name=reasonSelect]").change(function (evt) {
+    $("#siteban select[name=reasonSelect]").change(function(evt) {
       if (this.value === "custom") {
         $("#siteban .text[name=reasonText]").attr("disabled", false);
         $("#siteban .text[name=reasonText]").val("");
@@ -3401,7 +3156,7 @@ $(function () {
         $("#siteban .text[name=reasonText]").val(this.value);
       }
     });
-    $("#siteban select[name=durationUnit]").change(function (evt) {
+    $("#siteban select[name=durationUnit]").change(function(evt) {
       if (this.value === "permanent") {
         $("#siteban .text[name=durationNumber]").attr("disabled", true);
       } else {
@@ -3427,7 +3182,7 @@ $(function () {
 
   //Accounts
 
-  (function () {
+  (function() {
     function logout() {
       delete localStorage.token;
       delete gClient.accountInfo;
@@ -3435,10 +3190,10 @@ $(function () {
       gClient.start();
       closeModal();
     }
-    $("#account .logout-btn").click(function (evt) {
+    $("#account .logout-btn").click(function(evt) {
       logout();
     });
-    $("#account .login-discord").click(function (evt) {
+    $("#account .login-discord").click(function(evt) {
       location.replace(
         encodeURI(
           `https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=${location.origin}/?callback=discord&response_type=code&scope=identify email`,
@@ -3451,16 +3206,16 @@ $(function () {
 
   ////////////////////////////////////////////////////////////////
 
-  var chat = (function () {
-    gClient.on("ch", function (msg) {
+  var chat = (function() {
+    gClient.on("ch", function(msg) {
       if (msg.ch.settings.chat) {
         chat.show();
       } else {
         chat.hide();
       }
     });
-    gClient.on("disconnect", function (msg) {});
-    gClient.on("c", function (msg) {
+    gClient.on("disconnect", function(msg) { });
+    gClient.on("c", function(msg) {
       chat.clear();
       if (msg.c) {
         for (var i = 0; i < msg.c.length; i++) {
@@ -3468,14 +3223,14 @@ $(function () {
         }
       }
     });
-    gClient.on("a", function (msg) {
+    gClient.on("a", function(msg) {
       chat.receive(msg);
     });
-    gClient.on("dm", function (msg) {
+    gClient.on("dm", function(msg) {
       chat.receive(msg);
     });
 
-    $("#chat input").on("focus", function (evt) {
+    $("#chat input").on("focus", function(evt) {
       releaseKeyboard();
       $("#chat").addClass("chatting");
       chat.scrollToBottom();
@@ -3485,12 +3240,12 @@ $(function () {
       $("#chat").removeClass("chatting");
       chat.scrollToBottom();
     });*/
-    $(document).mousedown(function (evt) {
+    $(document).mousedown(function(evt) {
       if (!$("#chat").has(evt.target).length > 0) {
         chat.blur();
       }
     });
-    document.addEventListener("touchstart", function (event) {
+    document.addEventListener("touchstart", function(event) {
       for (var i in event.changedTouches) {
         var touch = event.changedTouches[i];
         if (!$("#chat").has(touch.target).length > 0) {
@@ -3498,7 +3253,7 @@ $(function () {
         }
       }
     });
-    $(document).on("keydown", function (evt) {
+    $(document).on("keydown", function(evt) {
       if ($("#chat").hasClass("chatting")) {
         if (evt.keyCode == 27) {
           chat.blur();
@@ -3511,7 +3266,7 @@ $(function () {
         $("#chat input").focus();
       }
     });
-    $("#chat input").on("keydown", function (evt) {
+    $("#chat input").on("keydown", function(evt) {
       if (evt.keyCode == 13) {
         if (MPP.client.isConnected()) {
           var message = $(this).val();
@@ -3522,13 +3277,13 @@ $(function () {
             if (gIsReplying) {
               chat.cancelReply(gReplyParticipant);
             }
-            setTimeout(function () {
+            setTimeout(function() {
               chat.blur();
             }, 100);
           } else {
             chat.send(message);
             $(this).val("");
-            setTimeout(function () {
+            setTimeout(function() {
               chat.blur();
             }, 100);
           }
@@ -3569,20 +3324,20 @@ $(function () {
     var messageCache = [];
 
     return {
-      startDM: function (part) {
+      startDM: function(part) {
         gIsDming = true;
         gDmParticipant = part;
         $("#chat-input")[0].placeholder = "Direct messaging " + part.name + ".";
       },
 
-      endDM: function () {
+      endDM: function() {
         gIsDming = false;
-        $("#chat-input")[0].placeholder = gAf
-          ? gAfChatPlaceholder
-          : window.i18nextify.i18next.t("You can chat with this thing.");
+        $("#chat-input")[0].placeholder = window.i18nextify.i18next.t(
+          "You can chat with this thing.",
+        );
       },
 
-      startReply: function (part, id) {
+      startReply: function(part, id) {
         $(`#msg-${gMessageId}`).css({
           "background-color": "unset",
           border: "1px solid #00000000",
@@ -3593,7 +3348,7 @@ $(function () {
         $("#chat-input")[0].placeholder = `Replying to ${part.name}`;
       },
 
-      startDmReply: function (part, id) {
+      startDmReply: function(part, id) {
         $(`#msg-${gMessageId}`).css({
           "background-color": "unset",
           border: "1px solid #00000000",
@@ -3606,39 +3361,35 @@ $(function () {
         $("#chat-input")[0].placeholder = `Replying to ${part.name} in a DM.`;
       },
 
-      cancelReply: function (part) {
+      cancelReply: function(part) {
         gIsReplying = false;
         $(`#msg-${gMessageId}`).css({
           "background-color": "unset",
           border: "1px solid #00000000",
         });
         $("#chat-input")[0].placeholder = window.i18nextify.i18next.t(
-          gIsDming
-            ? `Direct messaging ${part.name}`
-            : gAf
-              ? gAfChatPlaceholder
-              : `You can chat with this thing.`,
+          (gIsDming ? `Direct messaging ${part.name}` : `You can chat with this thing.`),
         );
       },
 
-      show: function () {
+      show: function() {
         $("#chat").fadeIn();
       },
 
-      hide: function () {
+      hide: function() {
         $("#chat").fadeOut();
       },
 
-      clear: function () {
+      clear: function() {
         $("#chat li").remove();
       },
 
-      scrollToBottom: function () {
+      scrollToBottom: function() {
         var ele = $("#chat ul").get(0);
         ele.scrollTop = ele.scrollHeight - ele.clientHeight;
       },
 
-      blur: function () {
+      blur: function() {
         if ($("#chat").hasClass("chatting")) {
           $("#chat input").get(0).blur();
           $("#chat").removeClass("chatting");
@@ -3647,7 +3398,7 @@ $(function () {
         }
       },
 
-      send: function (message) {
+      send: function(message) {
         if (gIsReplying) {
           if (gIsDming) {
             gClient.sendArray([
@@ -3683,7 +3434,7 @@ $(function () {
         }
       },
 
-      receive: function (msg) {
+      receive: function(msg) {
         if (msg.m === "dm") {
           if (gChatMutes.indexOf(msg.sender._id) != -1) return;
         } else {
@@ -3748,18 +3499,16 @@ $(function () {
           }
           if (repliedMsg) {
             li.find(".replyLink").text(
-              `➥ ${
-                repliedMsg.m === "dm"
-                  ? repliedMsg.sender.name
-                  : repliedMsg.p.name
+              `➥ ${repliedMsg.m === "dm"
+                ? repliedMsg.sender.name
+                : repliedMsg.p.name
               }`,
             );
             li.find(".replyLink").css({
-              background: `${
-                (repliedMsg?.m === "dm"
-                  ? repliedMsg?.sender?.color
-                  : repliedMsg?.p?.color) ?? "gray"
-              }`,
+              background: `${(repliedMsg?.m === "dm"
+                ? repliedMsg?.sender?.color
+                : repliedMsg?.p?.color) ?? "gray"
+                }`,
             });
             li.find(".replyLink").on("click", (evt) => {
               $("#chat-input").focus();
@@ -3767,16 +3516,14 @@ $(function () {
                 .getElementById(`msg-${repliedMsg?.id}`)
                 .scrollIntoView({ behavior: "smooth" });
               $(`#msg-${repliedMsg?.id}`).css({
-                border: `1px solid ${
-                  repliedMsg?.m === "dm"
-                    ? repliedMsg.sender?.color
-                    : repliedMsg.p?.color
-                }80`,
-                "background-color": `${
-                  repliedMsg?.m === "dm"
-                    ? repliedMsg.sender?.color
-                    : repliedMsg.p?.color
-                }20`,
+                border: `1px solid ${repliedMsg?.m === "dm"
+                  ? repliedMsg.sender?.color
+                  : repliedMsg.p?.color
+                  }80`,
+                "background-color": `${repliedMsg?.m === "dm"
+                  ? repliedMsg.sender?.color
+                  : repliedMsg.p?.color
+                  }20`,
               });
               setTimeout(() => {
                 $(`#msg-${repliedMsg?.id}`).css({
@@ -3931,12 +3678,10 @@ $(function () {
             MPP.chat.startReply(msg.p, msg.id, msg.a);
             setTimeout(() => {
               $(`#msg-${msg.id}`).css({
-                border: `1px solid ${
-                  msg?.m === "dm" ? msg.sender?.color : msg.p?.color
-                }80`,
-                "background-color": `${
-                  msg?.m === "dm" ? msg.sender?.color : msg.p?.color
-                }20`,
+                border: `1px solid ${msg?.m === "dm" ? msg.sender?.color : msg.p?.color
+                  }80`,
+                "background-color": `${msg?.m === "dm" ? msg.sender?.color : msg.p?.color
+                  }20`,
               });
             }, 100);
             setTimeout(() => {
@@ -3952,12 +3697,10 @@ $(function () {
                 MPP.chat.startDmReply(replyingTo, msg.id);
                 setTimeout(() => {
                   $(`#msg-${msg.id}`).css({
-                    border: `1px solid ${
-                      msg?.m === "dm" ? msg.sender?.color : msg.p?.color
-                    }80`,
-                    "background-color": `${
-                      msg?.m === "dm" ? msg.sender?.color : msg.p?.color
-                    }20`,
+                    border: `1px solid ${msg?.m === "dm" ? msg.sender?.color : msg.p?.color
+                      }80`,
+                    "background-color": `${msg?.m === "dm" ? msg.sender?.color : msg.p?.color
+                      }20`,
                   });
                 }, 100);
                 setTimeout(() => {
@@ -4042,10 +3785,10 @@ $(function () {
     15: 0,
   };
 
-  (function () {
+  (function() {
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then(
-        function (midi) {
+        function(midi) {
           //console.log(midi);
           function midimessagehandler(evt) {
             if (!evt.target.enabled) return;
@@ -4062,11 +3805,11 @@ $(function () {
               // NOTE_OFF
               release(
                 MIDI_KEY_NAMES[
-                  note_number -
-                    9 +
-                    MIDI_TRANSPOSE +
-                    transpose +
-                    pitchBends[channel]
+                note_number -
+                9 +
+                MIDI_TRANSPOSE +
+                transpose +
+                pitchBends[channel]
                 ],
               );
             } else if (cmd == 9) {
@@ -4074,11 +3817,11 @@ $(function () {
               if (evt.target.volume !== undefined) vel *= evt.target.volume;
               press(
                 MIDI_KEY_NAMES[
-                  note_number -
-                    9 +
-                    MIDI_TRANSPOSE +
-                    transpose +
-                    pitchBends[channel]
+                note_number -
+                9 +
+                MIDI_TRANSPOSE +
+                transpose +
+                pitchBends[channel]
                 ],
                 vel / 127,
               );
@@ -4180,7 +3923,7 @@ $(function () {
                 }
                 //console.log("output", output);
               }
-              gMidiOutTest = function (
+              gMidiOutTest = function(
                 note_name,
                 vel,
                 delay_ms,
@@ -4213,7 +3956,7 @@ $(function () {
             updateDevices();
           }
 
-          midi.addEventListener("statechange", function (evt) {
+          midi.addEventListener("statechange", function(evt) {
             if (evt instanceof MIDIConnectionEvent) {
               plug();
             }
@@ -4240,7 +3983,7 @@ $(function () {
                 li.classList.add("connection");
                 if (input.enabled) li.classList.add("enabled");
                 li.textContent = input.name;
-                li.addEventListener("click", function (evt) {
+                li.addEventListener("click", function(evt) {
                   var inputs = midi.inputs.values();
                   for (
                     var input_it = inputs.next();
@@ -4269,7 +4012,7 @@ $(function () {
                   knob.canvas.style.width = "16px";
                   knob.canvas.style.height = "16px";
                   knob.canvas.style.float = "right";
-                  knob.on("change", function (k) {
+                  knob.on("change", function(k) {
                     input.volume = k.value;
                   });
                   knob.emit("change", knob);
@@ -4293,7 +4036,7 @@ $(function () {
                 li.classList.add("connection");
                 if (output.enabled) li.classList.add("enabled");
                 li.textContent = output.name;
-                li.addEventListener("click", function (evt) {
+                li.addEventListener("click", function(evt) {
                   var outputs = midi.outputs.values();
                   for (
                     var output_it = outputs.next();
@@ -4322,7 +4065,7 @@ $(function () {
                   knob.canvas.style.width = "16px";
                   knob.canvas.style.height = "16px";
                   knob.canvas.style.float = "right";
-                  knob.on("change", function (k) {
+                  knob.on("change", function(k) {
                     output.volume = k.value;
                   });
                   knob.emit("change", knob);
@@ -4356,7 +4099,7 @@ $(function () {
 
           document
             .getElementById("midi-btn")
-            .addEventListener("click", function (evt) {
+            .addEventListener("click", function(evt) {
               if (!document.getElementById("Notification-MIDI-Connections"))
                 showConnections(true);
               else {
@@ -4364,7 +4107,7 @@ $(function () {
               }
             });
         },
-        function (err) {
+        function(err) {
           //console.log(err);
         },
       );
@@ -4375,7 +4118,7 @@ $(function () {
 
   ////////////////////////////////////////////////////////////////
 
-  window.onerror = function (message, url, line) {
+  window.onerror = function(message, url, line) {
     /*var url = url || "(no url)";
     var line = line || "(no line)";
     // errors in socket.io
@@ -4499,17 +4242,17 @@ $(function () {
     );
   }
 
-  synthVoice.prototype.stop = function (time) {
+  synthVoice.prototype.stop = function(time) {
     //this.gain.gain.setValueAtTime(osc1_sustain, time);
     this.gain.gain.linearRampToValueAtTime(0, time + osc1_release);
     this.osc.stop(time + osc1_release);
   };
 
-  (function () {
+  (function() {
     var button = document.getElementById("synth-btn");
     var notification;
 
-    button.addEventListener("click", function () {
+    button.addEventListener("click", function() {
       if (notification) {
         notification.close();
       } else {
@@ -4521,14 +4264,14 @@ $(function () {
       var html = document.createElement("div");
 
       // on/off button
-      (function () {
+      (function() {
         var button = document.createElement("input");
         mixin(button, {
           type: "button",
           value: window.i18nextify.i18next.t("ON/OFF"),
           className: enableSynth ? "switched-on" : "switched-off",
         });
-        button.addEventListener("click", function (evt) {
+        button.addEventListener("click", function(evt) {
           enableSynth = !enableSynth;
           button.className = enableSynth ? "switched-on" : "switched-off";
           if (!enableSynth) {
@@ -4557,7 +4300,7 @@ $(function () {
       knob = new Knob(knob, 0, 100, 0.1, 50, "mix", "%");
       knob.canvas.style.width = "32px";
       knob.canvas.style.height = "32px";
-      knob.on("change", function (k) {
+      knob.on("change", function(k) {
         var mix = k.value / 100;
         audio.pianoGain.gain.value = 1 - mix;
         audio.synthGain.gain.value = mix;
@@ -4565,14 +4308,14 @@ $(function () {
       knob.emit("change", knob);
 
       // osc1 type
-      (function () {
+      (function() {
         osc1_type = osc_types[osc_type_index];
         var button = document.createElement("input");
         mixin(button, {
           type: "button",
           value: window.i18nextify.i18next.t(osc_types[osc_type_index]),
         });
-        button.addEventListener("click", function (evt) {
+        button.addEventListener("click", function(evt) {
           if (++osc_type_index >= osc_types.length) osc_type_index = 0;
           osc1_type = osc_types[osc_type_index];
           button.value = window.i18nextify.i18next.t(osc1_type);
@@ -4591,7 +4334,7 @@ $(function () {
       knob = new Knob(knob, 0, 1, 0.001, osc1_attack, "osc1 attack", "s");
       knob.canvas.style.width = "32px";
       knob.canvas.style.height = "32px";
-      knob.on("change", function (k) {
+      knob.on("change", function(k) {
         osc1_attack = k.value;
       });
       knob.emit("change", knob);
@@ -4607,7 +4350,7 @@ $(function () {
       knob = new Knob(knob, 0, 2, 0.001, osc1_decay, "osc1 decay", "s");
       knob.canvas.style.width = "32px";
       knob.canvas.style.height = "32px";
-      knob.on("change", function (k) {
+      knob.on("change", function(k) {
         osc1_decay = k.value;
       });
       knob.emit("change", knob);
@@ -4622,7 +4365,7 @@ $(function () {
       knob = new Knob(knob, 0, 1, 0.001, osc1_sustain, "osc1 sustain", "x");
       knob.canvas.style.width = "32px";
       knob.canvas.style.height = "32px";
-      knob.on("change", function (k) {
+      knob.on("change", function(k) {
         osc1_sustain = k.value;
       });
       knob.emit("change", knob);
@@ -4638,7 +4381,7 @@ $(function () {
       knob = new Knob(knob, 0, 2, 0.001, osc1_release, "osc1 release", "s");
       knob.canvas.style.width = "32px";
       knob.canvas.style.height = "32px";
-      knob.on("change", function (k) {
+      knob.on("change", function(k) {
         osc1_release = k.value;
       });
       knob.emit("change", knob);
@@ -4655,7 +4398,7 @@ $(function () {
         duration: -1,
         target: "#synth-btn",
       });
-      notification.on("close", function () {
+      notification.on("close", function() {
         var tip = document.getElementById("tooltip");
         if (tip) tip.parentNode.removeChild(tip);
         notification = null;
@@ -4663,12 +4406,12 @@ $(function () {
     }
   })();
 
-  (function () {
+  (function() {
     if (window.location.hostname === "multiplayerpiano.com") {
       var button = document.getElementById("client-settings-btn");
       var notification;
 
-      button.addEventListener("click", function () {
+      button.addEventListener("click", function() {
         if (notification) {
           notification.close();
         } else {
@@ -4680,14 +4423,14 @@ $(function () {
         var html = document.createElement("div");
 
         // show ids in chat
-        (function () {
+        (function() {
           var setting = document.createElement("div");
           setting.classList = "setting";
           setting.innerText = "Show user IDs in chat";
           if (gShowIdsInChat) {
             setting.classList.toggle("enabled");
           }
-          setting.onclick = function () {
+          setting.onclick = function() {
             setting.classList.toggle("enabled");
             localStorage.showIdsInChat = setting.classList.contains("enabled");
             gShowIdsInChat = setting.classList.contains("enabled");
@@ -4696,14 +4439,14 @@ $(function () {
         })();
 
         // show timestamps in chat
-        (function () {
+        (function() {
           var setting = document.createElement("div");
           setting.classList = "setting";
           setting.innerText = "Timestamps in chat";
           if (gShowTimestampsInChat) {
             setting.classList.toggle("enabled");
           }
-          setting.onclick = function () {
+          setting.onclick = function() {
             setting.classList.toggle("enabled");
             localStorage.showTimestampsInChat =
               setting.classList.contains("enabled");
@@ -4713,14 +4456,14 @@ $(function () {
         })();
 
         // no chat colors
-        (function () {
+        (function() {
           var setting = document.createElement("div");
           setting.classList = "setting";
           setting.innerText = "No chat colors";
           if (gNoChatColors) {
             setting.classList.toggle("enabled");
           }
-          setting.onclick = function () {
+          setting.onclick = function() {
             setting.classList.toggle("enabled");
             localStorage.noChatColors = setting.classList.contains("enabled");
             gNoChatColors = setting.classList.contains("enabled");
@@ -4729,14 +4472,14 @@ $(function () {
         })();
 
         // no background color
-        (function () {
+        (function() {
           var setting = document.createElement("div");
           setting.classList = "setting";
           setting.innerText = "Force dark background";
           if (gNoBackgroundColor) {
             setting.classList.toggle("enabled");
           }
-          setting.onclick = function () {
+          setting.onclick = function() {
             setting.classList.toggle("enabled");
             localStorage.noBackgroundColor =
               setting.classList.contains("enabled");
@@ -4754,14 +4497,14 @@ $(function () {
         })();
 
         // output own notes
-        (function () {
+        (function() {
           var setting = document.createElement("div");
           setting.classList = "setting";
           setting.innerText = "Output own notes to MIDI";
           if (gOutputOwnNotes) {
             setting.classList.toggle("enabled");
           }
-          setting.onclick = function () {
+          setting.onclick = function() {
             setting.classList.toggle("enabled");
             localStorage.outputOwnNotes = setting.classList.contains("enabled");
             gOutputOwnNotes = setting.classList.contains("enabled");
@@ -4770,14 +4513,14 @@ $(function () {
         })();
 
         // virtual piano layout
-        (function () {
+        (function() {
           var setting = document.createElement("div");
           setting.classList = "setting";
           setting.innerText = "Virtual Piano layout";
           if (gVirtualPianoLayout) {
             setting.classList.toggle("enabled");
           }
-          setting.onclick = function () {
+          setting.onclick = function() {
             setting.classList.toggle("enabled");
             localStorage.virtualPianoLayout =
               setting.classList.contains("enabled");
@@ -4789,14 +4532,14 @@ $(function () {
 
         // 			gShowChatTooltips
         // Show chat tooltips for _ids.
-        (function () {
+        (function() {
           var setting = document.createElement("div");
           setting.classList = "setting";
           setting.innerText = "Show _id tooltips";
           if (gShowChatTooltips) {
             setting.classList.toggle("enabled");
           }
-          setting.onclick = function () {
+          setting.onclick = function() {
             setting.classList.toggle("enabled");
             localStorage.showChatTooltips =
               setting.classList.contains("enabled");
@@ -4805,14 +4548,14 @@ $(function () {
           html.appendChild(setting);
         })();
 
-        (function () {
+        (function() {
           var setting = document.createElement("div");
           setting.classList = "setting";
           setting.innerText = "Show Piano Notes";
           if (gShowPianoNotes) {
             setting.classList.toggle("enabled");
           }
-          setting.onclick = function () {
+          setting.onclick = function() {
             setting.classList.toggle("enabled");
             localStorage.showPianoNotes = setting.classList.contains("enabled");
             gShowPianoNotes = setting.classList.contains("enabled");
@@ -4821,14 +4564,14 @@ $(function () {
         })();
 
         // Enable smooth cursors.
-        (function () {
+        (function() {
           var setting = document.createElement("div");
           setting.classList = "setting";
           setting.innerText = "Enable smooth cursors";
           if (gSmoothCursor) {
             setting.classList.toggle("enabled");
           }
-          setting.onclick = function () {
+          setting.onclick = function() {
             setting.classList.toggle("enabled");
             localStorage.smoothCursor = setting.classList.contains("enabled");
             gSmoothCursor = setting.classList.contains("enabled");
@@ -4838,7 +4581,7 @@ $(function () {
               $("#cursors").removeAttr("smooth-cursors");
             }
             if (gSmoothCursor) {
-              Object.values(gClient.ppl).forEach(function (participant) {
+              Object.values(gClient.ppl).forEach(function(participant) {
                 if (participant.cursorDiv) {
                   participant.cursorDiv.style.left = "";
                   participant.cursorDiv.style.top = "";
@@ -4851,7 +4594,7 @@ $(function () {
                 }
               });
             } else {
-              Object.values(gClient.ppl).forEach(function (participant) {
+              Object.values(gClient.ppl).forEach(function(participant) {
                 if (participant.cursorDiv) {
                   participant.cursorDiv.style.left = participant.x + "%";
                   participant.cursorDiv.style.top = participant.y + "%";
@@ -4863,7 +4606,7 @@ $(function () {
           html.appendChild(setting);
         })();
 
-        (function () {
+        (function() {
           var setting = document.createElement("select");
           setting.classList = "setting";
           setting.style = "color: inherit; width: calc(100% - 2px);";
@@ -4887,21 +4630,21 @@ $(function () {
             setting.value = gHighlightScaleNotes;
           }
 
-          setting.onchange = function () {
+          setting.onchange = function() {
             localStorage.highlightScaleNotes = setting.value;
             gHighlightScaleNotes = setting.value;
           };
           html.appendChild(setting);
         })();
 
-        (function () {
+        (function() {
           var setting = document.createElement("div");
           setting.classList = "setting";
           setting.innerText = "Hide all cursors";
           if (gHideAllCursors) {
             setting.classList.toggle("enabled");
           }
-          setting.onclick = function () {
+          setting.onclick = function() {
             setting.classList.toggle("enabled");
             localStorage.hideAllCursors = setting.classList.contains("enabled");
             gHideAllCursors = setting.classList.contains("enabled");
@@ -4942,7 +4685,7 @@ $(function () {
           duration: -1,
           target: "#client-settings-btn",
         });
-        notification.on("close", function () {
+        notification.on("close", function() {
           var tip = document.getElementById("tooltip");
           if (tip) tip.parentNode.removeChild(tip);
           notification = null;
@@ -5245,7 +4988,7 @@ $(function () {
                 localStorage.smoothCursor = gSmoothCursor;
                 if (gSmoothCursor) {
                   $("#cursors").attr("smooth-cursors", "");
-                  Object.values(gClient.ppl).forEach(function (participant) {
+                  Object.values(gClient.ppl).forEach(function(participant) {
                     if (participant.cursorDiv) {
                       participant.cursorDiv.style.left = "";
                       participant.cursorDiv.style.top = "";
@@ -5259,7 +5002,7 @@ $(function () {
                   });
                 } else {
                   $("#cursors").removeAttr("smooth-cursors");
-                  Object.values(gClient.ppl).forEach(function (participant) {
+                  Object.values(gClient.ppl).forEach(function(participant) {
                     if (participant.cursorDiv) {
                       participant.cursorDiv.style.left = participant.x + "%";
                       participant.cursorDiv.style.top = participant.y + "%";
@@ -5297,13 +5040,9 @@ $(function () {
                 gHideBotUsers = !gHideBotUsers;
                 localStorage.hideBotUsers = gHideBotUsers;
 
-                Object.values(gClient.ppl).forEach(function (participant) {
-                  if (
-                    participant.tag &&
-                    participant.tag.text == "BOT" &&
-                    participant.cursorDiv
-                  ) {
-                    if (gHideBotUsers) {
+                Object.values(gClient.ppl).forEach(function(participant) {
+                  if (participant.tag && participant.tag.text == "BOT" && participant.cursorDiv) {
+                    if(gHideBotUsers) {
                       $("#names #namediv-" + participant.id).hide();
                       participant.cursorDiv.style.display = "none";
                     } else {
@@ -5356,7 +5095,7 @@ $(function () {
   var toggleConfetti; //call to start or stop the confetti animation depending on whether it's already running
   var removeConfetti; //call to stop the confetti animation and remove all confetti immediately
 
-  (function () {
+  (function() {
     startConfetti = startConfettiInner;
     stopConfetti = stopConfettiInner;
     toggleConfetti = toggleConfettiInner;
@@ -5394,14 +5133,14 @@ $(function () {
     function startConfettiInner() {
       var width = window.innerWidth;
       var height = window.innerHeight;
-      window.requestAnimFrame = (function () {
+      window.requestAnimFrame = (function() {
         return (
           window.requestAnimationFrame ||
           window.webkitRequestAnimationFrame ||
           window.mozRequestAnimationFrame ||
           window.oRequestAnimationFrame ||
           window.msRequestAnimationFrame ||
-          function (callback) {
+          function(callback) {
             return window.setTimeout(callback, 16.6666667);
           }
         );
@@ -5419,7 +5158,7 @@ $(function () {
         canvas.height = height;
         window.addEventListener(
           "resize",
-          function () {
+          function() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
           },
@@ -5544,10 +5283,7 @@ $(function () {
         closeModal();
       });
   })();
-
-  if (!gAf) {
-    gClient.start();
-  }
+  gClient.start();
 });
 
 // misc
