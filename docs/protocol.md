@@ -378,7 +378,7 @@ Clients can send this to change a channel's settings if they have the crown.
 }
 ```
 ### custom (server-bound)
-Clients can send custom data using this message. This is meant for developers to create addons for multiple people without being restricted to the standard protocol. A user can only send 16384 bytes of custom data per 10 seconds. This is measured by the stringified value in the "data" property. If the "data" property is not present, it is treated as null. Make sure you have lots of type checking for receiving custom messages, because someone could craft a malicious message to try to break your scripts.
+Clients can send custom data using this message. This is meant for developers to create addons for multiple people without being restricted to the standard protocol. A user can only send 16384 bytes of custom data per 10 seconds. This is measured by the stringified value in the "data" property, and if using the binary protocol, the length of the binary payload. If the "data" property is not present, it is treated as null. Make sure you have lots of type checking for receiving custom messages, because someone could craft a malicious message to try to break your scripts.
 #### Properties
 - `"data"`: Data to send to other clients. This can be any valid JSON. It could be an array, an object, a string, a number, or boolean, or null. Object nesting is acceptable to any depth (within the data quota).
 - `"target"`: Object representing who this should get sent to. See [target](#target).
@@ -405,6 +405,19 @@ Clients can send custom data using this message. This is meant for developers to
     "mode":"subscribed"
   }
 }
+```
+The binary protocol for sending custom data works slightly differently. Due to JSON stringification, binary cannot be efficiently sent. So, there is an alternative version specifically for that.
+#### Protocol
+- `metadataLength`: A `uint32` defining how long the metadata JSON string is. This should be followed by a JSON string that mimics the original custom JSON message. However, you do not need to provide the `data` property.
+- `metadata`: A JSON string in the format of the above custom message. You are required to provide at least the `m` and `target` properties.
+- `binary`: The binary payload of your custom message. This can be any binary data, but you should be aware that it will use your custom data quota.
+#### Example
+```
+<metadataLength>{"m":"custom","data":{"version":1},"target":{"mode":"id","id":"fd2de1013eea7f43e2ca6f25"}}<binary>
+```
+An actual usage:
+```
+<00 00 00 5A>{"m":"custom","data":{"version":1},"target":{"mode":"id","id":"fd2de1013eea7f43e2ca6f25"}}<4E AD DB 03 4D 50 50 0A 48 65 6C 6C 6F 2C 20 5A 61 63 6B 69 21>
 ```
 
 ### devices
@@ -815,6 +828,7 @@ This is sent when a client sends a [custom](#custom-server-bound) message.
 - `"data"`: The data sent in this custom message. Can be any valid JSON.
 - `"p"`: The user id of the client who sent this custom message.
 - `"u"`: The full user info of the client who sent this custom message.
+- `?"binary"`: The binary data (as an `ArrayBuffer`) sent if the original custom message was sent with the binary protocol. This property isn't actually sent through the WebSocket, but applied if listening to the event through `MPP.client.on()`
 #### Example
 ```json
 {
@@ -830,8 +844,22 @@ This is sent when a client sends a [custom](#custom-server-bound) message.
     "color": "#4ac0e8",
     "name": "cheezburger0",
     "_id": "e597eb458dd0da2b05edb1b1"
-  }
+  },
+  "binary": ArrayBuffer
 }
+```
+When listening to the WebSocket, if one uses the binary custom message protocol, the data is similar to how it is sent.
+#### Protocol
+- `metadataLength`: A `uint32` defining how long the metadata JSON string is.
+- `metadata`: A JSON string in the format of the above custom message (excluding `"binary"`).
+- `binary`: The binary payload of the custom message. This can be any binary data. Make sure to parse it correctly, as users can send malicious data.
+#### Example
+```
+<metadataLength>{"m":"custom","data":{"version":1},"p":"fd2de1013eea7f43e2ca6f25"},"u":{"afk":false,"color":"#00ffaa","name":"Zacki","_id":"fd2de1013eea7f43e2ca6f25"}}<binary>
+```
+The actual data:
+```
+<00 00 00 97>{"m":"custom","data":{"version":1},"p":"fd2de1013eea7f43e2ca6f25"},"u":{"afk":false,"color":"#00ffaa","name":"Zacki","_id":"fd2de1013eea7f43e2ca6f25"}}<4E AD DB 03 4D 50 50 0A 48 65 6C 6C 6F 2C 20 5A 61 63 6B 69 21>
 ```
 
 ### dm (client-bound)
