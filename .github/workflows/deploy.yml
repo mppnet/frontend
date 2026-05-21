@@ -8,10 +8,22 @@ on:
 
 jobs:
   deploy:
-    if: "!startsWith(github.event.head_commit.message, '[skip ci]')"  
+    if: "!startsWith(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build
+        run: bun run build:min
+
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh

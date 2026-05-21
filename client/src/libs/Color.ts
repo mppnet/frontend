@@ -1,87 +1,90 @@
-if (typeof module !== "undefined") {
-  module.exports = Color;
-} else {
-  this.Color = Color;
-}
+export class Color {
+  r: number;
+  g: number;
+  b: number;
 
-function Color() {
-  var r, g, b;
-  if (arguments.length === 1) {
-    var hexa = arguments[0].toLowerCase();
-    if (hexa.match(/^#[0-9a-f]{6}$/i)) {
-      hexa = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hexa);
-      if (hexa && hexa.length === 4) {
-        r = parseInt(hexa[1], 16);
-        g = parseInt(hexa[2], 16);
-        b = parseInt(hexa[3], 16);
+  static map: Record<string, Color> = {};
+
+  static addToMap(hexa: string, name: string): void {
+    Color.map[name] = new Color(hexa);
+  }
+
+  constructor(r?: string | number, g?: number, b?: number) {
+    let red: number | undefined;
+    let green: number | undefined;
+    let blue: number | undefined;
+
+    if (typeof r === "string" && g === undefined && b === undefined) {
+      const hexa = r.toLowerCase();
+      if (hexa.match(/^#[0-9a-f]{6}$/i)) {
+        const match = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hexa);
+        if (match && match.length === 4) {
+          red = parseInt(match[1], 16);
+          green = parseInt(match[2], 16);
+          blue = parseInt(match[3], 16);
+        }
+      }
+    } else if (typeof r === "number" && g !== undefined && b !== undefined) {
+      red = r;
+      green = g;
+      blue = b;
+    }
+
+    this.r = ~~(red as number) || 0;
+    this.g = ~~(green as number) || 0;
+    this.b = ~~(blue as number) || 0;
+  }
+
+  distance(color: Color): number {
+    let d = 0;
+    d += Math.pow(this.r - color.r, 2);
+    d += Math.pow(this.g - color.g, 2);
+    d += Math.pow(this.b - color.b, 2);
+    return Math.abs(Math.sqrt(d));
+  }
+
+  add(r: number, g: number, b: number): void {
+    this.r += r;
+    this.g += g;
+    this.b += b;
+    if (this.r < 0) this.r = 0;
+    else if (this.r > 255) this.r = 255;
+    if (this.g < 0) this.g = 0;
+    else if (this.g > 255) this.g = 255;
+    if (this.b < 0) this.b = 0;
+    else if (this.b > 255) this.b = 255;
+  }
+
+  toHexa(): string {
+    let r = (~~this.r || 0).toString(16);
+    let g = (~~this.g || 0).toString(16);
+    let b = (~~this.b || 0).toString(16);
+    if (r.length == 1) r = "0" + r;
+    if (g.length == 1) g = "0" + g;
+    if (b.length == 1) b = "0" + b;
+    return "#" + r + g + b;
+  }
+
+  getName(): string {
+    let low = 256;
+    let name: string | undefined;
+    for (const n in Color.map) {
+      if (!Color.map.hasOwnProperty(n)) continue;
+      const color = Color.map[n];
+      if (color.r === this.r && color.g === this.g && color.b === this.b) {
+        return n;
+      }
+      const dist = this.distance(color);
+      if (dist < low) {
+        low = dist;
+        name = n;
       }
     }
-  } else if (arguments.length === 3) {
-    r = arguments[0];
-    g = arguments[1];
-    b = arguments[2];
+    if (!name) name = this.toHexa();
+    else name = "A shade of " + name;
+    return name;
   }
-  this.r = ~~r || 0;
-  this.g = ~~g || 0;
-  this.b = ~~b || 0;
 }
-
-Color.prototype.distance = function (color) {
-  var d = 0;
-  d += Math.pow(this.r - color.r, 2);
-  d += Math.pow(this.g - color.g, 2);
-  d += Math.pow(this.b - color.b, 2);
-  return Math.abs(Math.sqrt(d));
-};
-
-Color.prototype.add = function (r, g, b) {
-  this.r += r;
-  this.g += g;
-  this.b += b;
-  if (this.r < 0) this.r = 0;
-  else if (this.r > 255) this.r = 255;
-  if (this.g < 0) this.g = 0;
-  else if (this.g > 255) this.g = 255;
-  if (this.b < 0) this.b = 0;
-  else if (this.b > 255) this.b = 255;
-};
-
-Color.prototype.toHexa = function () {
-  var r = (~~this.r || 0).toString(16),
-    g = (~~this.g || 0).toString(16),
-    b = (~~this.b || 0).toString(16);
-  if (r.length == 1) r = "0" + r;
-  if (g.length == 1) g = "0" + g;
-  if (b.length == 1) b = "0" + b;
-  return "#" + r + g + b;
-};
-
-Color.prototype.getName = function () {
-  var hexa = this.toHexa();
-  var low = 256;
-  var name;
-  for (var n in Color.map) {
-    if (!Color.map.hasOwnProperty(n)) continue;
-    var color = Color.map[n];
-    if (color.r === this.r && color.g === this.g && color.b === this.b) {
-      return n;
-    }
-    var dist = this.distance(color);
-    if (dist < low) {
-      low = dist;
-      name = n;
-    }
-  }
-  if (!name) name = this.toHexa();
-  else name = "A shade of " + name;
-  return name;
-};
-
-Color.map = {};
-
-Color.addToMap = function (hexa, name) {
-  Color.map[name] = new Color(hexa);
-};
 
 Color.addToMap("#7CB9E8", "Aero");
 Color.addToMap("#C9FFE5", "Aero blue");
@@ -131,12 +134,13 @@ Color.addToMap("#FAE7B5", "Banana Mania");
 Color.addToMap("#FFE135", "Banana yellow");
 Color.addToMap("#E0218A", "Barbie pink");
 Color.addToMap("#7C0A02", "Barn red");
+// CHUNK_PLACEHOLDER_1
 Color.addToMap("#848482", "Battleship grey");
 Color.addToMap("#98777B", "Bazaar");
 Color.addToMap("#9F8170", "Beaver");
 Color.addToMap("#F5F5DC", "Beige");
 Color.addToMap("#2E5894", "B'dazzled blue");
-Color.addToMap("#9C2542", "Big dip o’ruby");
+Color.addToMap("#9C2542", "Big dip o'ruby");
 Color.addToMap("#FFE4C4", "Bisque");
 Color.addToMap("#3D2B1F", "Bistre");
 Color.addToMap("#967117", "Bistre brown");
@@ -181,6 +185,7 @@ Color.addToMap("#1DACD6", "Bright cerulean");
 Color.addToMap("#66FF00", "Bright green");
 Color.addToMap("#BF94E4", "Bright lavender");
 Color.addToMap("#D891EF", "Bright lilac");
+// CHUNK_PLACEHOLDER_2
 Color.addToMap("#C32148", "Bright maroon");
 Color.addToMap("#1974D2", "Bright navy blue");
 Color.addToMap("#FF007F", "Bright pink");
@@ -231,6 +236,7 @@ Color.addToMap("#FFA6C9", "Carnation pink");
 Color.addToMap("#99BADD", "Carolina blue");
 Color.addToMap("#ED9121", "Carrot orange");
 Color.addToMap("#00563F", "Castleton green");
+// CHUNK_PLACEHOLDER_3
 Color.addToMap("#062A78", "Catalina blue");
 Color.addToMap("#703642", "Catawba");
 Color.addToMap("#C95A49", "Cedar Chest");
@@ -281,6 +287,7 @@ Color.addToMap("#F88379", "Coral pink");
 Color.addToMap("#FF4040", "Coral red");
 Color.addToMap("#893F45", "Cordovan");
 Color.addToMap("#FBEC5D", "Corn Yellow");
+// CHUNK_PLACEHOLDER_4
 Color.addToMap("#B31B1B", "Cornell Red");
 Color.addToMap("#6495ED", "Cornflower blue");
 Color.addToMap("#FFF8DC", "Cornsilk");
@@ -331,6 +338,7 @@ Color.addToMap("#8B0000", "Dark red");
 Color.addToMap("#E9967A", "Dark salmon");
 Color.addToMap("#560319", "Dark scarlet");
 Color.addToMap("#8FBC8F", "Dark sea green");
+// CHUNK_PLACEHOLDER_5
 Color.addToMap("#3C1414", "Dark sienna");
 Color.addToMap("#8CBED6", "Dark sky blue");
 Color.addToMap("#483D8B", "Dark slate blue");
@@ -381,6 +389,7 @@ Color.addToMap("#00009C", "Duke blue");
 Color.addToMap("#E5CCC9", "Dust storm");
 Color.addToMap("#EFDFBB", "Dutch white");
 Color.addToMap("#E1A95F", "Earth yellow");
+// CHUNK_PLACEHOLDER_6
 Color.addToMap("#555D50", "Ebony");
 Color.addToMap("#1B1B1B", "Eerie black");
 Color.addToMap("#614051", "Eggplant");
@@ -431,6 +440,7 @@ Color.addToMap("#86608E", "French lilac");
 Color.addToMap("#9EFD38", "French lime");
 Color.addToMap("#FD6C9E", "French pink");
 Color.addToMap("#4E1609", "French puce");
+// CHUNK_PLACEHOLDER_7
 Color.addToMap("#C72C48", "French raspberry");
 Color.addToMap("#F64A8A", "French rose");
 Color.addToMap("#77B5FE", "French sky blue");
@@ -481,6 +491,7 @@ Color.addToMap("#DA9100", "Harvest gold");
 Color.addToMap("#DF73FF", "Heliotrope");
 Color.addToMap("#AA98A9", "Heliotrope gray");
 Color.addToMap("#F0FFF0", "Honeydew");
+// CHUNK_PLACEHOLDER_8
 Color.addToMap("#006DB0", "Honolulu blue");
 Color.addToMap("#49796B", "Hooker's green");
 Color.addToMap("#FF1DCE", "Hot magenta");
@@ -531,6 +542,7 @@ Color.addToMap("#D6CADD", "Languid lavender");
 Color.addToMap("#26619C", "Lapis lazuli");
 Color.addToMap("#A9BA9D", "Laurel green");
 Color.addToMap("#CF1020", "Lava");
+// CHUNK_PLACEHOLDER_9
 Color.addToMap("#B57EDC", "Lavender (floral)");
 Color.addToMap("#CCCCFF", "Lavender blue");
 Color.addToMap("#FFF0F5", "Lavender blush");
@@ -581,6 +593,7 @@ Color.addToMap("#778899", "Light slate gray");
 Color.addToMap("#B0C4DE", "Light steel blue");
 Color.addToMap("#B38B6D", "Light taupe");
 Color.addToMap("#FFFFE0", "Light yellow");
+// CHUNK_PLACEHOLDER_10
 Color.addToMap("#C8A2C8", "Lilac");
 Color.addToMap("#BFFF00", "Lime");
 Color.addToMap("#32CD32", "Lime green");
@@ -631,6 +644,7 @@ Color.addToMap("#C9DC87", "Medium spring bud");
 Color.addToMap("#00FA9A", "Medium spring green");
 Color.addToMap("#674C47", "Medium taupe");
 Color.addToMap("#48D1CC", "Medium turquoise");
+// CHUNK_PLACEHOLDER_11
 Color.addToMap("#D9603B", "Pale vermilion");
 Color.addToMap("#F8B878", "Mellow apricot");
 Color.addToMap("#F8DE7E", "Mellow yellow");
@@ -681,6 +695,7 @@ Color.addToMap("#808000", "Olive");
 Color.addToMap("#6B8E23", "Olive Drab #3");
 Color.addToMap("#3C341F", "Olive Drab #7");
 Color.addToMap("#9AB973", "Olivine");
+// CHUNK_PLACEHOLDER_12
 Color.addToMap("#353839", "Onyx");
 Color.addToMap("#B784A7", "Opera mauve");
 Color.addToMap("#FF7F00", "Orange");
@@ -731,6 +746,7 @@ Color.addToMap("#F49AC2", "Pastel magenta");
 Color.addToMap("#FFB347", "Pastel orange");
 Color.addToMap("#DEA5A4", "Pastel pink");
 Color.addToMap("#B39EB5", "Pastel purple");
+// CHUNK_PLACEHOLDER_13
 Color.addToMap("#FF6961", "Pastel red");
 Color.addToMap("#CB99C9", "Pastel violet");
 Color.addToMap("#FDFD96", "Pastel yellow");
@@ -781,6 +797,7 @@ Color.addToMap("#FF7518", "Pumpkin");
 Color.addToMap("#800080", "Deep purple");
 Color.addToMap("#9F00C5", "Purple (Munsell)");
 Color.addToMap("#A020F0", "Purple");
+// CHUNK_PLACEHOLDER_14
 Color.addToMap("#69359C", "Purple Heart");
 Color.addToMap("#9678B6", "Purple mountain majesty");
 Color.addToMap("#4E5180", "Purple navy");
@@ -831,6 +848,7 @@ Color.addToMap("#F9429E", "Rose bonbon");
 Color.addToMap("#674846", "Rose ebony");
 Color.addToMap("#B76E79", "Rose gold");
 Color.addToMap("#FF66CC", "Rose pink");
+// CHUNK_PLACEHOLDER_15
 Color.addToMap("#C21E56", "Rose red");
 Color.addToMap("#905D5D", "Rose taupe");
 Color.addToMap("#AB4E52", "Rose vale");
@@ -881,6 +899,7 @@ Color.addToMap("#321414", "Seal brown");
 Color.addToMap("#FFF5EE", "Seashell");
 Color.addToMap("#FFBA00", "Selective yellow");
 Color.addToMap("#704214", "Sepia");
+// CHUNK_PLACEHOLDER_16
 Color.addToMap("#8A795D", "Shadow");
 Color.addToMap("#778BA5", "Shadow blue");
 Color.addToMap("#FFCFF1", "Shampoo");
@@ -931,6 +950,7 @@ Color.addToMap("#4F666A", "Stormcloud");
 Color.addToMap("#E4D96F", "Straw");
 Color.addToMap("#FC5A8D", "Strawberry");
 Color.addToMap("#FFCC33", "Sunglow");
+// CHUNK_PLACEHOLDER_17
 Color.addToMap("#E3AB57", "Sunray");
 Color.addToMap("#FAD6A5", "Sunset");
 Color.addToMap("#FD5E53", "Sunset orange");
@@ -981,6 +1001,7 @@ Color.addToMap("#536895", "UCLA Blue");
 Color.addToMap("#FFB300", "UCLA Gold");
 Color.addToMap("#3CD070", "UFO Green");
 Color.addToMap("#120A8F", "Ultramarine");
+// CHUNK_PLACEHOLDER_18
 Color.addToMap("#4166F5", "Ultramarine blue");
 Color.addToMap("#FF6FFF", "Ultra pink");
 Color.addToMap("#635147", "Umber");
@@ -1031,6 +1052,7 @@ Color.addToMap("#722F37", "Wine");
 Color.addToMap("#C9A0DC", "Wisteria");
 Color.addToMap("#C19A6B", "Wood brown");
 Color.addToMap("#738678", "Xanadu");
+// CHUNK_PLACEHOLDER_19
 Color.addToMap("#0F4D92", "Yale Blue");
 Color.addToMap("#1C2841", "Yankees blue");
 Color.addToMap("#FCE883", "Yellow (Crayola)");
