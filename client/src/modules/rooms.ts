@@ -78,7 +78,7 @@ export function initRooms(): void {
       fadeOut(document.querySelector('#room .more') as HTMLElement, 250);
       const selected_name = (evt.target as HTMLElement).getAttribute('roomname');
       if (typeof selected_name !== 'undefined') {
-        if (!evt.ctrlKey) changeRoom(selected_name, 'right');
+        if (!evt.ctrlKey) changeRoom(selected_name!, 'right');
         else window.open(`?c=${selected_name}`);
       }
       return false;
@@ -113,7 +113,7 @@ export function initRooms(): void {
     if (gClient.accountInfo) {
       (document.querySelector('#account #account-info') as HTMLElement).style.display = 'block';
       if (gClient.accountInfo.type === 'discord') {
-        (document.querySelector('#account #avatar-image') as HTMLImageElement).src = gClient.accountInfo.avatar;
+        (document.querySelector('#account #avatar-image') as HTMLImageElement).src = gClient.accountInfo.avatar ?? "https://placehold.co/300x300";
         document.querySelector('#account #logged-in-user-text')!.textContent = `@${gClient.accountInfo.username}`;
       }
     } else { (document.querySelector('#account #account-info') as HTMLElement).style.display = 'none'; }

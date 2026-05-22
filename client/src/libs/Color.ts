@@ -134,7 +134,6 @@ Color.addToMap("#FAE7B5", "Banana Mania");
 Color.addToMap("#FFE135", "Banana yellow");
 Color.addToMap("#E0218A", "Barbie pink");
 Color.addToMap("#7C0A02", "Barn red");
-// CHUNK_PLACEHOLDER_1
 Color.addToMap("#848482", "Battleship grey");
 Color.addToMap("#98777B", "Bazaar");
 Color.addToMap("#9F8170", "Beaver");
@@ -185,7 +184,6 @@ Color.addToMap("#1DACD6", "Bright cerulean");
 Color.addToMap("#66FF00", "Bright green");
 Color.addToMap("#BF94E4", "Bright lavender");
 Color.addToMap("#D891EF", "Bright lilac");
-// CHUNK_PLACEHOLDER_2
 Color.addToMap("#C32148", "Bright maroon");
 Color.addToMap("#1974D2", "Bright navy blue");
 Color.addToMap("#FF007F", "Bright pink");
@@ -236,7 +234,6 @@ Color.addToMap("#FFA6C9", "Carnation pink");
 Color.addToMap("#99BADD", "Carolina blue");
 Color.addToMap("#ED9121", "Carrot orange");
 Color.addToMap("#00563F", "Castleton green");
-// CHUNK_PLACEHOLDER_3
 Color.addToMap("#062A78", "Catalina blue");
 Color.addToMap("#703642", "Catawba");
 Color.addToMap("#C95A49", "Cedar Chest");
@@ -287,7 +284,6 @@ Color.addToMap("#F88379", "Coral pink");
 Color.addToMap("#FF4040", "Coral red");
 Color.addToMap("#893F45", "Cordovan");
 Color.addToMap("#FBEC5D", "Corn Yellow");
-// CHUNK_PLACEHOLDER_4
 Color.addToMap("#B31B1B", "Cornell Red");
 Color.addToMap("#6495ED", "Cornflower blue");
 Color.addToMap("#FFF8DC", "Cornsilk");
@@ -338,7 +334,6 @@ Color.addToMap("#8B0000", "Dark red");
 Color.addToMap("#E9967A", "Dark salmon");
 Color.addToMap("#560319", "Dark scarlet");
 Color.addToMap("#8FBC8F", "Dark sea green");
-// CHUNK_PLACEHOLDER_5
 Color.addToMap("#3C1414", "Dark sienna");
 Color.addToMap("#8CBED6", "Dark sky blue");
 Color.addToMap("#483D8B", "Dark slate blue");
@@ -389,7 +384,6 @@ Color.addToMap("#00009C", "Duke blue");
 Color.addToMap("#E5CCC9", "Dust storm");
 Color.addToMap("#EFDFBB", "Dutch white");
 Color.addToMap("#E1A95F", "Earth yellow");
-// CHUNK_PLACEHOLDER_6
 Color.addToMap("#555D50", "Ebony");
 Color.addToMap("#1B1B1B", "Eerie black");
 Color.addToMap("#614051", "Eggplant");
@@ -440,7 +434,6 @@ Color.addToMap("#86608E", "French lilac");
 Color.addToMap("#9EFD38", "French lime");
 Color.addToMap("#FD6C9E", "French pink");
 Color.addToMap("#4E1609", "French puce");
-// CHUNK_PLACEHOLDER_7
 Color.addToMap("#C72C48", "French raspberry");
 Color.addToMap("#F64A8A", "French rose");
 Color.addToMap("#77B5FE", "French sky blue");
@@ -491,7 +484,6 @@ Color.addToMap("#DA9100", "Harvest gold");
 Color.addToMap("#DF73FF", "Heliotrope");
 Color.addToMap("#AA98A9", "Heliotrope gray");
 Color.addToMap("#F0FFF0", "Honeydew");
-// CHUNK_PLACEHOLDER_8
 Color.addToMap("#006DB0", "Honolulu blue");
 Color.addToMap("#49796B", "Hooker's green");
 Color.addToMap("#FF1DCE", "Hot magenta");
@@ -542,7 +534,6 @@ Color.addToMap("#D6CADD", "Languid lavender");
 Color.addToMap("#26619C", "Lapis lazuli");
 Color.addToMap("#A9BA9D", "Laurel green");
 Color.addToMap("#CF1020", "Lava");
-// CHUNK_PLACEHOLDER_9
 Color.addToMap("#B57EDC", "Lavender (floral)");
 Color.addToMap("#CCCCFF", "Lavender blue");
 Color.addToMap("#FFF0F5", "Lavender blush");
@@ -593,7 +584,6 @@ Color.addToMap("#778899", "Light slate gray");
 Color.addToMap("#B0C4DE", "Light steel blue");
 Color.addToMap("#B38B6D", "Light taupe");
 Color.addToMap("#FFFFE0", "Light yellow");
-// CHUNK_PLACEHOLDER_10
 Color.addToMap("#C8A2C8", "Lilac");
 Color.addToMap("#BFFF00", "Lime");
 Color.addToMap("#32CD32", "Lime green");
@@ -644,7 +634,6 @@ Color.addToMap("#C9DC87", "Medium spring bud");
 Color.addToMap("#00FA9A", "Medium spring green");
 Color.addToMap("#674C47", "Medium taupe");
 Color.addToMap("#48D1CC", "Medium turquoise");
-// CHUNK_PLACEHOLDER_11
 Color.addToMap("#D9603B", "Pale vermilion");
 Color.addToMap("#F8B878", "Mellow apricot");
 Color.addToMap("#F8DE7E", "Mellow yellow");
@@ -695,7 +684,6 @@ Color.addToMap("#808000", "Olive");
 Color.addToMap("#6B8E23", "Olive Drab #3");
 Color.addToMap("#3C341F", "Olive Drab #7");
 Color.addToMap("#9AB973", "Olivine");
-// CHUNK_PLACEHOLDER_12
 Color.addToMap("#353839", "Onyx");
 Color.addToMap("#B784A7", "Opera mauve");
 Color.addToMap("#FF7F00", "Orange");
@@ -746,7 +734,6 @@ Color.addToMap("#F49AC2", "Pastel magenta");
 Color.addToMap("#FFB347", "Pastel orange");
 Color.addToMap("#DEA5A4", "Pastel pink");
 Color.addToMap("#B39EB5", "Pastel purple");
-// CHUNK_PLACEHOLDER_13
 Color.addToMap("#FF6961", "Pastel red");
 Color.addToMap("#CB99C9", "Pastel violet");
 Color.addToMap("#FDFD96", "Pastel yellow");
@@ -797,7 +784,6 @@ Color.addToMap("#FF7518", "Pumpkin");
 Color.addToMap("#800080", "Deep purple");
 Color.addToMap("#9F00C5", "Purple (Munsell)");
 Color.addToMap("#A020F0", "Purple");
-// CHUNK_PLACEHOLDER_14
 Color.addToMap("#69359C", "Purple Heart");
 Color.addToMap("#9678B6", "Purple mountain majesty");
 Color.addToMap("#4E5180", "Purple navy");
@@ -848,7 +834,6 @@ Color.addToMap("#F9429E", "Rose bonbon");
 Color.addToMap("#674846", "Rose ebony");
 Color.addToMap("#B76E79", "Rose gold");
 Color.addToMap("#FF66CC", "Rose pink");
-// CHUNK_PLACEHOLDER_15
 Color.addToMap("#C21E56", "Rose red");
 Color.addToMap("#905D5D", "Rose taupe");
 Color.addToMap("#AB4E52", "Rose vale");
@@ -899,7 +884,6 @@ Color.addToMap("#321414", "Seal brown");
 Color.addToMap("#FFF5EE", "Seashell");
 Color.addToMap("#FFBA00", "Selective yellow");
 Color.addToMap("#704214", "Sepia");
-// CHUNK_PLACEHOLDER_16
 Color.addToMap("#8A795D", "Shadow");
 Color.addToMap("#778BA5", "Shadow blue");
 Color.addToMap("#FFCFF1", "Shampoo");
@@ -950,7 +934,6 @@ Color.addToMap("#4F666A", "Stormcloud");
 Color.addToMap("#E4D96F", "Straw");
 Color.addToMap("#FC5A8D", "Strawberry");
 Color.addToMap("#FFCC33", "Sunglow");
-// CHUNK_PLACEHOLDER_17
 Color.addToMap("#E3AB57", "Sunray");
 Color.addToMap("#FAD6A5", "Sunset");
 Color.addToMap("#FD5E53", "Sunset orange");
@@ -1001,7 +984,6 @@ Color.addToMap("#536895", "UCLA Blue");
 Color.addToMap("#FFB300", "UCLA Gold");
 Color.addToMap("#3CD070", "UFO Green");
 Color.addToMap("#120A8F", "Ultramarine");
-// CHUNK_PLACEHOLDER_18
 Color.addToMap("#4166F5", "Ultramarine blue");
 Color.addToMap("#FF6FFF", "Ultra pink");
 Color.addToMap("#635147", "Umber");
@@ -1052,7 +1034,6 @@ Color.addToMap("#722F37", "Wine");
 Color.addToMap("#C9A0DC", "Wisteria");
 Color.addToMap("#C19A6B", "Wood brown");
 Color.addToMap("#738678", "Xanadu");
-// CHUNK_PLACEHOLDER_19
 Color.addToMap("#0F4D92", "Yale Blue");
 Color.addToMap("#1C2841", "Yankees blue");
 Color.addToMap("#FCE883", "Yellow (Crayola)");

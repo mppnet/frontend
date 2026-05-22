@@ -7,6 +7,7 @@ import { DEFAULT_VELOCITY, TIMING_TARGET } from '../util/constants';
 import { openModal, closeModal, modalHandleEsc } from '../util/modal';
 import { fadeIn, fadeOut } from '../util/util';
 import type { Participant } from '../types';
+import { i18next } from '../util/translations';
 
 let tabIsActive = true;
 let youreMentioned = false;
@@ -90,7 +91,7 @@ export function initConnection(): Client {
         '<span class="number" translated>' +
           count +
           '</span> ' +
-          window.i18nextify.i18next.t('people are playing', { count });
+          i18next.t('people are playing', { count });
       if (!tabIsActive) {
         if (youreMentioned || youreReplied) {
           return;
@@ -530,15 +531,15 @@ export function initConnection(): Client {
       openModal('#room-settings');
       setTimeout(() => {
         const modal = document.getElementById('room-settings')!;
-        (modal.querySelector('.checkbox[name=visible]') as HTMLInputElement).checked = roomSettings.visible;
-        (modal.querySelector('.checkbox[name=chat]') as HTMLInputElement).checked = roomSettings.chat;
-        (modal.querySelector('.checkbox[name=crownsolo]') as HTMLInputElement).checked = roomSettings.crownsolo;
-        (modal.querySelector('.checkbox[name=nocussing]') as HTMLInputElement).checked = roomSettings['no cussing'];
-        (modal.querySelector('input[name=color]') as HTMLInputElement).value = roomSettings.color;
-        (modal.querySelector('input[name=color2]') as HTMLInputElement).value = roomSettings.color2;
-        (modal.querySelector('.checkbox[name=noindex]') as HTMLInputElement).checked = roomSettings.noindex;
-        (modal.querySelector('.checkbox[name=allowBots]') as HTMLInputElement).checked = roomSettings.allowBots;
-        (modal.querySelector('input[name=limit]') as HTMLInputElement).value = roomSettings.limit.toString();
+        (modal.querySelector('.checkbox[name=visible]') as HTMLInputElement).checked = roomSettings.visible ?? false;
+        (modal.querySelector('.checkbox[name=chat]') as HTMLInputElement).checked = roomSettings.chat ?? false;
+        (modal.querySelector('.checkbox[name=crownsolo]') as HTMLInputElement).checked = roomSettings.crownsolo ?? false;
+        (modal.querySelector('.checkbox[name=nocussing]') as HTMLInputElement).checked = roomSettings['no cussing'] ?? false;
+        (modal.querySelector('.checkbox[name=noindex]') as HTMLInputElement).checked = roomSettings.noindex ?? false;
+        (modal.querySelector('.checkbox[name=allowBots]') as HTMLInputElement).checked = roomSettings.allowBots ?? false;
+        (modal.querySelector('input[name=color]') as HTMLInputElement).value = roomSettings.color ?? '';
+        (modal.querySelector('input[name=color2]') as HTMLInputElement).value = roomSettings.color2 ?? '';
+        (modal.querySelector('input[name=limit]') as HTMLInputElement).value = roomSettings.limit?.toString() ?? '';
       }, 100);
     }
   });

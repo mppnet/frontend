@@ -521,7 +521,7 @@ export function initKeyboard(): void {
       });
     }
     if (gClient.permissions.usersetOthers) {
-      createMenuItem(window.i18nextify.i18next.t('Set Color'), () => {
+      createMenuItem(i18next.t('Set Color'), () => {
         const color = prompt('What color?', part.color);
         if (color === null) return;
         gClient.sendArray([{ m: 'setcolor', _id: part._id, color: color }]);

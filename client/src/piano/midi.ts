@@ -6,6 +6,18 @@ import { press, release, pressSustain, releaseSustain, getAutoSustain } from '..
 import { MIDI_KEY_NAMES, MIDI_TRANSPOSE } from '../util/constants';
 import { MidiInputInfo } from '../types';
 
+declare global {
+  interface MIDIInput {
+    enabled: boolean;
+    volume: number;
+  }
+
+  interface MIDIOutput {
+    enabled: boolean;
+    volume: number;
+  }
+}
+
 export function initMidi(): void {
   const gClient = getClient();
   const gPiano = getPiano();
@@ -201,7 +213,7 @@ export function initMidi(): void {
 
       document.getElementById('midi-btn')!.addEventListener('click', () => {
         if (!document.getElementById('Notification-MIDI-Connections')) showConnections(true);
-        else connectionsNotification.close();
+        else connectionsNotification!.close();
       });
     }, () => {});
   }
