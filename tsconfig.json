@@ -12,6 +12,6 @@
     "rootDir": "./src",
     "baseUrl": "."
   },
-  "include": ["src/**/*.ts"],
+  "include": ["client/src/**/*.ts"],
   "exclude": ["node_modules"]
 }
