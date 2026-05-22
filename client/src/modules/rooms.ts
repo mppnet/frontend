@@ -87,7 +87,7 @@ export function initRooms(): void {
       openModal('#new-room', 'input[name=name]');
     }
     const doc_click = (evt2: any) => {
-      if ((evt2.target as HTMLElement).matches('#room .more')) return;
+      if ((evt2.target as HTMLElement).closest('#room')) return;
       document.removeEventListener('mousedown', doc_click);
       fadeOut(document.querySelector('#room .more') as HTMLElement, 250);
       gClient.sendArray([{ m: '-ls' }]);

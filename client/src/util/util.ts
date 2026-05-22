@@ -37,6 +37,7 @@ export function fadeOut(el: HTMLElement | undefined | null, ms: number, cb?: () 
   setTimeout(() => {
     el.style.display = 'none';
     el.style.transition = '';
+    el.style.opacity = '';
     cb?.();
   }, ms);
 }
