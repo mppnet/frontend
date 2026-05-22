@@ -282,6 +282,7 @@ export class CanvasRenderer extends Renderer {
         if (!this.piano.keys.hasOwnProperty(i)) continue;
         const key = this.piano.keys[i];
         if (key.sharp !== sharp) continue;
+        if (!key.rect) continue;
         if (key.rect.contains(x, y)) {
           let v = y / (key.sharp ? this.blackKeyHeight : this.whiteKeyHeight);
           v += 0.25;

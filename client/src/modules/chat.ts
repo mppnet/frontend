@@ -138,7 +138,7 @@ export function initChat(): Chat {
             {
               m: "dm",
               reply_to: getMessageId(),
-              _id: getReplyParticipant()._id,
+              _id: getReplyParticipant()!._id,
               message,
             },
           ]);
@@ -150,7 +150,7 @@ export function initChat(): Chat {
             {
               m: "a",
               reply_to: getMessageId(),
-              _id: getReplyParticipant()._id,
+              _id: getReplyParticipant()!._id,
               message,
             },
           ]);
@@ -160,7 +160,7 @@ export function initChat(): Chat {
         }
       } else {
         if (getIsDming()) {
-          gClient.sendArray([{ m: "dm", _id: getDmParticipant()._id, message }]);
+          gClient.sendArray([{ m: "dm", _id: getDmParticipant()!._id, message }]);
         } else {
           gClient.sendArray([{ m: "a", message }]);
         }
@@ -180,8 +180,8 @@ export function initChat(): Chat {
 
       if (msg.m === "dm") {
         if (
-          msg.sender._id === gClient.user._id ||
-          msg.recipient._id === gClient.user._id
+          msg.sender._id === gClient.user!._id ||
+            msg.recipient._id === gClient.user!._id
         ) {
           const replySpan = document.createElement('span');
           replySpan.className = 'reply';
@@ -200,11 +200,11 @@ export function initChat(): Chat {
       }
 
       if (msg.m === "dm") {
-        if (msg.sender._id === gClient.user._id) {
+        if (msg.sender._id === gClient.user!._id) {
           const s = document.createElement('span');
           s.className = 'sentDm';
           li.appendChild(s);
-        } else if (msg.recipient._id === gClient.user._id) {
+        } else if (msg.recipient._id === gClient.user!._id) {
           const s = document.createElement('span');
           s.className = 'receivedDm';
           li.appendChild(s);
@@ -264,7 +264,7 @@ export function initChat(): Chat {
       if (msg.r) {
         const repliedMsg = messageCache.find((e: any) => e.id === msg.r);
         if (!getTabIsActive()) {
-          if (repliedMsg?.p?._id === gClient.user._id) {
+          if (repliedMsg?.p?._id === gClient.user!._id) {
             document.title = `You have received a reply!`;
             setYoureReplied(true);
           }
@@ -273,8 +273,8 @@ export function initChat(): Chat {
           const replyLinkEl = li.querySelector('.replyLink') as HTMLElement;
           replyLinkEl.textContent = `➥ ${
             repliedMsg.m === "dm"
-              ? repliedMsg.sender.name
-              : repliedMsg.p.name
+              ? repliedMsg.sender!.name
+              : repliedMsg.p!.name
           }`;
           Object.assign(replyLinkEl.style, {
             background: `${
@@ -317,10 +317,10 @@ export function initChat(): Chat {
 
       // prefix before dms
       if (msg.m === "dm") {
-        if (msg.sender._id === gClient.user._id) {
+        if (msg.sender._id === gClient.user!._id) {
           (li.querySelector('.sentDm') as HTMLElement).textContent = "To";
           Object.assign((li.querySelector('.sentDm') as HTMLElement).style, { color: "#ff55ff" });
-        } else if (msg.recipient._id === gClient.user._id) {
+        } else if (msg.recipient._id === gClient.user!._id) {
           (li.querySelector('.receivedDm') as HTMLElement).textContent = "From";
           Object.assign((li.querySelector('.receivedDm') as HTMLElement).style, { color: "#ff55ff" });
         } else {
@@ -344,7 +344,7 @@ export function initChat(): Chat {
             if (user.id === gClient.getOwnParticipant()!.id) {
               if (!getTabIsActive()) {
                 setYoureMentioned(true);
-                document.title = i18nextt.t(
+                document.title = i18next.t(
                   "You were mentioned!",
                 );
               }
@@ -361,19 +361,19 @@ export function initChat(): Chat {
         if (!settings.noChatColors)
           Object.assign((li.querySelector('.message') as HTMLElement).style, { color: msg.sender.color || "white" });
         if (settings.showIdsInChat) {
-          if (msg.sender._id === gClient.user._id) {
+          if (msg.sender._id === gClient.user!._id) {
             (li.querySelector('.id') as HTMLElement).textContent = msg.recipient._id.substring(0, 6);
           } else {
             (li.querySelector('.id') as HTMLElement).textContent = msg.sender._id.substring(0, 6);
           }
         }
 
-        if (msg.sender._id === gClient.user._id) {
+        if (msg.sender._id === gClient.user!._id) {
           if (!settings.noChatColors)
             Object.assign((li.querySelector('.name') as HTMLElement).style, { color: msg.recipient.color || "white" });
           (li.querySelector('.name') as HTMLElement).textContent = msg.recipient.name + ":";
           if (settings.showChatTooltips) li.title = msg.recipient._id;
-        } else if (msg.recipient._id === gClient.user._id) {
+        } else if (msg.recipient._id === gClient.user!._id) {
           if (!settings.noChatColors)
             Object.assign((li.querySelector('.name') as HTMLElement).style, { color: msg.sender.color || "white" });
           (li.querySelector('.name') as HTMLElement).textContent = msg.sender.name + ":";
@@ -406,7 +406,7 @@ export function initChat(): Chat {
       // Adds copying _ids on click in chat
       li.querySelector('.id')?.addEventListener('click', () => {
         if (msg.m === "dm") {
-          const copyId = msg.sender._id === gClient.user._id
+          const copyId = msg.sender._id === gClient.user!._id
             ? msg.recipient._id
             : msg.sender._id;
           navigator.clipboard.writeText(copyId);
@@ -450,7 +450,7 @@ export function initChat(): Chat {
           }, 100);
         } else {
           const replyingTo =
-            msg.sender._id === gClient.user._id
+            msg.sender._id === gClient.user!._id
               ? msg.recipient
               : msg.sender;
           if (gClient.ppl[replyingTo._id]) {
@@ -565,7 +565,7 @@ export function initChat(): Chat {
     }
   });
 
-  document.querySelector('#chat input')!.addEventListener('keydown', (evt: KeyboardEvent) => {
+  (document.querySelector('#chat input')! as HTMLInputElement).addEventListener('keydown', (evt: KeyboardEvent) => {
     const input = evt.target as HTMLInputElement;
     if (evt.keyCode === 13) {
       if (gClient.isConnected()) {
