@@ -1,4 +1,4 @@
-import { parseMarkdown, parseUrl, parseContent } from "../util/util";
+import { parseMarkdown, parseUrl, parseContent, fadeIn, fadeOut } from "../util/util";
 import { Notification } from "../libs/Notification";
 import { getClient, state } from "../util/state";
 import { settings } from "./settings/settings";
@@ -14,9 +14,7 @@ import {
   setYoureMentioned,
   setYoureReplied,
 } from "./connection";
-
-declare const $: any;
-declare const MPP: any;
+import type { ChatMessage } from '../types';
 
 export interface Chat {
   startDM(part: any): void;
@@ -50,36 +48,38 @@ export function initChat(): Chat {
     releaseKeyboard();
   };
 
-  const messageCache: any[] = [];
+  const messageCache: ChatMessage[] = [];
 
   const chat: Chat = {
     startDM(part: any): void {
       setIsDming(true);
       setDmParticipant(part);
-      $("#chat-input")[0].placeholder = "Direct messaging " + part.name + ".";
+      (document.getElementById('chat-input') as HTMLInputElement).placeholder = "Direct messaging " + part.name + ".";
     },
 
     endDM(): void {
       setIsDming(false);
-      $("#chat-input")[0].placeholder = (window as any).i18nextify.i18next.t(
+      (document.getElementById('chat-input') as HTMLInputElement).placeholder = window.i18nextify.i18next.t(
         "You can chat with this thing.",
       );
     },
 
     startReply(part: any, id: any): void {
-      $(`#msg-${getMessageId()}`).css({
-        "background-color": "unset",
+      const msgEl = document.getElementById('msg-' + getMessageId());
+      if (msgEl) Object.assign(msgEl.style, {
+        backgroundColor: "unset",
         border: "1px solid #00000000",
       });
       setIsReplying(true);
       setReplyParticipant(part);
       setMessageId(id);
-      $("#chat-input")[0].placeholder = `Replying to ${part.name}`;
+      (document.getElementById('chat-input') as HTMLInputElement).placeholder = `Replying to ${part.name}`;
     },
 
     startDmReply(part: any, id: any): void {
-      $(`#msg-${getMessageId()}`).css({
-        "background-color": "unset",
+      const msgEl = document.getElementById('msg-' + getMessageId());
+      if (msgEl) Object.assign(msgEl.style, {
+        backgroundColor: "unset",
         border: "1px solid #00000000",
       });
       setIsReplying(true);
@@ -87,16 +87,17 @@ export function initChat(): Chat {
       setMessageId(id);
       setReplyParticipant(part);
       setDmParticipant(part);
-      $("#chat-input")[0].placeholder = `Replying to ${part.name} in a DM.`;
+      (document.getElementById('chat-input') as HTMLInputElement).placeholder = `Replying to ${part.name} in a DM.`;
     },
 
     cancelReply(part: any): void {
       setIsReplying(false);
-      $(`#msg-${getMessageId()}`).css({
-        "background-color": "unset",
+      const msgEl = document.getElementById('msg-' + getMessageId());
+      if (msgEl) Object.assign(msgEl.style, {
+        backgroundColor: "unset",
         border: "1px solid #00000000",
       });
-      $("#chat-input")[0].placeholder = (window as any).i18nextify.i18next.t(
+      (document.getElementById('chat-input') as HTMLInputElement).placeholder = window.i18nextify.i18next.t(
         getIsDming()
           ? `Direct messaging ${part.name}`
           : `You can chat with this thing.`,
@@ -104,26 +105,26 @@ export function initChat(): Chat {
     },
 
     show(): void {
-      $("#chat").fadeIn();
+      fadeIn(document.getElementById('chat')!, 250);
     },
 
     hide(): void {
-      $("#chat").fadeOut();
+      fadeOut(document.getElementById('chat')!, 250);
     },
 
     clear(): void {
-      $("#chat li").remove();
+      document.querySelectorAll('#chat li').forEach(el => el.remove());
     },
 
     scrollToBottom(): void {
-      const ele = $("#chat ul").get(0);
+      const ele = document.querySelector('#chat ul') as HTMLElement;
       ele.scrollTop = ele.scrollHeight - ele.clientHeight;
     },
 
     blur(): void {
-      if ($("#chat").hasClass("chatting")) {
-        $("#chat input").get(0).blur();
-        $("#chat").removeClass("chatting");
+      if (document.getElementById('chat')!.classList.contains('chatting')) {
+        (document.querySelector('#chat input') as HTMLElement).blur();
+        document.getElementById('chat')!.classList.remove('chatting');
         chat.scrollToBottom();
         captureKb();
       }
@@ -141,7 +142,7 @@ export function initChat(): Chat {
             },
           ]);
           setTimeout(() => {
-            MPP.chat.cancelReply(getReplyParticipant());
+            chat.cancelReply(getReplyParticipant());
           }, 100);
         } else {
           gClient.sendArray([
@@ -153,7 +154,7 @@ export function initChat(): Chat {
             },
           ]);
           setTimeout(() => {
-            MPP.chat.cancelReply(getReplyParticipant());
+            chat.cancelReply(getReplyParticipant());
           }, 100);
         }
       } else {
@@ -172,7 +173,8 @@ export function initChat(): Chat {
         if (settings.chatMutes.indexOf(msg.p._id) !== -1) return;
       }
 
-      let liString = `<li id="msg-${msg.id}">`;
+      const li = document.createElement('li');
+      li.id = 'msg-' + msg.id;
       let isSpecialDm = false;
 
       if (msg.m === "dm") {
@@ -180,39 +182,83 @@ export function initChat(): Chat {
           msg.sender._id === gClient.user._id ||
           msg.recipient._id === gClient.user._id
         ) {
-          liString += `<span class="reply"/>`;
+          const replySpan = document.createElement('span');
+          replySpan.className = 'reply';
+          li.appendChild(replySpan);
         }
       } else {
-        liString += `<span class="reply"/>`;
+        const replySpan = document.createElement('span');
+        replySpan.className = 'reply';
+        li.appendChild(replySpan);
       }
 
-      if (settings.showTimestampsInChat) liString += '<span class="timestamp"/>';
+      if (settings.showTimestampsInChat) {
+        const tsSpan = document.createElement('span');
+        tsSpan.className = 'timestamp';
+        li.appendChild(tsSpan);
+      }
 
       if (msg.m === "dm") {
         if (msg.sender._id === gClient.user._id) {
-          liString += '<span class="sentDm"/>';
+          const s = document.createElement('span');
+          s.className = 'sentDm';
+          li.appendChild(s);
         } else if (msg.recipient._id === gClient.user._id) {
-          liString += '<span class="receivedDm"/>';
+          const s = document.createElement('span');
+          s.className = 'receivedDm';
+          li.appendChild(s);
         } else {
-          liString += '<span class="otherDm"/>';
+          const s = document.createElement('span');
+          s.className = 'otherDm';
+          li.appendChild(s);
           isSpecialDm = true;
         }
       }
 
       if (isSpecialDm) {
-        if (settings.showIdsInChat) liString += '<span class="id"/>';
-        liString += '<span class="name"/><span class="dmArrow"/>';
-        if (settings.showIdsInChat) liString += '<span class="id2"/>';
-        liString += '<span class="name2"/><span class="message"/>';
+        if (settings.showIdsInChat) {
+          const s = document.createElement('span');
+          s.className = 'id';
+          li.appendChild(s);
+        }
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'name';
+        li.appendChild(nameSpan);
+        const arrowSpan = document.createElement('span');
+        arrowSpan.className = 'dmArrow';
+        li.appendChild(arrowSpan);
+        if (settings.showIdsInChat) {
+          const s = document.createElement('span');
+          s.className = 'id2';
+          li.appendChild(s);
+        }
+        const name2Span = document.createElement('span');
+        name2Span.className = 'name2';
+        li.appendChild(name2Span);
+        const msgSpan = document.createElement('span');
+        msgSpan.className = 'message';
+        li.appendChild(msgSpan);
       } else {
-        if (settings.showIdsInChat) liString += '<span class="id"/>';
-        liString += '<span class="name"/>';
-        if (msg.r) liString += `<span class="replyLink"/>`;
-        liString += '<span class="message"/>';
+        if (settings.showIdsInChat) {
+          const s = document.createElement('span');
+          s.className = 'id';
+          li.appendChild(s);
+        }
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'name';
+        li.appendChild(nameSpan);
+        if (msg.r) {
+          const rlSpan = document.createElement('span');
+          rlSpan.className = 'replyLink';
+          li.appendChild(rlSpan);
+        }
+        const msgSpan = document.createElement('span');
+        msgSpan.className = 'message';
+        li.appendChild(msgSpan);
       }
 
-      const li = $(liString);
-      li.find(`.reply`).text("➦");
+      const replyEl = li.querySelector('.reply') as HTMLElement | null;
+      if (replyEl) replyEl.textContent = "➦";
 
       if (msg.r) {
         const repliedMsg = messageCache.find((e: any) => e.id === msg.r);
@@ -223,68 +269,69 @@ export function initChat(): Chat {
           }
         }
         if (repliedMsg) {
-          li.find(".replyLink").text(
-            `➥ ${
-              repliedMsg.m === "dm"
-                ? repliedMsg.sender.name
-                : repliedMsg.p.name
-            }`,
-          );
-          li.find(".replyLink").css({
+          const replyLinkEl = li.querySelector('.replyLink') as HTMLElement;
+          replyLinkEl.textContent = `➥ ${
+            repliedMsg.m === "dm"
+              ? repliedMsg.sender.name
+              : repliedMsg.p.name
+          }`;
+          Object.assign(replyLinkEl.style, {
             background: `${
               (repliedMsg?.m === "dm"
                 ? repliedMsg?.sender?.color
                 : repliedMsg?.p?.color) ?? "gray"
             }`,
           });
-          li.find(".replyLink").on("click", () => {
-            $("#chat-input").focus();
+          replyLinkEl.addEventListener('click', () => {
+            (document.querySelector('#chat input') as HTMLElement).focus();
             document
               .getElementById(`msg-${repliedMsg?.id}`)
               ?.scrollIntoView({ behavior: "smooth" });
-            $(`#msg-${repliedMsg?.id}`).css({
+            const repliedEl = document.getElementById('msg-' + repliedMsg?.id);
+            if (repliedEl) Object.assign(repliedEl.style, {
               border: `1px solid ${
                 repliedMsg?.m === "dm"
                   ? repliedMsg.sender?.color
                   : repliedMsg.p?.color
               }80`,
-              "background-color": `${
+              backgroundColor: `${
                 repliedMsg?.m === "dm"
                   ? repliedMsg.sender?.color
                   : repliedMsg.p?.color
               }20`,
             });
             setTimeout(() => {
-              $(`#msg-${repliedMsg?.id}`).css({
-                "background-color": "unset",
+              const el = document.getElementById('msg-' + repliedMsg?.id);
+              if (el) Object.assign(el.style, {
+                backgroundColor: "unset",
                 border: "1px solid #00000000",
               });
             }, 5000);
           });
         } else {
-          li.find(".replyLink").text("➥ Unknown Message");
-          li.find(".replyLink").css({ background: "gray" });
+          (li.querySelector('.replyLink') as HTMLElement).textContent = "➥ Unknown Message";
+          Object.assign((li.querySelector('.replyLink') as HTMLElement).style, { background: "gray" });
         }
       }
 
       // prefix before dms
       if (msg.m === "dm") {
         if (msg.sender._id === gClient.user._id) {
-          li.find(".sentDm").text("To");
-          li.find(".sentDm").css("color", "#ff55ff");
+          (li.querySelector('.sentDm') as HTMLElement).textContent = "To";
+          Object.assign((li.querySelector('.sentDm') as HTMLElement).style, { color: "#ff55ff" });
         } else if (msg.recipient._id === gClient.user._id) {
-          li.find(".receivedDm").text("From");
-          li.find(".receivedDm").css("color", "#ff55ff");
+          (li.querySelector('.receivedDm') as HTMLElement).textContent = "From";
+          Object.assign((li.querySelector('.receivedDm') as HTMLElement).style, { color: "#ff55ff" });
         } else {
-          li.find(".otherDm").text("DM");
-          li.find(".otherDm").css("color", "#ff55ff");
-          li.find(".dmArrow").text("->");
-          li.find(".dmArrow").css("color", "#ff55ff");
+          (li.querySelector('.otherDm') as HTMLElement).textContent = "DM";
+          Object.assign((li.querySelector('.otherDm') as HTMLElement).style, { color: "#ff55ff" });
+          (li.querySelector('.dmArrow') as HTMLElement).textContent = "->";
+          Object.assign((li.querySelector('.dmArrow') as HTMLElement).style, { color: "#ff55ff" });
         }
       }
 
       if (settings.showTimestampsInChat) {
-        li.find(".timestamp").text(new Date(msg.t).toLocaleTimeString());
+        (li.querySelector('.timestamp') as HTMLElement).textContent = new Date(msg.t).toLocaleTimeString();
       }
 
       const message = parseMarkdown(parseContent(msg.a), parseUrl).replace(
@@ -293,10 +340,10 @@ export function initChat(): Chat {
           const user = gClient.ppl[id];
           if (user) {
             const nick = parseContent(user.name);
-            if (user.id === gClient.getOwnParticipant().id) {
+            if (user.id === gClient.getOwnParticipant()!.id) {
               if (!getTabIsActive()) {
                 setYoureMentioned(true);
-                document.title = (window as any).i18nextify.i18next.t(
+                document.title = window.i18nextify.i18next.t(
                   "You were mentioned!",
                 );
               }
@@ -307,97 +354,98 @@ export function initChat(): Chat {
       );
 
       // apply names, colors, ids
-      li.find(".message").html(message);
+      (li.querySelector('.message') as HTMLElement).innerHTML = message;
 
       if (msg.m === "dm") {
         if (!settings.noChatColors)
-          li.find(".message").css("color", msg.sender.color || "white");
+          Object.assign((li.querySelector('.message') as HTMLElement).style, { color: msg.sender.color || "white" });
         if (settings.showIdsInChat) {
           if (msg.sender._id === gClient.user._id) {
-            li.find(".id").text(msg.recipient._id.substring(0, 6));
+            (li.querySelector('.id') as HTMLElement).textContent = msg.recipient._id.substring(0, 6);
           } else {
-            li.find(".id").text(msg.sender._id.substring(0, 6));
+            (li.querySelector('.id') as HTMLElement).textContent = msg.sender._id.substring(0, 6);
           }
         }
 
         if (msg.sender._id === gClient.user._id) {
           if (!settings.noChatColors)
-            li.find(".name").css("color", msg.recipient.color || "white");
-          li.find(".name").text(msg.recipient.name + ":");
-          if (settings.showChatTooltips) li[0].title = msg.recipient._id;
+            Object.assign((li.querySelector('.name') as HTMLElement).style, { color: msg.recipient.color || "white" });
+          (li.querySelector('.name') as HTMLElement).textContent = msg.recipient.name + ":";
+          if (settings.showChatTooltips) li.title = msg.recipient._id;
         } else if (msg.recipient._id === gClient.user._id) {
           if (!settings.noChatColors)
-            li.find(".name").css("color", msg.sender.color || "white");
-          li.find(".name").text(msg.sender.name + ":");
-          if (settings.showChatTooltips) li[0].title = msg.sender._id;
+            Object.assign((li.querySelector('.name') as HTMLElement).style, { color: msg.sender.color || "white" });
+          (li.querySelector('.name') as HTMLElement).textContent = msg.sender.name + ":";
+          if (settings.showChatTooltips) li.title = msg.sender._id;
         } else {
           if (!settings.noChatColors)
-            li.find(".name").css("color", msg.sender.color || "white");
+            Object.assign((li.querySelector('.name') as HTMLElement).style, { color: msg.sender.color || "white" });
           if (!settings.noChatColors)
-            li.find(".name2").css("color", msg.recipient.color || "white");
-          li.find(".name").text(msg.sender.name);
-          li.find(".name2").text(msg.recipient.name + ":");
+            Object.assign((li.querySelector('.name2') as HTMLElement).style, { color: msg.recipient.color || "white" });
+          (li.querySelector('.name') as HTMLElement).textContent = msg.sender.name;
+          (li.querySelector('.name2') as HTMLElement).textContent = msg.recipient.name + ":";
           if (settings.showIdsInChat)
-            li.find(".id").text(msg.sender._id.substring(0, 6));
+            (li.querySelector('.id') as HTMLElement).textContent = msg.sender._id.substring(0, 6);
           if (settings.showIdsInChat)
-            li.find(".id2").text(msg.recipient._id.substring(0, 6));
-          if (settings.showChatTooltips) li[0].title = msg.sender._id;
+            (li.querySelector('.id2') as HTMLElement).textContent = msg.recipient._id.substring(0, 6);
+          if (settings.showChatTooltips) li.title = msg.sender._id;
         }
       } else {
         if (!settings.noChatColors)
-          li.find(".message").css("color", msg.p.color || "white");
+          Object.assign((li.querySelector('.message') as HTMLElement).style, { color: msg.p.color || "white" });
         if (!settings.noChatColors)
-          li.find(".name").css("color", msg.p.color || "white");
-        li.find(".name").text(msg.p.name + ":");
+          Object.assign((li.querySelector('.name') as HTMLElement).style, { color: msg.p.color || "white" });
+        (li.querySelector('.name') as HTMLElement).textContent = msg.p.name + ":";
         if (!settings.noChatColors)
-          li.find(".message").css("color", msg.p.color || "white");
-        if (settings.showIdsInChat) li.find(".id").text(msg.p._id.substring(0, 6));
-        if (settings.showChatTooltips) li[0].title = msg.p._id;
+          Object.assign((li.querySelector('.message') as HTMLElement).style, { color: msg.p.color || "white" });
+        if (settings.showIdsInChat) (li.querySelector('.id') as HTMLElement).textContent = msg.p._id.substring(0, 6);
+        if (settings.showChatTooltips) li.title = msg.p._id;
       }
 
       // Adds copying _ids on click in chat
-      li.find(".id").on("click", () => {
+      li.querySelector('.id')?.addEventListener('click', () => {
         if (msg.m === "dm") {
           const copyId = msg.sender._id === gClient.user._id
             ? msg.recipient._id
             : msg.sender._id;
           navigator.clipboard.writeText(copyId);
-          li.find(".id").text("Copied");
+          (li.querySelector('.id') as HTMLElement).textContent = "Copied";
           setTimeout(() => {
-            li.find(".id").text(copyId.substring(0, 6));
+            (li.querySelector('.id') as HTMLElement).textContent = copyId.substring(0, 6);
           }, 2500);
         } else {
           navigator.clipboard.writeText(msg.p._id);
-          li.find(".id").text("Copied");
+          (li.querySelector('.id') as HTMLElement).textContent = "Copied";
           setTimeout(() => {
-            li.find(".id").text(msg.p._id.substring(0, 6));
+            (li.querySelector('.id') as HTMLElement).textContent = msg.p._id.substring(0, 6);
           }, 2500);
         }
       });
-      li.find(".id2").on("click", () => {
+      li.querySelector('.id2')?.addEventListener('click', () => {
         navigator.clipboard.writeText(msg.recipient._id);
-        li.find(".id2").text("Copied");
+        (li.querySelector('.id2') as HTMLElement).textContent = "Copied";
         setTimeout(() => {
-          li.find(".id2").text(msg.recipient._id.substring(0, 6));
+          (li.querySelector('.id2') as HTMLElement).textContent = msg.recipient._id.substring(0, 6);
         }, 2500);
       });
 
       // Reply button click event listener
-      li.find(".reply").on("click", () => {
+      li.querySelector('.reply')?.addEventListener('click', () => {
         if (msg.m !== "dm") {
-          MPP.chat.startReply(msg.p, msg.id, msg.a);
+          chat.startReply(msg.p, msg.id, msg.a);
           setTimeout(() => {
-            $(`#msg-${msg.id}`).css({
+            const el = document.getElementById('msg-' + msg.id);
+            if (el) Object.assign(el.style, {
               border: `1px solid ${
                 msg?.m === "dm" ? msg.sender?.color : msg.p?.color
               }80`,
-              "background-color": `${
+              backgroundColor: `${
                 msg?.m === "dm" ? msg.sender?.color : msg.p?.color
               }20`,
             });
           }, 100);
           setTimeout(() => {
-            $("#chat-input").focus();
+            (document.querySelector('#chat input') as HTMLElement).focus();
           }, 100);
         } else {
           const replyingTo =
@@ -405,22 +453,23 @@ export function initChat(): Chat {
               ? msg.recipient
               : msg.sender;
           if (gClient.ppl[replyingTo._id]) {
-            MPP.chat.startDmReply(replyingTo, msg.id);
+            chat.startDmReply(replyingTo, msg.id);
             setTimeout(() => {
-              $(`#msg-${msg.id}`).css({
+              const el = document.getElementById('msg-' + msg.id);
+              if (el) Object.assign(el.style, {
                 border: `1px solid ${
                   msg?.m === "dm" ? msg.sender?.color : msg.p?.color
                 }80`,
-                "background-color": `${
+                backgroundColor: `${
                   msg?.m === "dm" ? msg.sender?.color : msg.p?.color
                 }20`,
               });
             }, 100);
             setTimeout(() => {
-              $("#chat-input").focus();
+              (document.querySelector('#chat input') as HTMLElement).focus();
             }, 100);
           } else {
-            new (Notification as any)({
+            new Notification({
               target: "#piano",
               title: "User not found.",
               text: "The user who you are trying to reply to in a DM is not found, so a DM could not be started.",
@@ -430,26 +479,26 @@ export function initChat(): Chat {
       });
 
       // put list element in chat
-      $("#chat ul").append(li);
+      document.querySelector('#chat ul')!.appendChild(li);
       messageCache.push(msg);
 
-      const eles = $("#chat ul li").get();
+      const eles = Array.from(document.querySelectorAll('#chat ul li')) as HTMLElement[];
       for (let i = 1; i <= 50 && i <= eles.length; i++) {
-        eles[eles.length - i].style.opacity = 1.0 - i * 0.03;
+        eles[eles.length - i].style.opacity = String(1.0 - i * 0.03);
       }
       if (eles.length > 50) {
         eles[0].style.display = "none";
       }
       if (eles.length > 256) {
         messageCache.shift();
-        $(eles[0]).remove();
+        eles[0].remove();
       }
 
       // scroll to bottom if not "chatting" or if not scrolled up
-      if (!$("#chat").hasClass("chatting")) {
+      if (!document.getElementById('chat')!.classList.contains('chatting')) {
         chat.scrollToBottom();
       } else {
-        const ele = $("#chat ul").get(0);
+        const ele = document.querySelector('#chat ul') as HTMLElement;
         if (ele.scrollTop > ele.scrollHeight - ele.offsetHeight - 50)
           chat.scrollToBottom();
       }
@@ -481,44 +530,45 @@ export function initChat(): Chat {
   });
 
   // DOM event bindings
-  $("#chat input").on("focus", () => {
+  document.querySelector('#chat input')!.addEventListener('focus', () => {
     releaseKb();
-    $("#chat").addClass("chatting");
+    document.getElementById('chat')!.classList.add('chatting');
     chat.scrollToBottom();
   });
 
-  $(document).mousedown((evt: any) => {
-    if (!$("#chat").has(evt.target)) {
+  document.addEventListener('mousedown', (evt: MouseEvent) => {
+    if (!document.getElementById('chat')!.contains(evt.target as Node)) {
       chat.blur();
     }
   });
-  document.addEventListener("touchstart", (event: any) => {
+  document.addEventListener("touchstart", (event: TouchEvent) => {
     for (const i in event.changedTouches) {
       const touch = event.changedTouches[i];
-      if ($("#chat").has(touch.target)) {
+      if (document.getElementById('chat')!.contains(touch.target as Node)) {
         chat.blur();
       }
     }
   });
 
-  $(document).on("keydown", (evt: any) => {
-    if ($("#chat").hasClass("chatting")) {
+  document.addEventListener('keydown', (evt: KeyboardEvent) => {
+    if (document.getElementById('chat')!.classList.contains('chatting')) {
       if (evt.keyCode === 27) {
         chat.blur();
         if (!settings.noPreventDefault) evt.preventDefault();
         evt.stopPropagation();
       } else if (evt.keyCode === 13) {
-        $("#chat input").focus();
+        (document.querySelector('#chat input') as HTMLElement).focus();
       }
     } else if (!getModal() && (evt.keyCode === 27 || evt.keyCode === 13)) {
-      $("#chat input").focus();
+      (document.querySelector('#chat input') as HTMLElement).focus();
     }
   });
 
-  $("#chat input").on("keydown", function (this: any, evt: any) {
+  document.querySelector('#chat input')!.addEventListener('keydown', (evt: KeyboardEvent) => {
+    const input = evt.target as HTMLInputElement;
     if (evt.keyCode === 13) {
-      if (MPP.client.isConnected()) {
-        const message = $(this).val();
+      if (gClient.isConnected()) {
+        const message = input.value;
         if (message.length === 0) {
           if (getIsDming()) {
             chat.endDM();
@@ -531,7 +581,7 @@ export function initChat(): Chat {
           }, 100);
         } else {
           chat.send(message);
-          $(this).val("");
+          input.value = "";
           setTimeout(() => {
             chat.blur();
           }, 100);

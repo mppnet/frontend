@@ -1,7 +1,6 @@
 import { Notification } from './Notification';
-import type { Piano } from '../piano';
-
-declare const $: any;
+import type { Piano } from '../piano/piano';
+import type { SoundPack } from '../types';
 
 const soundDomain = window.location.hostname === 'localhost'
   ? `http://${location.host}`
@@ -11,8 +10,8 @@ export class SoundSelector {
   initialized: boolean = false;
   keys: Record<string, any>;
   loading: Record<string, boolean> = {};
-  notification: any;
-  packs: any[] = [];
+  notification: { close: () => void } | null;
+  packs: SoundPack[] = [];
   piano: Piano;
   soundSelection: string;
 
@@ -28,11 +27,16 @@ export class SoundSelector {
     });
   }
 
-  addPack(pack: any, load?: boolean): void {
-    this.loading[pack.url || pack] = true;
+  addPack(pack: string | SoundPack, load?: boolean): void {
+    if (typeof pack == "string") {
+      this.loading[pack] = true
+    } else {
+      this.loading[pack.url] = true;
+    }
+
     const self = this;
 
-    function add(obj: any) {
+    function add(obj: SoundPack) {
       for (let i = 0; i < self.packs.length; i++) {
         if (obj.name === self.packs[i].name) return console.warn('Sounds already added!!');
       }
@@ -43,7 +47,7 @@ export class SoundSelector {
       html.onclick = () => { self.loadPack(obj.name); self.notification.close(); };
       obj.html = html;
       self.packs.push(obj);
-      self.packs.sort((a: any, b: any) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+      self.packs.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
       if (load) self.loadPack(obj.name);
       delete self.loading[obj.url];
     }
@@ -51,24 +55,25 @@ export class SoundSelector {
     if (typeof pack === 'string') {
       let useDomain = true;
       if (pack.match(/^(http|https):\/\//i)) useDomain = false;
-      $.getJSON((useDomain ? soundDomain : '') + pack + '/info.json').done((json: any) => {
+      const url = (useDomain ? soundDomain : '') + pack;
+      fetch(url + '/info.json').then(r => r.json()).then((json: SoundPack) => {
         json.url = pack;
         add(json);
       });
     } else add(pack);
   }
-  addPacks(packs: any[]): void {
+  addPacks(packs: (string | SoundPack)[]): void {
     for (const p of packs) this.addPack(p);
   }
 
   init(): void {
-    if (this.initialized) return console.warn('Sound selector already initialized!') as any;
+    if (this.initialized) { console.warn('Sound selector already initialized!'); return; }
     if (Object.keys(this.loading).length) {
       setTimeout(() => { this.init(); }, 250);
       return;
     }
     const self = this;
-    $('#sound-btn').on('click', () => {
+    document.getElementById('sound-btn')!.addEventListener('click', () => {
       if (document.getElementById('Notification-Sound-Selector') != null) return self.notification.close();
       const html = document.createElement('ul');
       for (let i = 0; i < self.packs.length; i++) {
@@ -84,7 +89,7 @@ export class SoundSelector {
   }
 
   loadPack(name: string, force?: boolean): void {
-    let pack: any = name;
+    let pack: string | SoundPack = name;
     for (let i = 0; i < this.packs.length; i++) {
       if (this.packs[i].name === name) { pack = this.packs[i]; break; }
     }

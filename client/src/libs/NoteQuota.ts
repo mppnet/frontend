@@ -1,3 +1,5 @@
+import type { NoteQuotaParams } from '../types';
+
 export class NoteQuota {
   static PARAMS_LOBBY = { allowance: 200, max: 600 };
   static PARAMS_NORMAL = { allowance: 400, max: 1200 };
@@ -5,14 +7,14 @@ export class NoteQuota {
   static PARAMS_OFFLINE = { allowance: 8000, max: 24000, maxHistLen: 3 };
   static PARAMS_UNLIMITED = { allowance: 1000000, max: 3000000, maxHistLen: 3 };
 
-  cb: Function;
+  cb: (points: number) => void;
   allowance: number = 0;
   max: number = 0;
   maxHistLen: number = 0;
   points: number = 0;
   history: number[] = [];
 
-  constructor(cb: Function) {
+  constructor(cb: (points: number) => void) {
     this.cb = cb;
     this.setParams();
     this.resetPoints();
@@ -22,11 +24,11 @@ export class NoteQuota {
     return { m: "nq", allowance: this.allowance, max: this.max, maxHistLen: this.maxHistLen };
   }
 
-  setParams(params?: any) {
+  setParams(params?: NoteQuotaParams) {
     params = params || NoteQuota.PARAMS_OFFLINE;
-    var allowance = params.allowance || this.allowance || NoteQuota.PARAMS_OFFLINE.allowance;
-    var max = params.max || this.max || NoteQuota.PARAMS_OFFLINE.max;
-    var maxHistLen = params.maxHistLen || this.maxHistLen || NoteQuota.PARAMS_OFFLINE.maxHistLen;
+    const allowance = params.allowance || this.allowance || NoteQuota.PARAMS_OFFLINE.allowance;
+    const max = params.max || this.max || NoteQuota.PARAMS_OFFLINE.max;
+    const maxHistLen = params.maxHistLen || this.maxHistLen || NoteQuota.PARAMS_OFFLINE.maxHistLen;
     if (allowance !== this.allowance || max !== this.max || maxHistLen !== this.maxHistLen) {
       this.allowance = allowance;
       this.max = max;
@@ -40,7 +42,7 @@ export class NoteQuota {
   resetPoints() {
     this.points = this.max;
     this.history = [];
-    for (var i = 0; i < this.maxHistLen; i++) this.history.unshift(this.points);
+    for (let i = 0; i < this.maxHistLen; i++) this.history.unshift(this.points);
     if (this.cb) this.cb(this.points);
   }
 
@@ -55,8 +57,8 @@ export class NoteQuota {
   }
 
   spend(needed: number) {
-    var sum = 0;
-    for (var i in this.history) { sum += this.history[i]; }
+    let sum = 0;
+    for (const i in this.history) { sum += this.history[i]; }
     if (sum <= 0) needed *= this.allowance;
     if (this.points < needed) {
       return false;

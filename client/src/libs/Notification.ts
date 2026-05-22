@@ -1,19 +1,18 @@
-import { mixin, EventEmitter } from '../util/util';
-
-declare const $: any;
+import { EventEmitter, fadeOut } from '../util/util';
+import type { NotificationParams } from '../types';
 
 export class Notification extends EventEmitter {
   id: string;
   title: string;
   text: string;
-  html: any;
-  target: any;
+  html: string | HTMLElement;
+  target: HTMLElement;
   duration: number;
-  domElement: any;
+  domElement: HTMLElement;
   onresize: () => void;
   ["class"]: string;
 
-  constructor(par?: any) {
+  constructor(par?: NotificationParams) {
     super();
 
     par = par || {};
@@ -22,33 +21,44 @@ export class Notification extends EventEmitter {
     this.title = par.title || "";
     this.text = par.text || "";
     this.html = par.html || "";
-    this.target = $(par.target || "#piano");
+    this.target = document.querySelector(par.target || '#piano') as HTMLElement;
     this.duration = par.duration || 30000;
     this["class"] = par["class"] || "classic";
 
-    const eles = $("#" + this.id);
-    if (eles.length > 0) {
-      eles.remove();
-    }
+    const existing = document.getElementById(this.id);
+    if (existing) existing.remove();
 
-    this.domElement = $(
-      '<div class="notification"><div class="notification-body"><div class="title"></div>' +
-      '<div class="text"></div></div><div class="x" translated>X</div></div>',
-    );
+    const wrapper = document.createElement('div');
+    wrapper.className = 'notification';
+    const body = document.createElement('div');
+    body.className = 'notification-body';
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'title';
+    titleDiv.textContent = this.title;
+    const textDiv = document.createElement('div');
+    textDiv.className = 'text';
+    body.appendChild(titleDiv);
+    body.appendChild(textDiv);
+    const xBtn = document.createElement('div');
+    xBtn.className = 'x';
+    xBtn.setAttribute('translated', '');
+    xBtn.textContent = 'X';
+    wrapper.appendChild(body);
+    wrapper.appendChild(xBtn);
+    this.domElement = wrapper;
 
-    this.domElement[0].id = this.id;
-    this.domElement.addClass(this["class"]);
-    this.domElement.find(".title").text(this.title);
+    this.domElement.id = this.id;
+    this.domElement.classList.add(this["class"]);
 
     if (this.text.length > 0) {
-      this.domElement.find(".text").text(this.text);
+      textDiv.textContent = this.text;
     } else if (this.html instanceof HTMLElement) {
-      this.domElement.find(".text")[0].appendChild(this.html);
+      textDiv.appendChild(this.html as HTMLElement);
     } else if (this.html.length > 0) {
-      this.domElement.find(".text").html(this.html);
+      textDiv.innerHTML = this.html as string;
     }
 
-    document.body.appendChild(this.domElement.get(0));
+    document.body.appendChild(this.domElement);
 
     this.position();
 
@@ -58,7 +68,7 @@ export class Notification extends EventEmitter {
 
     window.addEventListener("resize", this.onresize);
 
-    this.domElement.find(".x").click(() => {
+    xBtn.addEventListener('click', () => {
       this.close();
     });
 
@@ -70,29 +80,31 @@ export class Notification extends EventEmitter {
   }
 
   position() {
-    const pos = this.target.offset();
+    const pos = this.target.getBoundingClientRect();
 
     let x =
       pos.left -
-      this.domElement.width() / 2 +
-      this.target.width() / 4;
+      this.domElement.offsetWidth / 2 +
+      this.target.offsetWidth / 4;
 
-    const y = pos.top - this.domElement.height() - 8;
-    const width = this.domElement.width();
+    const y = pos.top - this.domElement.offsetHeight - 8;
+    const width = this.domElement.offsetWidth;
 
-    if (x + width > $("body").width()) {
-      x -= x + width - $("body").width();
+    if (x + width > document.body.offsetWidth) {
+      x -= x + width - document.body.offsetWidth;
     }
 
     if (x < 0) x = 0;
 
-    this.domElement.offset({ left: x, top: y });
+    this.domElement.style.left = x + 'px';
+    this.domElement.style.top = y + 'px';
+    this.domElement.style.position = 'absolute';
   }
 
   close() {
     window.removeEventListener("resize", this.onresize);
 
-    this.domElement.fadeOut(500, () => {
+    fadeOut(this.domElement, 500, () => {
       this.domElement.remove();
       this.emit("close");
     });

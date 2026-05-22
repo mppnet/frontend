@@ -14,5 +14,8 @@
     "build:dev": "bun build client/src/main.ts --outfile client/script.js --target browser --sourcemap",
     "build:min": "bun build client/src/main.ts --outfile client/script.js --target browser --minify",
     "typecheck": "tsc --project client/tsconfig.json"
+  },
+  "dependencies": {
+    "@types/bun": "^1.3.14"
   }
 }

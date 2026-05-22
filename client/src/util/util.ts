@@ -1,9 +1,42 @@
-export function mixin(obj1: any, obj2: any) {
-  for (var i in obj2) {
-    if (obj2.hasOwnProperty(i)) {
-      obj1[i] = obj2[i];
-    }
-  }
+function getNaturalDisplay(el: HTMLElement): string {
+  const tmp = document.createElement(el.tagName);
+  document.body.appendChild(tmp);
+  const display = getComputedStyle(tmp).display;
+  document.body.removeChild(tmp);
+  return display === 'none' ? 'block' : display;
+}
+
+export function fadeIn(el: HTMLElement, ms: number, cb?: () => void): void {
+  const isHidden =
+    el.style.display === 'none' || getComputedStyle(el).display === 'none';
+
+  el.style.opacity = '0';
+  el.style.display = isHidden ? getNaturalDisplay(el) : getComputedStyle(el).display;
+  el.style.transition = `opacity ${ms}ms`;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+    });
+  });
+
+  setTimeout(() => {
+    el.style.transition = '';
+    cb?.();
+  }, ms);
+}
+
+export function fadeOut(el: HTMLElement, ms: number, cb?: () => void): void {
+  if (!el) return;
+
+  el.style.transition = `opacity ${ms}ms`;
+  el.style.opacity = '0';
+
+  setTimeout(() => {
+    el.style.display = 'none';
+    el.style.transition = '';
+    cb?.();
+  }, ms);
 }
 
 export class EventEmitter {
@@ -29,9 +62,9 @@ export class EventEmitter {
   }
 }
 
-export function hashFnv32a(str: string, asString?: boolean, seed?: number) {
-  var i, l, hval = (seed === undefined) ? 0x811c9dc5 : seed;
-  for (i = 0, l = str.length; i < l; i++) {
+export function hashFnv32a(str: string, asString?: boolean, seed?: number): string | number {
+  let hval = (seed === undefined) ? 0x811c9dc5 : seed;
+  for (let i = 0, l = str.length; i < l; i++) {
     hval ^= str.charCodeAt(i);
     hval += (hval << 1) + (hval << 4) + (hval << 7) + (hval << 8) + (hval << 24);
   }
@@ -57,12 +90,12 @@ export class Knob extends EventEmitter {
   fixedPoint: number;
   dragY: number;
   mouse_over: boolean;
-  canvas: any;
-  ctx: any;
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
   radius: number;
   baseImage: HTMLCanvasElement;
 
-  constructor(canvas: any, min: number, max: number, step: number, value: number, name: string, unit?: string) {
+  constructor(canvas: HTMLCanvasElement, min: number, max: number, step: number, value: number, name: string, unit?: string) {
     super();
 
     this.min = min || 0;
@@ -73,9 +106,9 @@ export class Knob extends EventEmitter {
     this.name = name || "";
     this.unit = unit || "";
 
-    var ind = step.toString().indexOf(".");
-    if (ind == -1) ind = step.toString().length - 1;
-    this.fixedPoint = step.toString().substr(ind).length - 1;
+    const ind = step.toString().indexOf(".");
+    const fixedInd = ind == -1 ? step.toString().length - 1 : ind;
+    this.fixedPoint = step.toString().substr(fixedInd).length - 1;
 
     this.dragY = 0;
     this.mouse_over = false;
@@ -87,7 +120,7 @@ export class Knob extends EventEmitter {
     this.baseImage = document.createElement("canvas");
     this.baseImage.width = canvas.width;
     this.baseImage.height = canvas.height;
-    var ctx = this.baseImage.getContext("2d")!;
+    const ctx = this.baseImage.getContext("2d")!;
     ctx.fillStyle = "#444";
     ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
     ctx.shadowBlur = 5;
@@ -98,13 +131,13 @@ export class Knob extends EventEmitter {
     ctx.fill();
 
     // events
-    var self = this;
-    var dragging = false;
+    const self = this;
+    let dragging = false;
     (function () {
-      function mousemove(evt: any) {
+      function mousemove(evt: MouseEvent) {
         if (evt.screenY !== self.dragY) {
-          var delta = -(evt.screenY - self.dragY);
-          var scale = 0.0075;
+          const delta = -(evt.screenY - self.dragY);
+          let scale = 0.0075;
           if (evt.ctrlKey) scale *= 0.05;
           self.setKnobValue(self.knobValue + delta * scale);
           self.dragY = evt.screenY;
@@ -113,8 +146,8 @@ export class Knob extends EventEmitter {
         evt.preventDefault();
         showTip();
       }
-      function mouseout(evt: any) {
-        if (evt.toElement === null && evt.relatedTarget === null) {
+      function mouseout(evt: MouseEvent) {
+        if ((evt as any).toElement === null && evt.relatedTarget === null) {
           mouseup();
         }
       }
@@ -126,8 +159,8 @@ export class Knob extends EventEmitter {
         dragging = false;
         if (!self.mouse_over) removeTip();
       }
-      canvas.addEventListener("mousedown", function (evt: any) {
-        var pos = self.translateMouseEvent(evt);
+      canvas.addEventListener("mousedown", function (evt: MouseEvent) {
+        const pos = self.translateMouseEvent(evt);
         if (self.contains(pos.x, pos.y)) {
           dragging = true;
           self.dragY = evt.screenY;
@@ -137,19 +170,19 @@ export class Knob extends EventEmitter {
           document.addEventListener("mouseup", mouseup);
         }
       });
-      canvas.addEventListener("keydown", function (evt: any) {
+      canvas.addEventListener("keydown", function (evt: KeyboardEvent) {
         if (evt.keyCode == 38) { self.setValue(self.value + self.step); showTip(); }
         else if (evt.keyCode == 40) { self.setValue(self.value - self.step); showTip(); }
       });
     })();
 
     function showTip() {
-      var div: any = document.getElementById("tooltip");
+      let div = document.getElementById("tooltip") as HTMLElement | null;
       if (!div) {
         div = document.createElement("div");
         document.body.appendChild(div);
         div.id = "tooltip";
-        var rect = self.canvas.getBoundingClientRect();
+        const rect = self.canvas.getBoundingClientRect();
         div.style.left = rect.left + "px";
         div.style.top = rect.bottom + "px";
       }
@@ -158,11 +191,11 @@ export class Knob extends EventEmitter {
       div.textContent += self.valueString() + self.unit;
     }
     function removeTip() {
-      var div = document.getElementById("tooltip");
+      const div = document.getElementById("tooltip");
       if (div) { div.parentElement!.removeChild(div); }
     }
-    function ttmousemove(evt: any) {
-      var pos = self.translateMouseEvent(evt);
+    function ttmousemove(evt: MouseEvent) {
+      const pos = self.translateMouseEvent(evt);
       if (self.contains(pos.x, pos.y)) { self.mouse_over = true; showTip(); }
       else { self.mouse_over = false; if (!dragging) removeTip(); }
     }
@@ -174,17 +207,17 @@ export class Knob extends EventEmitter {
   }
 
   redraw() {
-    var dot_distance = 0.28 * this.canvas.width;
-    var dot_radius = 0.03 * this.canvas.width;
+    const dot_distance = 0.28 * this.canvas.width;
+    const dot_radius = 0.03 * this.canvas.width;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.drawImage(this.baseImage, 0, 0);
-    var a = this.knobValue;
+    let a = this.knobValue;
     a *= Math.PI * 2 * 0.8;
     a += Math.PI / 2;
     a += Math.PI * 2 * 0.1;
-    var half_width = this.canvas.width / 2;
-    var x = Math.cos(a) * dot_distance + half_width;
-    var y = Math.sin(a) * dot_distance + half_width;
+    const half_width = this.canvas.width / 2;
+    const x = Math.cos(a) * dot_distance + half_width;
+    const y = Math.sin(a) * dot_distance + half_width;
     this.ctx.fillStyle = "#fff";
     this.ctx.beginPath();
     this.ctx.arc(x, y, dot_radius, 0, Math.PI * 2);
@@ -218,8 +251,8 @@ export class Knob extends EventEmitter {
     return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) < this.radius;
   }
 
-  translateMouseEvent(evt: any) {
-    var element = evt.target;
+  translateMouseEvent(evt: MouseEvent) {
+    const element = evt.target as HTMLElement;
     return {
       x: evt.clientX - element.getBoundingClientRect().left - element.clientLeft + element.scrollLeft,
       y: evt.clientY - (element.getBoundingClientRect().top - element.clientTop + element.scrollTop),

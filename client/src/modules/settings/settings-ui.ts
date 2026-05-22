@@ -3,13 +3,12 @@ import { state, getClient, getPiano } from '../../util/state';
 import { settings } from './settings';
 import { openModal, closeModal } from '../../util/modal';
 import { BASIC_PIANO_SCALES } from '../../util/constants';
-
-declare const $: any;
+import { Participant } from 'src/types';
 
 export function initSettingsUI(): void {
   if (window.location.hostname === 'multiplayerpiano.com') {
     const button = document.getElementById('client-settings-btn')!;
-    let notification: any = null;
+    let notification: { close: () => void; on: (evt: string, cb: () => void) => void } | null = null;
 
     button.addEventListener('click', () => {
       if (notification) {
@@ -84,12 +83,12 @@ export function initSettingsUI(): void {
           settings.noBackgroundColor = setting.classList.contains('enabled');
           const client = getClient();
           if (client.channel.settings.color && !settings.noBackgroundColor) {
-            (window as any).setBackgroundColor(
+            window.setBackgroundColor(
               client.channel.settings.color,
               client.channel.settings.color2,
             );
           } else {
-            (window as any).setBackgroundColorToDefault();
+            window.setBackgroundColorToDefault();
           }
         };
         html.appendChild(setting);
@@ -175,12 +174,12 @@ export function initSettingsUI(): void {
           settings.smoothCursor = setting.classList.contains('enabled');
           const client = getClient();
           if (settings.smoothCursor) {
-            $('#cursors').attr('smooth-cursors', '');
+            document.getElementById('cursors')!.setAttribute('smooth-cursors', '');
           } else {
-            $('#cursors').removeAttr('smooth-cursors');
+            document.getElementById('cursors')!.removeAttribute('smooth-cursors');
           }
           if (settings.smoothCursor) {
-            Object.values(client.ppl).forEach((participant: any) => {
+            Object.values(client.ppl).forEach((participant: Participant) => {
               if (participant.cursorDiv) {
                 participant.cursorDiv.style.left = '';
                 participant.cursorDiv.style.top = '';
@@ -189,7 +188,7 @@ export function initSettingsUI(): void {
               }
             });
           } else {
-            Object.values(client.ppl).forEach((participant: any) => {
+            Object.values(client.ppl).forEach((participant: Participant) => {
               if (participant.cursorDiv) {
                 participant.cursorDiv.style.left = participant.x + '%';
                 participant.cursorDiv.style.top = participant.y + '%';
@@ -205,7 +204,7 @@ export function initSettingsUI(): void {
       (() => {
         const setting = document.createElement('select') as HTMLSelectElement;
         setting.className = 'setting';
-        (setting as any).style = 'color: inherit; width: calc(100% - 2px);';
+        (setting as HTMLElement).style.cssText = 'color: inherit; width: calc(100% - 2px);';
         setting.setAttribute('translated', '');
         const keys = Object.keys(BASIC_PIANO_SCALES);
         const defaultOption = document.createElement('option');
@@ -245,9 +244,9 @@ export function initSettingsUI(): void {
           localStorage.hideAllCursors = setting.classList.contains('enabled');
           settings.hideAllCursors = setting.classList.contains('enabled');
           if (settings.hideAllCursors) {
-            $('#cursors').hide();
+            document.getElementById('cursors')!.style.display = 'none';
           } else {
-            $('#cursors').show();
+            document.getElementById('cursors')!.style.display = 'block';
           }
         };
         html.appendChild(setting);
@@ -297,14 +296,14 @@ export function initSettingsUI(): void {
       setting.onclick = onclickFunc;
 
       const label = document.createElement('label');
-      label.innerText = (window as any).i18nextify.i18next.t(labelText + ':') + ' ';
+      label.innerText = window.i18nextify.i18next.t(labelText + ':') + ' ';
 
       label.appendChild(setting);
       container.appendChild(label);
       if (addBr) container.appendChild(document.createElement('br'));
     };
 
-    (window as any).changeClientSettingsTab = (evt: any, tabName: string) => {
+    window.changeClientSettingsTab = (evt: { currentTarget: Element }, tabName: string) => {
       content.innerHTML = '';
 
       for (let index = 0; index < tablinks.length; index++) {
@@ -375,9 +374,9 @@ export function initSettingsUI(): void {
               localStorage.hideChat = settings.hideChatLocal;
 
               if (settings.hideChatLocal) {
-                $('#chat').hide();
+                document.getElementById('chat')!.style.display = 'none';
               } else {
-                $('#chat').show();
+                document.getElementById('chat')!.style.display = 'block';
               }
             },
           );
@@ -468,16 +467,16 @@ export function initSettingsUI(): void {
               localStorage.hidePiano = settings.hidePianoLocal;
 
               if (settings.hidePianoLocal) {
-                $('#piano').hide();
+                document.getElementById('piano')!.style.display = 'none';
               } else {
-                $('#piano').show();
+                document.getElementById('piano')!.style.display = 'block';
               }
             },
           );
 
           const selectSetting = document.createElement('select') as HTMLSelectElement;
           selectSetting.className = 'setting';
-          (selectSetting as any).style = 'width: calc(58.7% - 2px);';
+          selectSetting.style.cssText = 'width: calc(58.7% - 2px);';
 
           selectSetting.onchange = () => {
             localStorage.highlightScaleNotes = selectSetting.value;
@@ -540,12 +539,12 @@ export function initSettingsUI(): void {
               const client = getClient();
 
               if (client.channel.settings.color && !settings.noBackgroundColor) {
-                (window as any).setBackgroundColor(
+                window.setBackgroundColor(
                   client.channel.settings.color,
                   client.channel.settings.color2,
                 );
               } else {
-                (window as any).setBackgroundColorToDefault();
+                window.setBackgroundColorToDefault();
               }
             },
           );
@@ -561,8 +560,8 @@ export function initSettingsUI(): void {
               localStorage.smoothCursor = settings.smoothCursor;
               const client = getClient();
               if (settings.smoothCursor) {
-                $('#cursors').attr('smooth-cursors', '');
-                Object.values(client.ppl).forEach((participant: any) => {
+                document.getElementById('cursors')!.setAttribute('smooth-cursors', '');
+                Object.values(client.ppl).forEach((participant: Participant) => {
                   if (participant.cursorDiv) {
                     participant.cursorDiv.style.left = '';
                     participant.cursorDiv.style.top = '';
@@ -571,8 +570,8 @@ export function initSettingsUI(): void {
                   }
                 });
               } else {
-                $('#cursors').removeAttr('smooth-cursors');
-                Object.values(client.ppl).forEach((participant: any) => {
+                document.getElementById('cursors')!.removeAttribute('smooth-cursors');
+                Object.values(client.ppl).forEach((participant: Participant) => {
                   if (participant.cursorDiv) {
                     participant.cursorDiv.style.left = participant.x + '%';
                     participant.cursorDiv.style.top = participant.y + '%';
@@ -593,9 +592,9 @@ export function initSettingsUI(): void {
               settings.hideAllCursors = !settings.hideAllCursors;
               localStorage.hideAllCursors = settings.hideAllCursors;
               if (settings.hideAllCursors) {
-                $('#cursors').hide();
+                document.getElementById('cursors')!.style.display = 'none';
               } else {
-                $('#cursors').show();
+                document.getElementById('cursors')!.style.display = 'block';
               }
             },
           );
@@ -611,18 +610,18 @@ export function initSettingsUI(): void {
               localStorage.hideBotUsers = settings.hideBotUsers;
               const client = getClient();
 
-              Object.values(client.ppl).forEach((participant: any) => {
+              Object.values(client.ppl).forEach((participant: Participant) => {
                 if (
                   participant.tag &&
-                  participant.tag.text === 'BOT' &&
+                    participant.tag.text === 'BOT' &&
                   participant.cursorDiv
                 ) {
                   if (settings.hideBotUsers) {
-                    $('#names #namediv-' + participant.id).hide();
+                    const nd = document.getElementById('namediv-' + participant.id); if (nd) nd.style.display = 'none';
                     participant.cursorDiv.style.display = 'none';
                   } else {
-                    $('#names #namediv-' + participant.id).show();
-                    participant.cursorDiv.style.display = '';
+                    const nd = document.getElementById('namediv-' + participant.id); if (nd) nd.style.display = 'block';
+                    participant.cursorDiv.style.display = 'block';
                   }
                 }
               });
@@ -651,7 +650,7 @@ export function initSettingsUI(): void {
       }
     };
 
-    (window as any).changeClientSettingsTab(
+    window.changeClientSettingsTab(
       {
         currentTarget: document.getElementsByClassName(
           'client-settings-tablink',

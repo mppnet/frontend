@@ -1,10 +1,6 @@
-/// <reference types="jquery" />
-
-declare function require(module: string): any;
-
 interface Window {
-  MPP: any;
-  i18nextify: any;
+  MPP: Record<string, unknown>;
+  i18nextify: { i18next: { t: (key: string, options?: Record<string, unknown>) => string; language: string; isInitialized: boolean; on: (event: string, cb: () => void) => void; changeLanguage: (lng: string) => Promise<void>; }; init: (opts: Record<string, unknown>) => { start: () => void }; forceRerender: () => void; };
   AudioContext: typeof AudioContext;
   webkitAudioContext: typeof AudioContext;
   mozRequestAnimationFrame: typeof requestAnimationFrame;
@@ -12,10 +8,10 @@ interface Window {
   requestAnimFrame: (cb: FrameRequestCallback) => number;
   setBackgroundColor: (hex: string, hex2?: string) => void;
   setBackgroundColorToDefault: () => void;
-  gKnowsYouCanUseKeyboardTimeout: any;
-  gKnowsYouCanUseKeyboardNotification: any;
-  gHasBeenHereBefore: any;
-  changeClientSettingsTab: (evt: any, tabName: string) => void;
+  gKnowsYouCanUseKeyboardTimeout: ReturnType<typeof setTimeout> | undefined;
+  gKnowsYouCanUseKeyboardNotification: { close: () => void } | undefined;
+  gHasBeenHereBefore: boolean;
+  changeClientSettingsTab: (evt: { currentTarget: Element }, tabName: string) => void;
 }
 
-declare var i18nextify: any;
+declare let i18nextify: Window['i18nextify'];

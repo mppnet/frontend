@@ -1,8 +1,6 @@
 import { state, getClient } from '../util/state';
 import { openModal, closeModal } from '../util/modal';
-
-declare const $: any;
-declare const i18nextify: any;
+import type { ConfettiParticle } from '../types';
 
 export function initConfetti(): void {
   const gClient = getClient();
@@ -10,12 +8,12 @@ export function initConfetti(): void {
   let maxParticleCount = 500;
   let particleSpeed = 2;
   let streamingConfetti = false;
-  let animationTimer: any = null;
-  let particles: any[] = [];
+  let animationTimer: number | null = null;
+  let particles: ConfettiParticle[] = [];
   let waveAngle = 0;
   const colors = ['DodgerBlue', 'OliveDrab', 'Gold', 'Pink', 'SlateBlue', 'LightBlue', 'Violet', 'PaleGreen', 'SteelBlue', 'SandyBrown', 'Chocolate', 'Crimson'];
 
-  function resetParticle(particle: any, width: number, height: number) {
+  function resetParticle(particle: Partial<ConfettiParticle>, width: number, height: number): ConfettiParticle {
     particle.color = colors[(Math.random() * colors.length) | 0];
     particle.x = Math.random() * width;
     particle.y = Math.random() * height - height;
@@ -23,7 +21,7 @@ export function initConfetti(): void {
     particle.tilt = Math.random() * 10 - 10;
     particle.tiltAngleIncrement = Math.random() * 0.07 + 0.05;
     particle.tiltAngle = 0;
-    return particle;
+    return particle as ConfettiParticle;
   }
 
   function startConfetti() {
@@ -103,19 +101,19 @@ export function initConfetti(): void {
         const option = document.createElement('option');
         option.value = z.code;
         option.innerText = z.native;
-        if (z.code === i18nextify.i18next.language.split('-')[0]) option.selected = true;
+        if (z.code === window.i18nextify.i18next.language.split('-')[0]) option.selected = true;
         option.setAttribute('translated', '');
         languages.appendChild(option);
       });
     }
 
-    if (i18nextify.i18next.isInitialized) createTranslationOptions();
-    else i18nextify.i18next.on('initialized', () => { createTranslationOptions(); });
+    if (window.i18nextify.i18next.isInitialized) createTranslationOptions();
+    else window.i18nextify.i18next.on('initialized', () => { createTranslationOptions(); });
 
     document.getElementById('lang-btn')!.addEventListener('click', () => { openModal('#language'); });
     document.querySelector('#language > button')!.addEventListener('click', async () => {
-      await i18nextify.i18next.changeLanguage((document.querySelector('#languages') as any).selectedOptions[0].value);
-      i18nextify.forceRerender();
+      await window.i18nextify.i18next.changeLanguage((document.querySelector('#languages') as HTMLSelectElement).selectedOptions[0].value);
+      window.i18nextify.forceRerender();
       closeModal();
     });
   })();

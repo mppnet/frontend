@@ -5,11 +5,10 @@ import { NoteQuota } from '../libs/NoteQuota';
 import { Color } from '../libs/Color';
 import { Notification } from '../libs/Notification';
 import { openModal, closeModal } from '../util/modal';
+import { fadeIn, fadeOut } from '../util/util';
+import type { Participant } from '../types';
 
-declare const $: any;
-declare let gKnowsYouCanUseKeyboard: boolean;
-declare let gKnowsYouCanUseKeyboardNotification: any;
-declare let gKeyboardSeq: number;
+let gKeyboardSeq = 0;
 
 // Module-level state
 let transpose = 0;
@@ -18,23 +17,23 @@ let capturingKeyboard = false;
 let capsLockKey = false;
 
 // DM state
-let gDmParticipant: any;
+let gDmParticipant: Participant | null = null;
 let gIsDming = false;
-let gReplyParticipant: any;
+let gReplyParticipant: Participant | null = null;
 let gIsReplying = false;
-let gMessageId: any;
+let gMessageId: string | null = null;
 
 // DM getters/setters
 export const getIsDming = (): boolean => gIsDming;
 export const setIsDming = (v: boolean): void => { gIsDming = v; };
-export const getDmParticipant = (): any => gDmParticipant;
-export const setDmParticipant = (v: any): void => { gDmParticipant = v; };
+export const getDmParticipant = (): Participant | null => gDmParticipant;
+export const setDmParticipant = (v: Participant | null): void => { gDmParticipant = v; };
 export const getIsReplying = (): boolean => gIsReplying;
 export const setIsReplying = (v: boolean): void => { gIsReplying = v; };
-export const getReplyParticipant = (): any => gReplyParticipant;
-export const setReplyParticipant = (v: any): void => { gReplyParticipant = v; };
-export const getMessageId = (): any => gMessageId;
-export const setMessageId = (v: any): void => { gMessageId = v; };
+export const getReplyParticipant = (): Participant | null => gReplyParticipant;
+export const setReplyParticipant = (v: Participant | null): void => { gReplyParticipant = v; };
+export const getMessageId = (): string | null => gMessageId;
+export const setMessageId = (v: string | null): void => { gMessageId = v; };
 
 export const getTranspose = (): number => transpose;
 export const getKeyBinding = (): Record<number, { note: { note: string; octave: number }; held: boolean }> => key_binding;
@@ -45,9 +44,9 @@ export const setKeyBinding = (useVP: boolean): void => {
 };
 
 // Forward declarations for keyboard handlers
-let handleKeyDown: (evt: any) => any;
-let handleKeyUp: (evt: any) => any;
-let handleKeyPress: (evt: any) => any;
+let handleKeyDown: (evt: KeyboardEvent) => any;
+let handleKeyUp: (evt: KeyboardEvent) => any;
+let handleKeyPress: (evt: KeyboardEvent) => any;
 
 const recapListener = () => {
   captureKeyboard();
@@ -55,22 +54,22 @@ const recapListener = () => {
 export function captureKeyboard(): void {
   if (!capturingKeyboard) {
     capturingKeyboard = true;
-    $('#piano').off('mousedown', recapListener);
-    $('#piano').off('touchstart', recapListener);
-    $(document).on('keydown', handleKeyDown);
-    $(document).on('keyup', handleKeyUp);
-    $(window).on('keypress', handleKeyPress);
+    document.getElementById('piano')!.removeEventListener('mousedown', recapListener);
+    document.getElementById('piano')!.removeEventListener('touchstart', recapListener);
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('keypress', handleKeyPress);
   }
 }
 
 export function releaseKeyboard(): void {
   if (capturingKeyboard) {
     capturingKeyboard = false;
-    $(document).off('keydown', handleKeyDown);
-    $(document).off('keyup', handleKeyUp);
-    $(window).off('keypress', handleKeyPress);
-    $('#piano').on('mousedown', recapListener);
-    $('#piano').on('touchstart', recapListener);
+    document.removeEventListener('keydown', handleKeyDown);
+    document.removeEventListener('keyup', handleKeyUp);
+    window.removeEventListener('keypress', handleKeyPress);
+    document.getElementById('piano')!.addEventListener('mousedown', recapListener);
+    document.getElementById('piano')!.addEventListener('touchstart', recapListener);
   }
 }
 
@@ -78,9 +77,9 @@ export const velocityFromMouseY = (): number => {
   return 0.1 + (state.mouseY / 100) * 0.6;
 };
 
-let participantTouchhandler: (e: any, ele: any) => void;
+let participantTouchhandler: (e: Event, ele: HTMLElement) => void;
 
-export const getParticipantTouchhandler = (): ((e: any, ele: any) => void) => participantTouchhandler;
+export const getParticipantTouchhandler = (): ((e: Event, ele: HTMLElement) => void) => participantTouchhandler;
 
 export function initKeyboard(): void {
   const gClient = getClient();
@@ -89,16 +88,16 @@ export function initKeyboard(): void {
   // Volume slider
   const volume_slider = document.getElementById('volume-slider') as HTMLInputElement;
   volume_slider.value = String(gPiano.audio.volume);
-  $('#volume-label').text('Volume: ' + Math.floor(gPiano.audio.volume * 100) + '%');
+  document.getElementById('volume-label')!.textContent = 'Volume: ' + Math.floor(gPiano.audio.volume * 100) + '%';
   volume_slider.addEventListener('input', () => {
     const v = +volume_slider.value;
     gPiano.audio.setVolume(v);
     if (window.localStorage) localStorage.volume = String(v);
-    $('#volume-label').text('Volume: ' + Math.floor(v * 100) + '%');
+    document.getElementById('volume-label')!.textContent = 'Volume: ' + Math.floor(v * 100) + '%';
   });
 
   // Note class
-  const Note = function (this: any, note: string, octave?: number) {
+  const Note = function (this: { note: string; octave: number }, note: string, octave?: number) {
     this.note = note;
     this.octave = octave || 0;
   } as any;
@@ -149,9 +148,9 @@ export function initKeyboard(): void {
     });
   };
 
-  handleKeyDown = (evt: any) => {
-    if (evt.target.type) return;
-    const code = parseInt(evt.keyCode);
+  handleKeyDown = (evt: KeyboardEvent) => {
+    if ((evt.target as HTMLElement & { type?: string }).type) return;
+    const code = parseInt(String(evt.keyCode));
     if (key_binding[code] !== undefined) {
       const binding = key_binding[code];
       if (!binding.held) {
@@ -176,7 +175,6 @@ export function initKeyboard(): void {
       }
 
       if (++gKeyboardSeq == 3) {
-        gKnowsYouCanUseKeyboard = true;
         if (window.gKnowsYouCanUseKeyboardTimeout)
           clearTimeout(window.gKnowsYouCanUseKeyboardTimeout);
         if (localStorage) localStorage.knowsYouCanUseKeyboard = 'true';
@@ -213,9 +211,9 @@ export function initKeyboard(): void {
     }
   };
 
-  handleKeyUp = (evt: any) => {
-    if (evt.target.type) return;
-    const code = parseInt(evt.keyCode);
+  handleKeyUp = (evt: KeyboardEvent) => {
+    if ((evt.target as HTMLElement & { type?: string }).type) return;
+    const code = parseInt(String(evt.keyCode));
     if (key_binding[code] !== undefined) {
       const binding = key_binding[code];
       if (binding.held) {
@@ -250,8 +248,8 @@ export function initKeyboard(): void {
     }
   };
 
-  handleKeyPress = (evt: any) => {
-    if (evt.target.type) return;
+  handleKeyPress = (evt: KeyboardEvent) => {
+    if ((evt.target as HTMLElement & { type?: string }).type) return;
     if (!settings.noPreventDefault) evt.preventDefault();
     evt.stopPropagation();
     if (evt.keyCode == 27 || evt.keyCode == 13) {
@@ -265,17 +263,20 @@ export function initKeyboard(): void {
   // NoteQuota
   const gNoteQuota = (() => {
     let last_rat = 0;
-    const nqjq = $('#quota .value');
+    const nqjq = document.querySelector('#quota .value') as HTMLElement;
     setInterval(() => {
       gNoteQuota.tick();
     }, 2000);
     return new NoteQuota((points: number) => {
       if(state.noteQuota) {
       const rat = (points / (state.noteQuota as any).max) * 100;
-      if (rat <= last_rat)
-        nqjq.stop(true, true).css('width', rat.toFixed(0) + '%');
-      else
-        nqjq.stop(true, true).animate({ width: rat.toFixed(0) + '%' }, 2000, 'linear');
+      if (rat <= last_rat) {
+        nqjq.style.transition = 'none';
+        nqjq.style.width = rat.toFixed(0) + '%';
+      } else {
+        nqjq.style.transition = 'width 2s linear';
+        nqjq.style.width = rat.toFixed(0) + '%';
+      }
         last_rat = rat;
       }
     });
@@ -292,7 +293,7 @@ export function initKeyboard(): void {
   // DMs
   let gKnowsHowToDm = localStorage.knowsHowToDm === 'true';
   gClient.on('participant removed', (part: any) => {
-    if (gIsDming && part._id === gDmParticipant._id) {
+    if (gIsDming && gDmParticipant && part._id === gDmParticipant._id) {
       state.chat.endDM();
       if (!settings.cancelDMs) {
         new Notification({
@@ -310,11 +311,11 @@ export function initKeyboard(): void {
         });
         if (!localStorage.hasSeenDMWarning) settings.hasSeenDMWarning = true;
         localStorage.hasSeenDMWarning = 'true';
-        $('#chat-input').blur();
+        (document.getElementById('chat-input') as HTMLElement).blur();
       }
       if (settings.cancelDMs) {
         state.chat.blur();
-        $('#chat input').value = '';
+        (document.querySelector('#chat input') as HTMLInputElement).value = '';
         new Notification({
           title: 'DM Cancelled',
           text: `${part.name} left the room.`,
@@ -327,8 +328,8 @@ export function initKeyboard(): void {
 
   // Participant touch handler and menu
   const removeParticipantMenus = () => {
-    $('.participant-menu').remove();
-    $('.participantSpotlight').hide();
+    document.querySelectorAll('.participant-menu').forEach(el => el.remove());
+    document.querySelectorAll('.participantSpotlight').forEach(el => (el as HTMLElement).style.display = 'none');
     document.removeEventListener('mousedown', removeParticipantMenus);
     document.removeEventListener('touchstart', removeParticipantMenus);
   };
@@ -338,227 +339,214 @@ export function initKeyboard(): void {
     removeParticipantMenus();
     document.addEventListener('mousedown', removeParticipantMenus);
     document.addEventListener('touchstart', removeParticipantMenus);
-    $('#' + part.id).find('.enemySpotlight').show();
-    const menu = $('<div class="participant-menu"></div>');
-    $('body').append(menu);
-    const jq_nd = $(part.nameDiv);
-    const pos = jq_nd.position();
-    menu.css({
-      top: pos.top + jq_nd.height() + 15,
-      left: pos.left + 6,
+    const spotlight = document.getElementById(part.id)
+        ?.querySelector('.enemySpotlight') as HTMLElement;
+    if (spotlight) spotlight.style.display = 'block';
+    const menu = document.createElement('div');
+    menu.className = 'participant-menu';
+    document.body.appendChild(menu);
+    const pos = part.nameDiv!.getBoundingClientRect();
+    Object.assign(menu.style, {
+      top: pos.top + part.nameDiv!.offsetHeight + 15 + 'px',
+      left: pos.left + 6 + 'px',
       background: part.color || 'black',
     });
-    menu.on('mousedown touchstart', (evt: any) => {
+    const menuClickHandler = (evt: Event) => {
       evt.stopPropagation();
-      const target = $(evt.target);
-      if (target.hasClass('menu-item')) {
-        target.addClass('clicked');
-        menu.fadeOut(200, () => { removeParticipantMenus(); });
+      const target = evt.target as HTMLElement;
+      if (target.classList.contains('menu-item')) {
+        target.classList.add('clicked');
+        fadeOut(menu, 200, () => { removeParticipantMenus(); });
       }
-    });
+    };
+    menu.addEventListener('mousedown', menuClickHandler);
+    menu.addEventListener('touchstart', menuClickHandler);
     // Info line
-    $('<div class="info"></div>')
-      .appendTo(menu)
-      .text(part._id)
-      .on('mousedown touchstart', (evt: any) => {
-        navigator.clipboard.writeText(part._id);
-        evt.target.innerText = 'Copied!';
-        setTimeout(() => { evt.target.innerText = part._id; }, 2500);
-      });
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'info';
+    infoDiv.textContent = part._id;
+    const infoHandler = (evt: Event) => {
+      navigator.clipboard.writeText(part._id);
+      (evt.target as HTMLElement).innerText = 'Copied!';
+      setTimeout(() => { (evt.target as HTMLElement).innerText = part._id; }, 2500);
+    };
+    infoDiv.addEventListener('mousedown', infoHandler);
+    infoDiv.addEventListener('touchstart', infoHandler);
+    menu.appendChild(infoDiv);
+
+    // Helper to create menu items
+    const createMenuItem = (label: string, handler: () => void) => {
+      const item = document.createElement('div');
+      item.className = 'menu-item';
+      item.innerHTML = label;
+      item.addEventListener('mousedown', handler);
+      item.addEventListener('touchstart', handler);
+      menu.appendChild(item);
+    };
+
     // Mute Notes
     if (settings.pianoMutes.indexOf(part._id) == -1) {
-      $(`<div class="menu-item">${(window as any).i18nextify.i18next.t('Mute Notes')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          settings.pianoMutes.push(part._id);
-          if (localStorage) localStorage.pianoMutes = settings.pianoMutes.join(',');
-          $(part.nameDiv).addClass('muted-notes');
-        });
+      createMenuItem(window.i18nextify.i18next.t('Mute Notes'), () => {
+        settings.pianoMutes.push(part._id);
+        if (localStorage) localStorage.pianoMutes = settings.pianoMutes.join(',');
+        part.nameDiv?.classList.add('muted-notes');
+      });
     } else {
-      $(`<div class="menu-item">${(window as any).i18nextify.i18next.t('Unmute Notes')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          let i: number;
-          while ((i = settings.pianoMutes.indexOf(part._id)) != -1)
-            settings.pianoMutes.splice(i, 1);
-          if (localStorage) localStorage.pianoMutes = settings.pianoMutes.join(',');
-          $(part.nameDiv).removeClass('muted-notes');
-        });
+      createMenuItem(window.i18nextify.i18next.t('Unmute Notes'), () => {
+        let i: number;
+        while ((i = settings.pianoMutes.indexOf(part._id)) != -1)
+          settings.pianoMutes.splice(i, 1);
+        if (localStorage) localStorage.pianoMutes = settings.pianoMutes.join(',');
+        part.nameDiv?.classList.remove('muted-notes');
+      });
     }
     // Mute Chat
     if (settings.chatMutes.indexOf(part._id) == -1) {
-      $(`<div class="menu-item">${(window as any).i18nextify.i18next.t('Mute Chat')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          settings.chatMutes.push(part._id);
-          if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
-          $(part.nameDiv).addClass('muted-chat');
-        });
+      createMenuItem(window.i18nextify.i18next.t('Mute Chat'), () => {
+        settings.chatMutes.push(part._id);
+        if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
+        part.nameDiv?.classList.add('muted-chat');
+      });
     } else {
-      $(`<div class="menu-item">${(window as any).i18nextify.i18next.t('Unmute Chat')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          let i: number;
-          while ((i = settings.chatMutes.indexOf(part._id)) != -1)
-            settings.chatMutes.splice(i, 1);
-          if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
-          $(part.nameDiv).removeClass('muted-chat');
-        });
+      createMenuItem(window.i18nextify.i18next.t('Unmute Chat'), () => {
+        let i: number;
+        while ((i = settings.chatMutes.indexOf(part._id)) != -1)
+          settings.chatMutes.splice(i, 1);
+        if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
+        part.nameDiv?.classList.remove('muted-chat');
+      });
     }
     // Mute Completely
     if (!(settings.pianoMutes.indexOf(part._id) >= 0) || !(settings.chatMutes.indexOf(part._id) >= 0)) {
-      $(`<div class="menu-item">${(window as any).i18nextify.i18next.t('Mute Completely')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          settings.pianoMutes.push(part._id);
-          if (localStorage) localStorage.pianoMutes = settings.pianoMutes.join(',');
-          settings.chatMutes.push(part._id);
-          if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
-          $(part.nameDiv).addClass('muted-notes');
-          $(part.nameDiv).addClass('muted-chat');
-        });
+      createMenuItem(window.i18nextify.i18next.t('Mute Completely'), () => {
+        settings.pianoMutes.push(part._id);
+        if (localStorage) localStorage.pianoMutes = settings.pianoMutes.join(',');
+        settings.chatMutes.push(part._id);
+        if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
+        part.nameDiv?.classList.add('muted-notes');
+        part.nameDiv?.classList.add('muted-chat');
+      });
     }
     if (settings.pianoMutes.indexOf(part._id) >= 0 || settings.chatMutes.indexOf(part._id) >= 0) {
-      $(`<div class="menu-item">${(window as any).i18nextify.i18next.t('Unmute Completely')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          let i: number;
-          while ((i = settings.pianoMutes.indexOf(part._id)) != -1)
-            settings.pianoMutes.splice(i, 1);
-          while ((i = settings.chatMutes.indexOf(part._id)) != -1)
-            settings.chatMutes.splice(i, 1);
-          if (localStorage) localStorage.pianoMutes = settings.pianoMutes.join(',');
-          if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
-          $(part.nameDiv).removeClass('muted-notes');
-          $(part.nameDiv).removeClass('muted-chat');
-        });
+      createMenuItem(window.i18nextify.i18next.t('Unmute Completely'), () => {
+        let i: number;
+        while ((i = settings.pianoMutes.indexOf(part._id)) != -1)
+          settings.pianoMutes.splice(i, 1);
+        while ((i = settings.chatMutes.indexOf(part._id)) != -1)
+          settings.chatMutes.splice(i, 1);
+        if (localStorage) localStorage.pianoMutes = settings.pianoMutes.join(',');
+        if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
+        part.nameDiv?.classList.remove('muted-notes');
+        part.nameDiv?.classList.remove('muted-chat');
+      });
     }
     // DM menu item
-    if (gIsDming && gDmParticipant._id === part._id) {
-      $(`<div class="menu-item">${(window as any).i18nextify.i18next.t('End Direct Message')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => { state.chat.endDM(); });
+    if (gIsDming && gDmParticipant && gDmParticipant._id === part._id) {
+      createMenuItem(window.i18nextify.i18next.t('End Direct Message'), () => {
+        state.chat.endDM();
+      });
     } else {
-      $(`<div class="menu-item">${(window as any).i18nextify.i18next.t('Direct Message')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          if (!gKnowsHowToDm) {
-            localStorage.knowsHowToDm = 'true';
-            gKnowsHowToDm = true;
-            new Notification({
-              target: '#piano',
-              duration: 20000,
-              title: (window as any).i18nextify.i18next.t('How to DM'),
-              text: (window as any).i18nextify.i18next.t(
-                'After you click the button to direct message someone, future chat messages will be sent to them instead of to everyone. To go back to talking in public chat, send a blank chat message, or click the button again.',
-              ),
-            });
-          }
-          state.chat.startDM(part);
-        });
+      createMenuItem(window.i18nextify.i18next.t('Direct Message'), () => {
+        if (!gKnowsHowToDm) {
+          localStorage.knowsHowToDm = 'true';
+          gKnowsHowToDm = true;
+          new Notification({
+            target: '#piano',
+            duration: 20000,
+            title: window.i18nextify.i18next.t('How to DM'),
+            text: window.i18nextify.i18next.t(
+              'After you click the button to direct message someone, future chat messages will be sent to them instead of to everyone. To go back to talking in public chat, send a blank chat message, or click the button again.',
+            ),
+          });
+        }
+        state.chat.startDM(part);
+      });
     }
     // Hide/Show Cursor
     if (settings.cursorHides.indexOf(part._id) == -1) {
-      $(`<div class="menu-item">${(window as any).i18nextify.i18next.t('Hide Cursor')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          settings.cursorHides.push(part._id);
-          if (localStorage) localStorage.cursorHides = settings.cursorHides.join(',');
-          $(part.cursorDiv).hide();
-        });
+      createMenuItem(window.i18nextify.i18next.t('Hide Cursor'), () => {
+        settings.cursorHides.push(part._id);
+        if (localStorage) localStorage.cursorHides = settings.cursorHides.join(',');
+        if (part.cursorDiv) part.cursorDiv.style.display = 'none';
+      });
     } else {
-      $(`<div class="menu-item">${(window as any).i18nextify.i18next.t('Show Cursor')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          let i: number;
-          while ((i = settings.cursorHides.indexOf(part._id)) != -1)
-            settings.cursorHides.splice(i, 1);
-          if (localStorage) localStorage.cursorHides = settings.cursorHides.join(',');
-          $(part.cursorDiv).show();
-        });
+      createMenuItem(window.i18nextify.i18next.t('Show Cursor'), () => {
+        let i: number;
+        while ((i = settings.cursorHides.indexOf(part._id)) != -1)
+          settings.cursorHides.splice(i, 1);
+        if (localStorage) localStorage.cursorHides = settings.cursorHides.join(',');
+        if (part.cursorDiv) part.cursorDiv.style.display = 'block';
+      });
     }
     // Mention
-    $(`<div class="menu-item">${(window as any).i18nextify.i18next.t('Mention')}</div>`)
-      .appendTo(menu)
-      .on('mousedown touchstart', () => {
-        $('#chat-input')[0].value += '@' + part.id + ' ';
-        setTimeout(() => { $('#chat-input').focus(); }, 1);
-      });
+    createMenuItem(window.i18nextify.i18next.t('Mention'), () => {
+      (document.getElementById('chat-input') as HTMLInputElement).value += '@' + part.id + ' ';
+      setTimeout(() => { (document.getElementById('chat-input') as HTMLElement).focus(); }, 1);
+    });
     // Admin actions
     if (gClient.isOwner() || gClient.permissions.chownAnywhere) {
       if (!gClient.channel.settings.lobby) {
-        $(`<div class="menu-item give-crown">${(window as any).i18nextify.i18next.t('Give Crown')}</div>`)
-          .appendTo(menu)
-          .on('mousedown touchstart', () => {
-            if (confirm('Give room ownership to ' + part.name + '?'))
-              gClient.sendArray([{ m: 'chown', id: part.id }]);
-          });
-      }
-      $(`<div class="menu-item kickban">${(window as any).i18nextify.i18next.t('Kickban')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          const minutes = prompt('How many minutes? (0-300)', '30');
-          if (minutes === null) return;
-          const ms = (parseFloat(minutes) || 0) * 60 * 1000;
-          gClient.sendArray([{ m: 'kickban', _id: part._id, ms: ms }]);
+        createMenuItem(window.i18nextify.i18next.t('Give Crown'), () => {
+          if (confirm('Give room ownership to ' + part.name + '?'))
+            gClient.sendArray([{ m: 'chown', id: part.id }]);
         });
+      }
+      createMenuItem(window.i18nextify.i18next.t('Kickban'), () => {
+        const minutes = prompt('How many minutes? (0-300)', '30');
+        if (minutes === null) return;
+        const ms = (parseFloat(minutes) || 0) * 60 * 1000;
+        gClient.sendArray([{ m: 'kickban', _id: part._id, ms: ms }]);
+      });
     }
     if (gClient.permissions.siteBan) {
-      $(`<div class="menu-item site-ban">${(window as any).i18nextify.i18next.t('Site Ban')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          openModal('#siteban');
-          setTimeout(() => {
-            $('#siteban input[name=id]').val(part._id);
-            $('#siteban input[name=reasonText]').val('Discrimination against others');
-            $('#siteban input[name=reasonText]').attr('disabled', true);
-            $('#siteban select[name=reasonSelect]').val('Discrimination against others');
-            $('#siteban input[name=durationNumber]').val(5);
-            $('#siteban input[name=durationNumber]').attr('disabled', false);
-            $('#siteban select[name=durationUnit]').val('hours');
-            $('#siteban textarea[name=note]').val('');
-            $('#siteban p[name=errorText]').text('');
-            if (gClient.permissions.siteBanAnyReason) {
-              $('#siteban select[name=reasonSelect] option[value=custom]').attr('disabled', false);
-            } else {
-              $('#siteban select[name=reasonSelect] option[value=custom]').attr('disabled', true);
-            }
-          }, 100);
-        });
+      createMenuItem(window.i18nextify.i18next.t('Site Ban'), () => {
+        openModal('#siteban');
+        setTimeout(() => {
+          (document.querySelector('#siteban input[name=id]') as HTMLInputElement).value = part._id;
+          (document.querySelector('#siteban input[name=reasonText]') as HTMLInputElement).value = 'Discrimination against others';
+          (document.querySelector('#siteban input[name=reasonText]') as HTMLInputElement).setAttribute('disabled', 'true');
+          (document.querySelector('#siteban select[name=reasonSelect]') as HTMLSelectElement).value = 'Discrimination against others';
+          (document.querySelector('#siteban input[name=durationNumber]') as HTMLInputElement).value = '5';
+          (document.querySelector('#siteban input[name=durationNumber]') as HTMLInputElement).removeAttribute('disabled');
+          (document.querySelector('#siteban select[name=durationUnit]') as HTMLSelectElement).value = 'hours';
+          (document.querySelector('#siteban textarea[name=note]') as HTMLTextAreaElement).value = '';
+          (document.querySelector('#siteban p[name=errorText]') as HTMLElement).textContent = '';
+          if (gClient.permissions.siteBanAnyReason) {
+            (document.querySelector('#siteban select[name=reasonSelect] option[value=custom]') as HTMLOptionElement).removeAttribute('disabled');
+          } else {
+            (document.querySelector('#siteban select[name=reasonSelect] option[value=custom]') as HTMLOptionElement).setAttribute('disabled', 'true');
+          }
+        }, 100);
+      });
     }
     if (gClient.permissions.usersetOthers) {
-      $(`<div class="menu-item set-color">${(window as any).i18nextify.i18next.t('Set Color')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          const color = prompt('What color?', part.color);
-          if (color === null) return;
-          gClient.sendArray([{ m: 'setcolor', _id: part._id, color: color }]);
-        });
+      createMenuItem(window.i18nextify.i18next.t('Set Color'), () => {
+        const color = prompt('What color?', part.color);
+        if (color === null) return;
+        gClient.sendArray([{ m: 'setcolor', _id: part._id, color: color }]);
+      });
     }
     if (gClient.permissions.usersetOthers) {
-      $(`<div class="menu-item set-name">${(window as any).i18nextify.i18next.t('Set Name')}</div>`)
-        .appendTo(menu)
-        .on('mousedown touchstart', () => {
-          const name = prompt('What name?', part.name);
-          if (name === null) return;
-          gClient.sendArray([{ m: 'setname', _id: part._id, name: name }]);
-        });
+      createMenuItem(window.i18nextify.i18next.t('Set Name'), () => {
+        const name = prompt('What name?', part.name);
+        if (name === null) return;
+        gClient.sendArray([{ m: 'setname', _id: part._id, name: name }]);
+      });
     }
-    menu.fadeIn(100);
+    fadeIn(menu, 100);
   };
 
-  participantTouchhandler = (e: any, ele: any) => {
+  participantTouchhandler = (e: Event, ele: HTMLElement) => {
     const target = ele;
-    const target_jq = $(target);
-    if (!target_jq) return;
-    if (target_jq.hasClass('name')) {
-      target_jq.addClass('play');
-      const id = target.participantId;
+    if (!target) return;
+    if (target.classList.contains('name')) {
+      target.classList.add('play');
+      const id = (target as any).participantId;
       if (id == gClient.participantId) {
         openModal('#rename', 'input[name=name]');
         setTimeout(() => {
-          $('#rename input[name=name]').val(gClient.ppl[gClient.participantId].name);
-          $('#rename input[name=color]').val(gClient.ppl[gClient.participantId].color);
+          (document.querySelector('#rename input[name=name]') as HTMLInputElement).value = gClient.ppl[gClient.participantId].name;
+          (document.querySelector('#rename input[name=color]') as HTMLInputElement).value = gClient.ppl[gClient.participantId].color;
         }, 100);
       } else if (id) {
         const part = gClient.ppl[id] || null;
@@ -570,7 +558,9 @@ export function initKeyboard(): void {
     }
   };
 
-  const releasehandler = () => { $('#names .name').removeClass('play'); };
+  const releasehandler = () => {
+    document.querySelectorAll('#names .name').forEach(el => el.classList.remove('play'));
+  };
   document.body.addEventListener('mouseup', releasehandler);
   document.body.addEventListener('touchend', releasehandler);
 
@@ -614,23 +604,23 @@ export function initKeyboard(): void {
 
   // Hide piano attribute
   if (settings.hidePianoLocal) {
-    $('#piano').hide();
+    document.getElementById('piano')!.style.display = 'none';
   } else {
-    $('#piano').show();
+    document.getElementById('piano')!.style.display = 'block';
   }
 
   // Hide chat attribute
   if (settings.hideChatLocal) {
-    $('#chat').hide();
+    document.getElementById('chat')!.style.display = 'none';
   } else {
-    $('#chat').show();
+    document.getElementById('chat')!.style.display = 'block';
   }
 
   // Smooth cursor attribute
   if (settings.smoothCursor) {
-    $('#cursors').attr('smooth-cursors', '');
+    document.getElementById('cursors')!.setAttribute('smooth-cursors', '');
   } else {
-    $('#cursors').removeAttr('smooth-cursors');
+    document.getElementById('cursors')!.removeAttribute('smooth-cursors');
   }
 }
 

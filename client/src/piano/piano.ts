@@ -3,8 +3,6 @@ import { AudioEngineWeb } from './audio';
 import { settings } from '../modules/settings/settings';
 import { state } from '../util/state';
 
-declare const $: any;
-
 export class PianoKey {
   note: string;
   baseNote: string;
@@ -16,7 +14,7 @@ export class PianoKey {
   timePlayed: number = 0;
   blips: Array<{ time: number; color: string }> = [];
   spatial: number = 0;
-  rect: any = null;
+  rect: { contains: (x: number, y: number) => boolean; } | null = null;
 
   constructor(note: string, octave: number) {
     this.note = note + octave;
@@ -72,20 +70,21 @@ export class Piano {
     this.audio = new AudioEngineWeb().init();
   }
 
-  play(note: string, vol: number, participant: any, delay_ms: number, lyric?: any): void {
+  play(note: string, vol: number, participant: { id: string; color: string; nameDiv?: HTMLElement }, delay_ms: number, lyric?: string): void {
     if (!this.keys.hasOwnProperty(note) || !participant) return;
     const key = this.keys[note];
     if (key.loaded) this.audio.play(key.note, vol, delay_ms, participant.id);
     if (state.midiOutTest) state.midiOutTest(key.note, vol * 100, delay_ms, participant.id);
     setTimeout(() => {
       this.renderer.visualize(key, participant.color);
-      const jq_namediv = $(participant.nameDiv);
-      jq_namediv.addClass('play');
-      setTimeout(() => { jq_namediv.removeClass('play'); }, 30);
+      if (participant.nameDiv) {
+        participant.nameDiv.classList.add('play');
+        setTimeout(() => { participant.nameDiv?.classList.remove('play'); }, 30);
+      }
     }, delay_ms || 0);
   }
 
-  stop(note: string, participant: any, delay_ms: number): void {
+  stop(note: string, participant: { id: string; color: string; nameDiv?: HTMLElement }, delay_ms: number): void {
     if (!this.keys.hasOwnProperty(note)) return;
     const key = this.keys[note];
     if (key.loaded) this.audio.stop(key.note, delay_ms, participant.id);

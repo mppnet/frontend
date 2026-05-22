@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["jquery"],
+    "types": ["node"],
     "rootDir": "./src",
     "baseUrl": "."
   },

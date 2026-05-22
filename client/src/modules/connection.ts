@@ -6,9 +6,8 @@ import { press, release } from '../util/actions';
 import { getParameterByName, getRoomNameFromURL } from '../util/url-utils';
 import { DEFAULT_VELOCITY, TIMING_TARGET } from '../util/constants';
 import { openModal, closeModal, modalHandleEsc } from '../util/modal';
-
-declare const $: any;
-declare const MPP: any;
+import { fadeIn, fadeOut } from '../util/util';
+import type { Participant } from '../types';
 
 let tabIsActive = true;
 let youreMentioned = false;
@@ -22,7 +21,7 @@ export function setYoureMentioned(v: boolean): void { youreMentioned = v; }
 export function getYoureReplied(): boolean { return youreReplied; }
 export function setYoureReplied(v: boolean): void { youreReplied = v; }
 
-export function shouldHideUser(user: any): boolean {
+export function shouldHideUser(user: Participant | undefined): boolean {
   if (settings.hideBotUsers) {
     if (user) {
       if (user.tag && user.tag.text === 'BOT') return true;
@@ -67,7 +66,7 @@ export function initConnection(): Client {
     tabIsActive = true;
     youreMentioned = false;
     youreReplied = false;
-    const count = Object.keys(MPP.client.ppl).length;
+    const count = Object.keys(gClient.ppl).length;
     if (count > 0) {
       document.title = 'Piano (' + count + ')';
     } else {
@@ -81,17 +80,18 @@ export function initConnection(): Client {
 
   // Setting status
   gClient.on('status', (status: string) => {
-    $('#status').text(status);
+    const statusEl = document.getElementById('status')!;
+    statusEl.textContent = status;
   });
 
   gClient.on('count', (count: number) => {
     if (count > 0) {
-      $('#status').html(
+      const statusEl = document.getElementById('status')!;
+      statusEl.innerHTML =
         '<span class="number" translated>' +
           count +
           '</span> ' +
-          (window as any).i18nextify.i18next.t('people are playing', { count }),
-      );
+          window.i18nextify.i18next.t('people are playing', { count });
       if (!tabIsActive) {
         if (youreMentioned || youreReplied) {
           return;
@@ -113,7 +113,7 @@ export function initConnection(): Client {
         'This site makes a lot of sound! You may want to adjust the volume before continuing.';
     document.getElementById('motd-text')!.innerHTML = msg.motd;
     openModal('#motd');
-    $(document).on('keydown', modalHandleEsc);
+    document.addEventListener('keydown', modalHandleEsc);
     const user_interact = (evt: any) => {
       if (
         (evt.path || (evt.composedPath && evt.composedPath())).includes(
@@ -128,12 +128,12 @@ export function initConnection(): Client {
     };
     document.addEventListener('click', user_interact);
     if (gClient.permissions.clearChat) {
-      $('#clearchat-btn').show();
+      (document.getElementById('clearchat-btn') as HTMLElement).style.display = 'block';
     }
     if (gClient.permissions.vanish) {
-      $('#vanish-btn').show();
+      (document.getElementById('vanish-btn') as HTMLElement).style.display = 'block';
     } else {
-      $('#vanish-btn').hide();
+      (document.getElementById('vanish-btn') as HTMLElement).style.display = 'none';
     }
   });
 
@@ -148,41 +148,41 @@ export function initConnection(): Client {
     return '#777';
   }
 
-  function updateLabels(part: any): void {
+  function updateLabels(part: Participant): void {
     if (part.id === gClient.participantId) {
-      $(part.nameDiv).addClass('me');
+      part.nameDiv.classList.add('me');
     } else {
-      $(part.nameDiv).removeClass('me');
+      part.nameDiv.classList.remove('me');
     }
     if (
       gClient.channel.crown &&
       gClient.channel.crown.participantId === part.id
     ) {
-      $(part.nameDiv).addClass('owner');
-      $(part.cursorDiv).addClass('owner');
+      part.nameDiv.classList.add('owner');
+      part.cursorDiv?.classList.add('owner');
     } else {
-      $(part.nameDiv).removeClass('owner');
-      $(part.cursorDiv).removeClass('owner');
+      part.nameDiv.classList.remove('owner');
+      part.cursorDiv?.classList.remove('owner');
     }
     if (settings.pianoMutes.indexOf(part._id) !== -1) {
-      $(part.nameDiv).addClass('muted-notes');
+      part.nameDiv.classList.add('muted-notes');
     } else {
-      $(part.nameDiv).removeClass('muted-notes');
+      part.nameDiv.classList.remove('muted-notes');
     }
     if (settings.chatMutes.indexOf(part._id) !== -1) {
-      $(part.nameDiv).addClass('muted-chat');
+      part.nameDiv.classList.add('muted-chat');
     } else {
-      $(part.nameDiv).removeClass('muted-chat');
+      part.nameDiv.classList.remove('muted-chat');
     }
   }
 
-  function setupParticipantDivs(part: any): void {
+  function setupParticipantDivs(part: Participant): void {
     const hadNameDiv = Boolean(part.nameDiv);
 
-    let nameDiv: any;
+    let nameDiv: HTMLElement;
     if (hadNameDiv) {
       nameDiv = part.nameDiv;
-      $(nameDiv).empty();
+      nameDiv.innerHTML = '';
     } else {
       nameDiv = document.createElement('div');
       nameDiv.addEventListener('mousedown', (e: any) => {
@@ -194,11 +194,11 @@ export function initConnection(): Client {
         getParticipantTouchhandler()(e, nameDiv);
       });
       nameDiv.style.display = 'none';
-      $(nameDiv).fadeIn(2000);
+      fadeIn(nameDiv, 2000);
       nameDiv.id = 'namediv-' + part._id;
       nameDiv.className = 'name';
-      nameDiv.participantId = part.id;
-      $('#names')[0].appendChild(nameDiv);
+      (nameDiv as any).participantId = part.id;
+      document.getElementById('names')!.appendChild(nameDiv);
       part.nameDiv = nameDiv;
     }
     nameDiv.style.backgroundColor = part.color || '#777';
@@ -259,16 +259,13 @@ export function initConnection(): Client {
     part.nameDiv.appendChild(textDiv);
     part.nameDiv.setAttribute('translated', '');
 
-    const arr = $('#names .name');
-    arr.sort((a: any, b: any) => {
-      if (a.id > b.id) return 1;
-      else if (a.id < b.id) return -1;
-      else return 0;
-    });
-    $('#names').html(arr);
+    const namesContainer = document.getElementById('names')!;
+    const arr = Array.from(namesContainer.querySelectorAll('.name')) as HTMLElement[];
+    arr.sort((a, b) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0);
+    arr.forEach(el => namesContainer.appendChild(el));
   }
 
-  gClient.on('participant added', (part: any) => {
+  gClient.on('participant added', (part: Participant) => {
     if (shouldHideUser(part)) return;
 
     part.displayX = 150;
@@ -285,8 +282,8 @@ export function initConnection(): Client {
       const div = document.createElement('div');
       div.className = 'cursor';
       div.style.display = 'none';
-      part.cursorDiv = $('#cursors')[0].appendChild(div);
-      $(part.cursorDiv).fadeIn(2000);
+      part.cursorDiv = document.getElementById('cursors')!.appendChild(div);
+      fadeIn(part.cursorDiv, 2000);
 
       const nameDiv = document.createElement('div');
       nameDiv.className = 'name';
@@ -313,30 +310,32 @@ export function initConnection(): Client {
     }
   });
 
-  gClient.on('participant removed', (part: any) => {
+  gClient.on('participant removed', (part: Participant) => {
     if (shouldHideUser(part)) return;
-    const nd = $(part.nameDiv);
-    const cd = $(part.cursorDiv);
-    cd.fadeOut(2000);
-    nd.fadeOut(2000, () => {
-      nd.remove();
-      cd.remove();
+    fadeOut(part.cursorDiv, 2000);
+    fadeOut(part.nameDiv, 2000, () => {
+      part.nameDiv?.remove();
+      part.cursorDiv?.remove();
       part.nameDiv = undefined;
       part.cursorDiv = undefined;
     });
   });
 
-  gClient.on('participant update', (part: any) => {
+  gClient.on('participant update', (part: Participant) => {
     if (shouldHideUser(part)) return;
     const name = part.name || '';
     const color = part.color || '#777';
     setupParticipantDivs(part);
-    $(part.cursorDiv).find('.name .nametext').text(name);
-    $(part.cursorDiv).find('.name').css('background-color', color);
+    const cursorNameText = part.cursorDiv?.querySelector('.name .nametext') as HTMLElement | null;
+    if (cursorNameText) cursorNameText.textContent = name;
+    const cursorName = part.cursorDiv?.querySelector('.name') as HTMLElement | null;
+    if (cursorName) cursorName.style.backgroundColor = color;
     if (part.tag != null) {
-      const tagSpan = $(part.cursorDiv).find('.name .curtag');
-      tagSpan.text(part.tag.text);
-      tagSpan.css('background-color', part.tag.color);
+      const tagSpan = part.cursorDiv?.querySelector('.name .curtag') as HTMLElement | null;
+      if (tagSpan) {
+        tagSpan.textContent = part.tag.text;
+        tagSpan.style.backgroundColor = part.tag.color;
+      }
     }
   });
 
@@ -349,7 +348,7 @@ export function initConnection(): Client {
     }
   });
 
-  gClient.on('participant added', (part: any) => {
+  gClient.on('participant added', (part: Participant) => {
     if (shouldHideUser(part)) return;
     updateLabels(part);
   });
@@ -372,10 +371,14 @@ export function initConnection(): Client {
   gClient.on('participant added', updateCursor);
 
   // Handle changes to crown
-  const jqcrown = $('<div id="crown"></div>').appendTo(document.body).hide();
-  const jqcountdown = $('<span></span>').appendTo(jqcrown);
-  let countdown_interval: any;
-  jqcrown.click(() => {
+  const crownEl = document.createElement('div');
+  crownEl.id = 'crown';
+  crownEl.style.display = 'none';
+  document.body.appendChild(crownEl);
+  const countdownEl = document.createElement('span');
+  crownEl.appendChild(countdownEl);
+  let countdown_interval: ReturnType<typeof setInterval> | undefined;
+  crownEl.addEventListener('click', () => {
     gClient.sendArray([{ m: 'chown', id: gClient.participantId }]);
   });
 
@@ -385,30 +388,27 @@ export function initConnection(): Client {
       if (!crown.participantId || !gClient.ppl[crown.participantId]) {
         const land_time = crown.time + 2000 - gClient.serverTimeOffset;
         const avail_time = crown.time + 15000 - gClient.serverTimeOffset;
-        jqcountdown.text('');
-        jqcrown.show();
+        countdownEl.textContent = '';
+        crownEl.style.display = 'block';
         if (land_time - Date.now() <= 0) {
-          jqcrown.css({
-            left: crown.endPos.x + '%',
-            top: crown.endPos.y + '%',
-          });
+          crownEl.style.left = crown.endPos.x + '%';
+          crownEl.style.top = crown.endPos.y + '%';
         } else {
-          jqcrown.css({
-            left: crown.startPos.x + '%',
-            top: crown.startPos.y + '%',
-          });
-          jqcrown.addClass('spin');
-          jqcrown.animate(
-            {
-              left: crown.endPos.x + '%',
-              top: crown.endPos.y + '%',
-            },
-            2000,
-            'linear',
-            () => {
-              jqcrown.removeClass('spin');
-            },
+          crownEl.style.left = crown.startPos.x + '%';
+          crownEl.style.top = crown.startPos.y + '%';
+          crownEl.classList.add('spin');
+          const anim = crownEl.animate(
+            [
+              { left: crown.startPos.x + '%', top: crown.startPos.y + '%' },
+              { left: crown.endPos.x + '%', top: crown.endPos.y + '%' },
+            ],
+            { duration: 2000, easing: 'linear', fill: 'forwards' },
           );
+          anim.onfinish = () => {
+            crownEl.style.left = crown.endPos.x + '%';
+            crownEl.style.top = crown.endPos.y + '%';
+            crownEl.classList.remove('spin');
+          };
         }
         clearInterval(countdown_interval);
         countdown_interval = setInterval(() => {
@@ -416,23 +416,23 @@ export function initConnection(): Client {
           if (time >= land_time) {
             const ms = avail_time - time;
             if (ms > 0) {
-              jqcountdown.text(Math.ceil(ms / 1000) + 's');
+              countdownEl.textContent = Math.ceil(ms / 1000) + 's';
             } else {
-              jqcountdown.text('');
+              countdownEl.textContent = '';
               clearInterval(countdown_interval);
             }
           }
         }, 1000);
       } else {
-        jqcrown.hide();
+        crownEl.style.display = 'none';
       }
     } else {
-      jqcrown.hide();
+      crownEl.style.display = 'none';
     }
   });
 
   gClient.on('disconnect', () => {
-    jqcrown.fadeOut(2000);
+    fadeOut(crownEl, 2000);
   });
 
   // Playing notes
@@ -494,30 +494,32 @@ export function initConnection(): Client {
       }
     }
   }, 50);
-  $(document).mousemove((event: any) => {
-    mx = +((event.pageX / $(window).width()) * 100).toFixed(2);
-    state.mouseY = +((event.pageY / $(window).height()) * 100).toFixed(2);
+  document.addEventListener('mousemove', (event: MouseEvent) => {
+    mx = +((event.pageX / window.innerWidth) * 100).toFixed(2);
+    state.mouseY = +((event.pageY / window.innerHeight) * 100).toFixed(2);
   });
 
   // Room settings button
   gClient.on('ch', (msg: any) => {
+    const roomSettingsBtn = document.getElementById('room-settings-btn') as HTMLElement;
+    const getcrownBtn = document.getElementById('getcrown-btn') as HTMLElement;
     if (gClient.isOwner() || gClient.permissions.chsetAnywhere) {
-      $('#room-settings-btn').show();
+      roomSettingsBtn.style.display = 'block';
     } else {
-      $('#room-settings-btn').hide();
+      roomSettingsBtn.style.display = 'none';
     }
     if (
       !gClient.channel.settings.lobby &&
       (gClient.permissions.chownAnywhere ||
         gClient.channel.settings.owner_id === gClient.user._id)
     ) {
-      $('#getcrown-btn').show();
+      getcrownBtn.style.display = 'block';
     } else {
-      $('#getcrown-btn').hide();
+      getcrownBtn.style.display = 'none';
     }
   });
 
-  $('#room-settings-btn').click((evt: any) => {
+  document.getElementById('room-settings-btn')!.addEventListener('click', (evt: any) => {
     if (
       gClient.channel &&
       (gClient.isOwner() || gClient.permissions.chsetAnywhere)
@@ -525,93 +527,80 @@ export function initConnection(): Client {
       const roomSettings = gClient.channel.settings;
       openModal('#room-settings');
       setTimeout(() => {
-        $('#room-settings .checkbox[name=visible]').prop(
-          'checked',
-          roomSettings.visible,
-        );
-        $('#room-settings .checkbox[name=chat]').prop(
-          'checked',
-          roomSettings.chat,
-        );
-        $('#room-settings .checkbox[name=crownsolo]').prop(
-          'checked',
-          roomSettings.crownsolo,
-        );
-        $('#room-settings .checkbox[name=nocussing]').prop(
-          'checked',
-          roomSettings['no cussing'],
-        );
-        $('#room-settings input[name=color]').val(roomSettings.color);
-        $('#room-settings input[name=color2]').val(roomSettings.color2);
-        $('#room-settings .checkbox[name=noindex]').prop(
-          'checked',
-          roomSettings.noindex,
-        );
-        $('#room-settings .checkbox[name=allowBots]').prop(
-          'checked',
-          roomSettings.allowBots,
-        );
-        $('#room-settings input[name=limit]').val(roomSettings.limit);
+        const modal = document.getElementById('room-settings')!;
+        (modal.querySelector('.checkbox[name=visible]') as HTMLInputElement).checked = roomSettings.visible;
+        (modal.querySelector('.checkbox[name=chat]') as HTMLInputElement).checked = roomSettings.chat;
+        (modal.querySelector('.checkbox[name=crownsolo]') as HTMLInputElement).checked = roomSettings.crownsolo;
+        (modal.querySelector('.checkbox[name=nocussing]') as HTMLInputElement).checked = roomSettings['no cussing'];
+        (modal.querySelector('input[name=color]') as HTMLInputElement).value = roomSettings.color;
+        (modal.querySelector('input[name=color2]') as HTMLInputElement).value = roomSettings.color2;
+        (modal.querySelector('.checkbox[name=noindex]') as HTMLInputElement).checked = roomSettings.noindex;
+        (modal.querySelector('.checkbox[name=allowBots]') as HTMLInputElement).checked = roomSettings.allowBots;
+        (modal.querySelector('input[name=limit]') as HTMLInputElement).value = roomSettings.limit.toString();
       }, 100);
     }
   });
 
-  $('#room-settings .submit').click(() => {
+  const roomSettingsModal = document.getElementById('room-settings')!;
+  roomSettingsModal.querySelector('.submit')!.addEventListener('click', () => {
+    const modal = roomSettingsModal;
     const newSettings = {
-      visible: $('#room-settings .checkbox[name=visible]').is(':checked'),
-      chat: $('#room-settings .checkbox[name=chat]').is(':checked'),
-      crownsolo: $('#room-settings .checkbox[name=crownsolo]').is(':checked'),
-      'no cussing': $('#room-settings .checkbox[name=nocussing]').is(':checked'),
-      noindex: $('#room-settings .checkbox[name=noindex]').is(':checked'),
-      allowBots: $('#room-settings .checkbox[name=allowBots]').is(':checked'),
-      color: $('#room-settings input[name=color]').val(),
-      color2: $('#room-settings input[name=color2]').val(),
-      limit: $('#room-settings input[name=limit]').val(),
+      visible: (modal.querySelector('.checkbox[name=visible]') as HTMLInputElement).checked,
+      chat: (modal.querySelector('.checkbox[name=chat]') as HTMLInputElement).checked,
+      crownsolo: (modal.querySelector('.checkbox[name=crownsolo]') as HTMLInputElement).checked,
+      'no cussing': (modal.querySelector('.checkbox[name=nocussing]') as HTMLInputElement).checked,
+      noindex: (modal.querySelector('.checkbox[name=noindex]') as HTMLInputElement).checked,
+      allowBots: (modal.querySelector('.checkbox[name=allowBots]') as HTMLInputElement).checked,
+      color: (modal.querySelector('input[name=color]') as HTMLInputElement).value,
+      color2: (modal.querySelector('input[name=color2]') as HTMLInputElement).value,
+      limit: +(modal.querySelector('input[name=limit]') as HTMLInputElement).value,
     };
     gClient.setChannelSettings(newSettings);
     closeModal();
   });
 
-  $('#room-settings .drop-crown').click(() => {
+  roomSettingsModal.querySelector('.drop-crown')!.addEventListener('click', () => {
     closeModal();
     if (confirm('This will drop the crown...!'))
       gClient.sendArray([{ m: 'chown' }]);
   });
 
   // Clear chat button
-  $('#clearchat-btn').click((evt: any) => {
+  document.getElementById('clearchat-btn')!.addEventListener('click', (evt: any) => {
     if (confirm('Are you sure you want to clear chat?'))
       gClient.sendArray([{ m: 'clearchat' }]);
   });
 
   // Get crown button
-  $('#getcrown-btn').click((evt: any) => {
-    gClient.sendArray([{ m: 'chown', id: MPP.client.getOwnParticipant().id }]);
+  document.getElementById('getcrown-btn')!.addEventListener('click', (evt: any) => {
+    gClient.sendArray([{ m: 'chown', id: gClient.getOwnParticipant().id }]);
   });
 
   // Vanish or unvanish button
-  $('#vanish-btn').click((evt: any) => {
+  document.getElementById('vanish-btn')!.addEventListener('click', (evt: any) => {
     gClient.sendArray([
       { m: 'v', vanish: !gClient.getOwnParticipant().vanished },
     ]);
   });
 
-  gClient.on('participant update', (part: any) => {
+  gClient.on('participant update', (part: Participant) => {
     if (part._id === gClient.getOwnParticipant()._id) {
+      const vanishBtn = document.getElementById('vanish-btn') as HTMLElement;
       if (part.vanished) {
-        $('#vanish-btn').text('Unvanish');
+        vanishBtn.textContent = 'Unvanish';
       } else {
-        $('#vanish-btn').text('Vanish');
+        vanishBtn.textContent = 'Vanish';
       }
     }
   });
 
-  gClient.on('participant added', (part: any) => {
+  gClient.on('participant added', (part: Participant) => {
     if (part._id === gClient.getOwnParticipant()._id) {
+      const vanishBtn = document.getElementById('vanish-btn') as HTMLElement;
       if (part.vanished) {
-        $('#vanish-btn').text('Unvanish');
+        vanishBtn.textContent = 'Unvanish';
       } else {
-        $('#vanish-btn').text('Vanish');
+        vanishBtn.textContent = 'Vanish';
       }
     }
   });
@@ -624,10 +613,11 @@ export function initConnection(): Client {
   // Don't forget spin
   gClient.on('ch', (msg: any) => {
     const chidlo = msg.ch._id.toLowerCase();
+    const pianoEl = document.getElementById('piano') as HTMLElement;
     if (chidlo === 'spin' || chidlo.substr(-5) === '/spin') {
-      $('#piano').addClass('spin');
+      pianoEl.classList.add('spin');
     } else {
-      $('#piano').removeClass('spin');
+      pianoEl.classList.remove('spin');
     }
   });
 
@@ -643,17 +633,17 @@ export function initConnection(): Client {
       has_notice = true;
       notice += '<p>This room is set to "no cussing."</p>';
     }
-    const notice_div = $('#room-notice');
+    const noticeDiv = document.getElementById('room-notice') as HTMLElement;
     if (has_notice) {
-      notice_div.html(notice);
-      if (notice_div.is(':hidden')) notice_div.fadeIn(1000);
+      noticeDiv.innerHTML = notice;
+      if (noticeDiv.style.display === 'none') fadeIn(noticeDiv, 1000);
     } else {
-      if (notice_div.is(':visible')) notice_div.fadeOut(1000);
+      if (noticeDiv.style.display !== 'none') fadeOut(noticeDiv, 1000);
     }
   });
 
   gClient.on('disconnect', () => {
-    $('#room-notice').fadeOut(1000);
+    fadeOut(document.getElementById('room-notice') as HTMLElement, 1000);
   });
 
   state.client = gClient;

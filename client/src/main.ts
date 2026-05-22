@@ -13,12 +13,12 @@ import { initConfetti } from './modules/confetti';
 import { Notification } from './libs/Notification';
 import { press, release, pressSustain, releaseSustain, setPress, setRelease, setPressSustain, setReleaseSustain } from './util/actions';
 
-const translation = (window as any).i18nextify.init({ autorun: false });
+const translation = window.i18nextify.init({ autorun: false });
 
 if (location.host === 'multiplayerpiano.com') {
   const url = new URL('https://multiplayerpiano.net/' + location.search);
   if (localStorage.token) url.searchParams.set('token', localStorage.token);
-  location.replace(url as any);
+  location.replace(url.toString());
   throw new Error('Redirecting to multiplayerpiano.net');
 }
 
@@ -28,14 +28,12 @@ if (location.host === 'multiplayerpiano.net') {
   if (token) {
     localStorage.token = token;
     url.searchParams.delete('token');
-    location.replace(url as any);
+    location.replace(url.toString());
     throw new Error('Finalizing redirect.');
   }
 }
 
-declare const $: any;
-
-$(function () {
+document.addEventListener('DOMContentLoaded', () => {
   translation.start();
 
   console.log('%cMPP Developer Console', 'color: #0066ff; font-size:20px;');
@@ -43,9 +41,9 @@ $(function () {
     '%cCheck out the client source : https://github.com/mppnet/frontend/tree/main/client\nGuide for developers: https://docs.google.com/document/d/1OrxwdLD1l1TE8iau6ToETVmnLuLXyGBhA0VfAY1Lf14/edit?usp=sharing',
     'color:gray; font-size:12px;',
   );
-  (window as any).requestAnimationFrame = (window as any).requestAnimationFrame ||
-    (window as any).mozRequestAnimationFrame || (window as any).webkitRequestAnimationFrame ||
-    (window as any).msRequestAnimationFrame || function (cb: any) { setTimeout(cb, 1000 / 30); };
+  window.requestAnimationFrame = window.requestAnimationFrame ||
+    window.mozRequestAnimationFrame || (window as any).webkitRequestAnimationFrame ||
+    window.msRequestAnimationFrame || function (cb: FrameRequestCallback) { setTimeout(cb, 1000 / 30); return 0; };
 
   const piano = new Piano(document.getElementById('piano')!);
   state.piano = piano;

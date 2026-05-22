@@ -1,4 +1,5 @@
 import { EventEmitter } from '../util/util';
+import type { Participant, Channel, ChannelSettings, Permissions, NoteQuotaParams } from '../types';
 
 WebSocket.prototype.send = new Proxy(WebSocket.prototype.send, {
   apply: (target, thisArg, args) => {
@@ -12,25 +13,25 @@ export class Client extends EventEmitter {
   uri: string;
   ws: WebSocket | undefined;
   serverTimeOffset: number = 0;
-  user: any;
-  participantId: any;
-  channel: any;
-  ppl: Record<string, any> = {};
-  connectionTime: any;
+  user: Participant | undefined;
+  participantId: string | undefined;
+  channel: Channel | undefined;
+  ppl: Record<string, Participant> = {};
+  connectionTime: number | undefined;
   connectionAttempts: number = 0;
-  desiredChannelId: any;
-  desiredChannelSettings: any;
-  pingInterval: any;
+  desiredChannelId: string | undefined;
+  desiredChannelSettings: Partial<ChannelSettings> | undefined;
+  pingInterval: ReturnType<typeof setInterval> | undefined;
   canConnect: boolean = false;
-  noteBuffer: any[] = [];
+  noteBuffer: Array<{ n: string; v?: number; d?: number; s?: number }> = [];
   noteBufferTime: number = 0;
-  noteFlushInterval: any;
-  permissions: any = {};
+  noteFlushInterval: ReturnType<typeof setInterval> | undefined;
+  permissions: Permissions = {};
   "🐈": number = 0;
-  loginInfo: any;
-  accountInfo: any;
+  loginInfo: Record<string, string> | undefined;
+  accountInfo: { type: string; avatar?: string; username?: string } | undefined;
   offlineChannelSettings = { color: "#ecfaed" };
-  offlineParticipant = { _id: "", name: "", color: "#777" };
+  offlineParticipant = { id: "", _id: "", name: "", color: "#777" };
 
   constructor(uri: string) {
     if ((window as any).MPP && (window as any).MPP.client) {
@@ -63,7 +64,7 @@ export class Client extends EventEmitter {
     this.emit("status", "Connecting...");
     this.ws = new WebSocket(this.uri);
     this.ws.binaryType = "arraybuffer";
-    var self = this;
+    const self = this;
     this.ws.addEventListener("close", function (evt) {
       self.user = undefined;
       self.participantId = undefined;
@@ -75,8 +76,8 @@ export class Client extends EventEmitter {
       self.emit("status", "Offline mode");
       if (self.connectionTime) { self.connectionTime = undefined; self.connectionAttempts = 0; }
       else { ++self.connectionAttempts; }
-      var ms_lut = [50, 2500, 10000];
-      var idx = self.connectionAttempts;
+      const ms_lut = [50, 2500, 10000];
+      let idx = self.connectionAttempts;
       if (idx >= ms_lut.length) idx = ms_lut.length - 1;
       setTimeout(self.connect.bind(self), ms_lut[idx]);
     });
@@ -100,14 +101,14 @@ export class Client extends EventEmitter {
         const { meta, binary } = self.decodeBinaryMessage(evt.data);
         self.emit(meta.m, { ...meta, binary });
       } else {
-        var transmission = JSON.parse(evt.data);
-        for (var i = 0; i < transmission.length; i++) { self.emit(transmission[i].m, transmission[i]); }
+        const transmission = JSON.parse(evt.data);
+        for (let i = 0; i < transmission.length; i++) { self.emit(transmission[i].m, transmission[i]); }
       }
     });
   }
 
   bindEventListeners() {
-    var self = this;
+    const self = this;
     this.on("hi", function (msg: any) {
       self.connectionTime = Date.now();
       self.user = msg.u;
@@ -134,7 +135,7 @@ export class Client extends EventEmitter {
     });
     this.on("bye", function (msg: any) { self.removeParticipant(msg.p); });
     this.on("b", async function (this: any, msg: any) {
-      var hiMsg: any = { m: "hi" };
+      const hiMsg: Record<string, unknown> = { m: "hi" };
       hiMsg["🐈"] = self["🐈"]++ || undefined;
       if (self.loginInfo) hiMsg.login = self.loginInfo;
       self.loginInfo = undefined;
@@ -152,9 +153,9 @@ export class Client extends EventEmitter {
   }
 
   send(raw: string) { if (this.isConnected()) this.ws!.send(raw); }
-  sendArray(arr: any[]) { this.send(JSON.stringify(arr)); }
+  sendArray(arr: Record<string, unknown>[]) { this.send(JSON.stringify(arr)); }
 
-  setChannel(id?: string, set?: any) {
+  setChannel(id?: string, set?: Partial<ChannelSettings>) {
     this.desiredChannelId = id || this.desiredChannelId || "lobby";
     this.desiredChannelSettings = set || this.desiredChannelSettings || undefined;
     this.sendArray([{ m: "ch", _id: this.desiredChannelId, set: this.desiredChannelSettings }]);
@@ -166,36 +167,36 @@ export class Client extends EventEmitter {
     return this.channel.settings[key];
   }
 
-  setChannelSettings(settings: any) {
+  setChannelSettings(settings: Partial<ChannelSettings>) {
     if (!this.isConnected() || !this.channel || !this.channel.settings) return;
     if (this.desiredChannelSettings) {
-      for (var key in settings) this.desiredChannelSettings[key] = settings[key];
+      for (const key in settings) this.desiredChannelSettings[key] = settings[key];
       this.sendArray([{ m: "chset", set: this.desiredChannelSettings }]);
     }
   }
 
   getOwnParticipant() { return this.findParticipantById(this.participantId); }
 
-  setParticipants(ppl: any[]) {
-    for (var id in this.ppl) {
+  setParticipants(ppl: Participant[]) {
+    for (const id in this.ppl) {
       if (!this.ppl.hasOwnProperty(id)) continue;
-      var found = false;
-      for (var j = 0; j < ppl.length; j++) { if (ppl[j].id === id) { found = true; break; } }
+      let found = false;
+      for (let j = 0; j < ppl.length; j++) { if (ppl[j].id === id) { found = true; break; } }
       if (!found) this.removeParticipant(id);
     }
-    for (var i = 0; i < ppl.length; i++) this.participantUpdate(ppl[i]);
+    for (let i = 0; i < ppl.length; i++) this.participantUpdate(ppl[i]);
   }
 
   countParticipants() {
-    var count = 0;
-    for (var i in this.ppl) { if (this.ppl.hasOwnProperty(i)) ++count; }
+    let count = 0;
+    for (const i in this.ppl) { if (this.ppl.hasOwnProperty(i)) ++count; }
     return count;
   }
 
-  participantUpdate(update: any) {
-    var part = this.ppl[update.id] || null;
+  participantUpdate(update: Partial<Participant>) {
+    let part = this.ppl[update.id] || null;
     if (part === null) {
-      part = update;
+      part = update as Participant;
       this.ppl[part.id] = part;
       this.emit("participant added", part);
       this.emit("count", this.countParticipants());
@@ -206,21 +207,21 @@ export class Client extends EventEmitter {
     }
   }
 
-  participantMoveMouse(update: any) {
-    var part = this.ppl[update.id] || null;
+  participantMoveMouse(update: { id: string; x: number; y: number }) {
+    const part = this.ppl[update.id] || null;
     if (part !== null) { part.x = update.x; part.y = update.y; }
   }
 
   removeParticipant(id: string) {
     if (this.ppl.hasOwnProperty(id)) {
-      var part = this.ppl[id];
+      const part = this.ppl[id];
       delete this.ppl[id];
       this.emit("participant removed", part);
       this.emit("count", this.countParticipants());
     }
   }
 
-  findParticipantById(id: string) { return this.ppl[id] || this.offlineParticipant; }
+  findParticipantById(id: string): Participant { return this.ppl[id] || this.offlineParticipant; }
 
   isOwner() {
     return this.channel && this.channel.crown && this.channel.crown.participantId === this.participantId;
@@ -232,13 +233,13 @@ export class Client extends EventEmitter {
   }
 
   receiveServerTime(time: number, echo?: number) {
-    var self = this;
-    var now = Date.now();
-    var target = time - now;
-    var step = 0, steps = 50;
-    var step_ms = 1000 / steps;
-    var inc = (target - this.serverTimeOffset) / steps;
-    var iv: any = setInterval(function () {
+    const self = this;
+    const now = Date.now();
+    const target = time - now;
+    let step = 0; const steps = 50;
+    const step_ms = 1000 / steps;
+    const inc = (target - this.serverTimeOffset) / steps;
+    const iv = setInterval(function () {
       self.serverTimeOffset += inc;
       if (++step >= steps) { clearInterval(iv); self.serverTimeOffset = target; }
     }, step_ms);
@@ -247,7 +248,7 @@ export class Client extends EventEmitter {
   startNote(note: string, vel?: number) {
     if (typeof note !== "string") return;
     if (this.isConnected()) {
-      var v = typeof vel === "undefined" ? undefined : +vel.toFixed(3);
+      const v = typeof vel === "undefined" ? undefined : +vel.toFixed(3);
       if (!this.noteBufferTime) { this.noteBufferTime = Date.now(); this.noteBuffer.push({ n: note, v: v }); }
       else { this.noteBuffer.push({ d: Date.now() - this.noteBufferTime, n: note, v: v }); }
     }
@@ -262,5 +263,5 @@ export class Client extends EventEmitter {
   }
 
   sendPing() { this.sendArray([{ m: "t", e: Date.now() }]); }
-  setLoginInfo(loginInfo: any) { this.loginInfo = loginInfo; }
+  setLoginInfo(loginInfo: Record<string, string>) { this.loginInfo = loginInfo; }
 }

@@ -2,32 +2,29 @@ import { Rect } from '../libs/Rect';
 import { DEFAULT_VELOCITY, BASIC_PIANO_SCALES } from '../util/constants';
 import { settings } from '../modules/settings/settings';
 import { press, release } from '../util/actions';
-
-declare const $: any;
+import type { Piano as PianoInterface } from '../util/state';
 
 export class Renderer {
-  piano: any;
+  piano!: PianoInterface;
   width: number = 0;
   height: number = 0;
 
-  init(piano: any): this {
+  init(piano: PianoInterface): this {
     this.piano = piano;
     this.resize();
     return this;
   }
 
   resize(width?: number, height?: number): void {
-    if (width === undefined) width = $(this.piano.rootElement).width();
+    if (width === undefined) width = this.piano.rootElement.offsetWidth;
     if (height === undefined) height = Math.floor(width! * 0.2);
-    $(this.piano.rootElement).css({
-      height: height + 'px',
-      marginTop: Math.floor($(window).height() / 2 - height / 2) + 'px',
-    });
+    this.piano.rootElement.style.height = height + 'px';
+    this.piano.rootElement.style.marginTop = Math.floor(window.innerHeight / 2 - height / 2) + 'px';
     this.width = width! * window.devicePixelRatio;
     this.height = height * window.devicePixelRatio;
   }
 
-  visualize(_key: any, _color: string): void {}
+  visualize(_key: { timePlayed: number; blips: Array<{ time: number; color: string }> }, _color: string): void {}
 }
 
 export class CanvasRenderer extends Renderer {
@@ -51,7 +48,7 @@ export class CanvasRenderer extends Renderer {
   blackKeyRender!: HTMLCanvasElement;
   shadowRender: HTMLCanvasElement[] = [];
   noteLyrics: any = {};
-  init(piano: any): this {
+  init(piano: PianoInterface): this {
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d')!;
     piano.rootElement.appendChild(this.canvas);
@@ -62,8 +59,8 @@ export class CanvasRenderer extends Renderer {
     requestAnimationFrame(render);
 
     let mouse_down = false;
-    let last_key: any = null;
-    $(piano.rootElement).mousedown((event: any) => {
+    let last_key: { note: string } | null = null;
+    piano.rootElement.addEventListener('mousedown', (event: MouseEvent) => {
       mouse_down = true;
       if (!settings.noPreventDefault) event.preventDefault();
       const pos = CanvasRenderer.translateMouseEvent(event);
@@ -79,7 +76,7 @@ export class CanvasRenderer extends Renderer {
         if (hit) { press(hit.key.note, hit.v); last_key = hit.key; }
       }
     }, false);
-    $(window).mouseup((_event: any) => {
+    window.addEventListener('mouseup', () => {
       if (last_key) release(last_key.note);
       mouse_down = false;
       last_key = null;
@@ -197,7 +194,7 @@ export class CanvasRenderer extends Renderer {
     }
   }
 
-  visualize(key: any, color: string): void {
+  visualize(key: { timePlayed: number; blips: Array<{ time: number; color: string }> }, color: string): void {
     key.timePlayed = Date.now();
     key.blips.push({ time: key.timePlayed, color });
   }
@@ -302,15 +299,15 @@ export class CanvasRenderer extends Renderer {
     return !!(canvas.getContext && canvas.getContext('2d'));
   }
 
-  static translateMouseEvent(evt: any): { x: number; y: number } {
-    let element = evt.target;
+  static translateMouseEvent(evt: MouseEvent | Touch): { x: number; y: number } {
+    let element = evt.target as HTMLElement | null;
     let offx = 0;
     let offy = 0;
     do {
       if (!element) break;
       offx += element.offsetLeft;
       offy += element.offsetTop;
-    } while ((element = element.offsetParent));
+    } while ((element = element.offsetParent as HTMLElement | null));
     return {
       x: (evt.pageX - offx) * window.devicePixelRatio,
       y: (evt.pageY - offy) * window.devicePixelRatio,

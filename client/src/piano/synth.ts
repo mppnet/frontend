@@ -1,9 +1,7 @@
-import { mixin, Knob } from '../util/util';
+import { Knob } from '../util/util';
 import { Notification } from '../libs/Notification';
 import { state, getPiano } from '../util/state';
 import { MIDI_KEY_NAMES, MIDI_TRANSPOSE } from '../util/constants';
-
-declare const $: any;
 
 export function initSynth(): void {
   const piano = getPiano();
@@ -44,7 +42,7 @@ export function initSynth(): void {
   state.enableSynth = false;
   state.synthVoice = SynthVoice as any;
   const button = document.getElementById('synth-btn')!;
-  let notification: any = null;
+  let notification: { close: () => void; on: (evt: string, cb: () => void) => void } | null = null;
 
   button.addEventListener('click', () => {
     if (notification) notification.close();
@@ -54,8 +52,8 @@ export function initSynth(): void {
   function showSynth() {
     const html = document.createElement('div');
 
-    const onOffBtn = document.createElement('input') as any;
-    mixin(onOffBtn, { type: 'button', value: (window as any).i18nextify.i18next.t('ON/OFF'), className: state.enableSynth ? 'switched-on' : 'switched-off' });
+    const onOffBtn = document.createElement('input');
+    Object.assign(onOffBtn, { type: 'button', value: window.i18nextify.i18next.t('ON/OFF'), className: state.enableSynth ? 'switched-on' : 'switched-off' });
     onOffBtn.addEventListener('click', () => {
       state.enableSynth = !state.enableSynth;
       onOffBtn.className = state.enableSynth ? 'switched-on' : 'switched-off';
@@ -69,18 +67,18 @@ export function initSynth(): void {
     });
     html.appendChild(onOffBtn);
 
-    let knobCanvas = document.createElement('canvas') as any;
-    mixin(knobCanvas, { width: 32 * window.devicePixelRatio, height: 32 * window.devicePixelRatio, className: 'knob' });
+    let knobCanvas = document.createElement('canvas');
+    Object.assign(knobCanvas, { width: 32 * window.devicePixelRatio, height: 32 * window.devicePixelRatio, className: 'knob' });
     html.appendChild(knobCanvas);
     let knob = new Knob(knobCanvas, 0, 100, 0.1, 50, 'mix', '%');
     knob.canvas.style.width = '32px';
     knob.canvas.style.height = '32px';
-    knob.on('change', (k: any) => { const mix = k.value / 100; audio.pianoGain.gain.value = 1 - mix; audio.synthGain.gain.value = mix; });
+    knob.on('change', (k: { value: number }) => { const mix = k.value / 100; audio.pianoGain.gain.value = 1 - mix; audio.synthGain.gain.value = mix; });
     knob.emit('change', knob);
 
-    const typeBtn = document.createElement('input') as any;
-    mixin(typeBtn, { type: 'button', value: (window as any).i18nextify.i18next.t(osc_types[osc_type_index]) });
-    typeBtn.addEventListener('click', () => { if (++osc_type_index >= osc_types.length) osc_type_index = 0; osc1_type = osc_types[osc_type_index]; typeBtn.value = (window as any).i18nextify.i18next.t(osc1_type); });
+    const typeBtn = document.createElement('input');
+    Object.assign(typeBtn, { type: 'button', value: window.i18nextify.i18next.t(osc_types[osc_type_index]) });
+    typeBtn.addEventListener('click', () => { if (++osc_type_index >= osc_types.length) osc_type_index = 0; osc1_type = osc_types[osc_type_index]; typeBtn.value = window.i18nextify.i18next.t(osc1_type); });
     html.appendChild(typeBtn);
 
     const knobConfigs = [
@@ -91,12 +89,12 @@ export function initSynth(): void {
     ];
     for (const cfg of knobConfigs) {
       knobCanvas = document.createElement('canvas');
-      mixin(knobCanvas, { width: 32 * window.devicePixelRatio, height: 32 * window.devicePixelRatio, className: 'knob' });
+      Object.assign(knobCanvas, { width: 32 * window.devicePixelRatio, height: 32 * window.devicePixelRatio, className: 'knob' });
       html.appendChild(knobCanvas);
       knob = new Knob(knobCanvas, cfg.min, cfg.max, cfg.step, cfg.value, cfg.name, cfg.unit);
       knob.canvas.style.width = '32px';
       knob.canvas.style.height = '32px';
-      knob.on('change', ((s: any) => (k: any) => { s(k.value); })(cfg.setter));
+      knob.on('change', ((s: (v: number) => void) => (k: { value: number }) => { s(k.value); })(cfg.setter));
       knob.emit('change', knob);
     }
 

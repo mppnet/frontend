@@ -1,11 +1,9 @@
-import { mixin, Knob } from '../util/util';
+import { Knob } from '../util/util';
 import { Notification } from '../libs/Notification';
 import { state, getClient, getPiano } from '../util/state';
 import { settings } from '../modules/settings/settings';
 import { press, release, pressSustain, releaseSustain, getAutoSustain } from '../util/actions';
 import { MIDI_KEY_NAMES, MIDI_TRANSPOSE } from '../util/constants';
-
-declare const $: any;
 
 export function initMidi(): void {
   const gClient = getClient();
@@ -21,8 +19,8 @@ export function initMidi(): void {
   for (let i = 0; i < 16; i++) pitchBends[i] = 0;
 
   if (navigator.requestMIDIAccess) {
-    navigator.requestMIDIAccess().then((midi: any) => {
-      function midimessagehandler(evt: any) {
+    navigator.requestMIDIAccess().then((midi) => {
+      function midimessagehandler(evt: { target: any; data: Uint8Array }) {
         if (!evt.target.enabled) return;
         const channel = evt.data[0] & 0xf;
         const cmd = evt.data[0] >> 4;
@@ -51,12 +49,12 @@ export function initMidi(): void {
           pitchBends[channel] = pitchMod;
         }
       }
-      function deviceInfo(dev: any) {
+      function deviceInfo(dev: { type: string; manufacturer: string; name: string; version: string; enabled?: boolean; volume?: number }) {
         return { type: dev.type, manufacturer: dev.manufacturer, name: dev.name, version: dev.version, enabled: dev.enabled, volume: dev.volume };
       }
 
       function updateDevices() {
-        const list: any[] = [];
+        const list: Array<{ type: string; manufacturer: string; name: string; version: string; enabled?: boolean; volume?: number }> = [];
         if (midi.inputs.size > 0) {
           const inputs = midi.inputs.values();
           for (let it = inputs.next(); it && !it.done; it = inputs.next()) list.push(deviceInfo(it.value));
@@ -105,40 +103,40 @@ export function initMidi(): void {
         updateDevices();
       }
 
-      midi.addEventListener('statechange', (evt: any) => { if (evt instanceof MIDIConnectionEvent) plug(); });
+      midi.addEventListener('statechange', () => { plug(); });
 
-      let connectionsNotification: any;
+      let connectionsNotification: { close: () => void } | null = null;
       function showConnections(sticky: boolean) {
         const inputs_ul = document.createElement('ul');
         if (midi.inputs.size > 0) {
           const inputs = midi.inputs.values();
           for (let it = inputs.next(); it && !it.done; it = inputs.next()) {
             const input = it.value;
-            const li = document.createElement('li') as any;
+            const li = document.createElement('li') as HTMLLIElement & { connectionId: string };
             li.connectionId = input.id;
             li.classList.add('connection');
             if (input.enabled) li.classList.add('enabled');
             li.textContent = input.name;
-            li.addEventListener('click', (evt: any) => {
+            li.addEventListener('click', (evt: Event) => {
               const ins = midi.inputs.values();
               for (let iit = ins.next(); iit && !iit.done; iit = ins.next()) {
-                if (iit.value.id === evt.target.connectionId) {
+                if (iit.value.id === (evt.target as HTMLElement & { connectionId: string }).connectionId) {
                   iit.value.enabled = !iit.value.enabled;
-                  evt.target.classList.toggle('enabled');
+                  (evt.target as HTMLElement).classList.toggle('enabled');
                   updateDevices();
                   return;
                 }
               }
             });
             if (settings.midiVolumeTest) {
-              let knobCanvas = document.createElement('canvas') as any;
-              mixin(knobCanvas, { width: 16 * window.devicePixelRatio, height: 16 * window.devicePixelRatio, className: 'knob' });
+              let knobCanvas = document.createElement('canvas');
+              Object.assign(knobCanvas, { width: 16 * window.devicePixelRatio, height: 16 * window.devicePixelRatio, className: 'knob' });
               li.appendChild(knobCanvas);
               const knob = new Knob(knobCanvas, 0, 2, 0.01, input.volume, 'volume');
               knob.canvas.style.width = '16px';
               knob.canvas.style.height = '16px';
               knob.canvas.style.float = 'right';
-              knob.on('change', (k: any) => { input.volume = k.value; });
+              knob.on('change', (k: { value: number }) => { input.volume = k.value; });
               knob.emit('change', knob);
             }
             inputs_ul.appendChild(li);
@@ -150,31 +148,31 @@ export function initMidi(): void {
           const outputs = midi.outputs.values();
           for (let it = outputs.next(); it && !it.done; it = outputs.next()) {
             const output = it.value;
-            const li = document.createElement('li') as any;
+            const li = document.createElement('li') as HTMLLIElement & { connectionId: string };
             li.connectionId = output.id;
             li.classList.add('connection');
             if (output.enabled) li.classList.add('enabled');
             li.textContent = output.name;
-            li.addEventListener('click', (evt: any) => {
+            li.addEventListener('click', (evt: Event) => {
               const outs = midi.outputs.values();
               for (let oit = outs.next(); oit && !oit.done; oit = outs.next()) {
-                if (oit.value.id === evt.target.connectionId) {
+                if (oit.value.id === (evt.target as HTMLElement & { connectionId: string }).connectionId) {
                   oit.value.enabled = !oit.value.enabled;
-                  evt.target.classList.toggle('enabled');
+                  (evt.target as HTMLElement).classList.toggle('enabled');
                   updateDevices();
                   return;
                 }
               }
             });
             if (settings.midiVolumeTest) {
-              let knobCanvas = document.createElement('canvas') as any;
-              mixin(knobCanvas, { width: 16 * window.devicePixelRatio, height: 16 * window.devicePixelRatio, className: 'knob' });
+              let knobCanvas = document.createElement('canvas');
+              Object.assign(knobCanvas, { width: 16 * window.devicePixelRatio, height: 16 * window.devicePixelRatio, className: 'knob' });
               li.appendChild(knobCanvas);
               const knob = new Knob(knobCanvas, 0, 2, 0.01, output.volume, 'volume');
               knob.canvas.style.width = '16px';
               knob.canvas.style.height = '16px';
               knob.canvas.style.float = 'right';
-              knob.on('change', (k: any) => { output.volume = k.value; });
+              knob.on('change', (k: { value: number }) => { output.volume = k.value; });
               knob.emit('change', knob);
             }
             outputs_ul.appendChild(li);
