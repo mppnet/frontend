@@ -3,8 +3,9 @@
     "plugins": ["prettier"],
     "parserOptions": {
         "ecmaVersion": "latest"
-    },      
+    },
     "rules": {
-      "prettier/prettier": ["error"]
+      "prettier/prettier": ["error"],
+      "@typescript-eslint/no-deprecated": "error"
     }
 }

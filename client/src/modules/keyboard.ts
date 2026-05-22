@@ -4,9 +4,10 @@ import { press, release, pressSustain, releaseSustain, setAutoSustain, getAutoSu
 import { NoteQuota } from '../libs/NoteQuota';
 import { Color } from '../libs/Color';
 import { Notification } from '../libs/Notification';
-import { openModal, closeModal } from '../util/modal';
+import { openModal } from '../util/modal';
 import { fadeIn, fadeOut } from '../util/util';
 import type { Participant } from '../types';
+import { i18next } from '../util/translations';
 
 let gKeyboardSeq = 0;
 
@@ -294,7 +295,7 @@ export function initKeyboard(): void {
   let gKnowsHowToDm = localStorage.knowsHowToDm === 'true';
   gClient.on('participant removed', (part: any) => {
     if (gIsDming && gDmParticipant && part._id === gDmParticipant._id) {
-      state.chat.endDM();
+      state.chat!.endDM();
       if (!settings.cancelDMs) {
         new Notification({
           title: 'DM Cancelled',
@@ -314,7 +315,7 @@ export function initKeyboard(): void {
         (document.getElementById('chat-input') as HTMLElement).blur();
       }
       if (settings.cancelDMs) {
-        state.chat.blur();
+        state.chat!.blur();
         (document.querySelector('#chat input') as HTMLInputElement).value = '';
         new Notification({
           title: 'DM Cancelled',
@@ -386,13 +387,13 @@ export function initKeyboard(): void {
 
     // Mute Notes
     if (settings.pianoMutes.indexOf(part._id) == -1) {
-      createMenuItem(window.i18nextify.i18next.t('Mute Notes'), () => {
+      createMenuItem(i18next.t('Mute Notes'), () => {
         settings.pianoMutes.push(part._id);
         if (localStorage) localStorage.pianoMutes = settings.pianoMutes.join(',');
         part.nameDiv?.classList.add('muted-notes');
       });
     } else {
-      createMenuItem(window.i18nextify.i18next.t('Unmute Notes'), () => {
+      createMenuItem(i18next.t('Unmute Notes'), () => {
         let i: number;
         while ((i = settings.pianoMutes.indexOf(part._id)) != -1)
           settings.pianoMutes.splice(i, 1);
@@ -402,13 +403,13 @@ export function initKeyboard(): void {
     }
     // Mute Chat
     if (settings.chatMutes.indexOf(part._id) == -1) {
-      createMenuItem(window.i18nextify.i18next.t('Mute Chat'), () => {
+      createMenuItem(i18next.t('Mute Chat'), () => {
         settings.chatMutes.push(part._id);
         if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
         part.nameDiv?.classList.add('muted-chat');
       });
     } else {
-      createMenuItem(window.i18nextify.i18next.t('Unmute Chat'), () => {
+      createMenuItem(i18next.t('Unmute Chat'), () => {
         let i: number;
         while ((i = settings.chatMutes.indexOf(part._id)) != -1)
           settings.chatMutes.splice(i, 1);
@@ -418,7 +419,7 @@ export function initKeyboard(): void {
     }
     // Mute Completely
     if (!(settings.pianoMutes.indexOf(part._id) >= 0) || !(settings.chatMutes.indexOf(part._id) >= 0)) {
-      createMenuItem(window.i18nextify.i18next.t('Mute Completely'), () => {
+      createMenuItem(i18next.t('Mute Completely'), () => {
         settings.pianoMutes.push(part._id);
         if (localStorage) localStorage.pianoMutes = settings.pianoMutes.join(',');
         settings.chatMutes.push(part._id);
@@ -428,7 +429,7 @@ export function initKeyboard(): void {
       });
     }
     if (settings.pianoMutes.indexOf(part._id) >= 0 || settings.chatMutes.indexOf(part._id) >= 0) {
-      createMenuItem(window.i18nextify.i18next.t('Unmute Completely'), () => {
+      createMenuItem(i18next.t('Unmute Completely'), () => {
         let i: number;
         while ((i = settings.pianoMutes.indexOf(part._id)) != -1)
           settings.pianoMutes.splice(i, 1);
@@ -442,35 +443,35 @@ export function initKeyboard(): void {
     }
     // DM menu item
     if (gIsDming && gDmParticipant && gDmParticipant._id === part._id) {
-      createMenuItem(window.i18nextify.i18next.t('End Direct Message'), () => {
-        state.chat.endDM();
+      createMenuItem(i18next.t('End Direct Message'), () => {
+        state.chat!.endDM();
       });
     } else {
-      createMenuItem(window.i18nextify.i18next.t('Direct Message'), () => {
+      createMenuItem(i18next.t('Direct Message'), () => {
         if (!gKnowsHowToDm) {
           localStorage.knowsHowToDm = 'true';
           gKnowsHowToDm = true;
           new Notification({
             target: '#piano',
             duration: 20000,
-            title: window.i18nextify.i18next.t('How to DM'),
-            text: window.i18nextify.i18next.t(
+            title: i18next.t('How to DM'),
+            text: i18next.t(
               'After you click the button to direct message someone, future chat messages will be sent to them instead of to everyone. To go back to talking in public chat, send a blank chat message, or click the button again.',
             ),
           });
         }
-        state.chat.startDM(part);
+        state.chat!.startDM(part);
       });
     }
     // Hide/Show Cursor
     if (settings.cursorHides.indexOf(part._id) == -1) {
-      createMenuItem(window.i18nextify.i18next.t('Hide Cursor'), () => {
+      createMenuItem(i18next.t('Hide Cursor'), () => {
         settings.cursorHides.push(part._id);
         if (localStorage) localStorage.cursorHides = settings.cursorHides.join(',');
         if (part.cursorDiv) part.cursorDiv.style.display = 'none';
       });
     } else {
-      createMenuItem(window.i18nextify.i18next.t('Show Cursor'), () => {
+      createMenuItem(i18next.t('Show Cursor'), () => {
         let i: number;
         while ((i = settings.cursorHides.indexOf(part._id)) != -1)
           settings.cursorHides.splice(i, 1);
@@ -479,19 +480,19 @@ export function initKeyboard(): void {
       });
     }
     // Mention
-    createMenuItem(window.i18nextify.i18next.t('Mention'), () => {
+    createMenuItem(i18next.t('Mention'), () => {
       (document.getElementById('chat-input') as HTMLInputElement).value += '@' + part.id + ' ';
       setTimeout(() => { (document.getElementById('chat-input') as HTMLElement).focus(); }, 1);
     });
     // Admin actions
     if (gClient.isOwner() || gClient.permissions.chownAnywhere) {
-      if (!gClient.channel.settings.lobby) {
-        createMenuItem(window.i18nextify.i18next.t('Give Crown'), () => {
+      if (!gClient.channel!.settings.lobby) {
+        createMenuItem(i18next.t('Give Crown'), () => {
           if (confirm('Give room ownership to ' + part.name + '?'))
             gClient.sendArray([{ m: 'chown', id: part.id }]);
         });
       }
-      createMenuItem(window.i18nextify.i18next.t('Kickban'), () => {
+      createMenuItem(i18next.t('Kickban'), () => {
         const minutes = prompt('How many minutes? (0-300)', '30');
         if (minutes === null) return;
         const ms = (parseFloat(minutes) || 0) * 60 * 1000;
@@ -499,7 +500,7 @@ export function initKeyboard(): void {
       });
     }
     if (gClient.permissions.siteBan) {
-      createMenuItem(window.i18nextify.i18next.t('Site Ban'), () => {
+      createMenuItem(i18next.t('Site Ban'), () => {
         openModal('#siteban');
         setTimeout(() => {
           (document.querySelector('#siteban input[name=id]') as HTMLInputElement).value = part._id;
@@ -527,7 +528,7 @@ export function initKeyboard(): void {
       });
     }
     if (gClient.permissions.usersetOthers) {
-      createMenuItem(window.i18nextify.i18next.t('Set Name'), () => {
+      createMenuItem(i18next.t('Set Name'), () => {
         const name = prompt('What name?', part.name);
         if (name === null) return;
         gClient.sendArray([{ m: 'setname', _id: part._id, name: name }]);
@@ -545,8 +546,8 @@ export function initKeyboard(): void {
       if (id == gClient.participantId) {
         openModal('#rename', 'input[name=name]');
         setTimeout(() => {
-          (document.querySelector('#rename input[name=name]') as HTMLInputElement).value = gClient.ppl[gClient.participantId].name;
-          (document.querySelector('#rename input[name=color]') as HTMLInputElement).value = gClient.ppl[gClient.participantId].color;
+          (document.querySelector('#rename input[name=name]') as HTMLInputElement).value = gClient.ppl[gClient.participantId!].name;
+          (document.querySelector('#rename input[name=color]') as HTMLInputElement).value = gClient.ppl[gClient.participantId!].color;
         }, 100);
       } else if (id) {
         const part = gClient.ppl[id] || null;

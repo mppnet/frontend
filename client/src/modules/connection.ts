@@ -2,7 +2,6 @@ import { Client } from '../libs/Client';
 import { Notification } from '../libs/Notification';
 import { state, getPiano } from '../util/state';
 import { settings } from './settings/settings';
-import { press, release } from '../util/actions';
 import { getParameterByName, getRoomNameFromURL } from '../util/url-utils';
 import { DEFAULT_VELOCITY, TIMING_TARGET } from '../util/constants';
 import { openModal, closeModal, modalHandleEsc } from '../util/modal';
@@ -149,6 +148,8 @@ export function initConnection(): Client {
   }
 
   function updateLabels(part: Participant): void {
+    if (!part.nameDiv || !gClient.channel) return;
+
     if (part.id === gClient.participantId) {
       part.nameDiv.classList.add('me');
     } else {
@@ -181,7 +182,7 @@ export function initConnection(): Client {
 
     let nameDiv: HTMLElement;
     if (hadNameDiv) {
-      nameDiv = part.nameDiv;
+      nameDiv = part.nameDiv!;
       nameDiv.innerHTML = '';
     } else {
       nameDiv = document.createElement('div');
@@ -220,7 +221,7 @@ export function initConnection(): Client {
     updateLabels(part);
 
     let hasOtherDiv = false;
-    if (part.vanished) {
+    if (part.vanished && part.nameDiv) {
       hasOtherDiv = true;
       const vanishDiv = document.createElement('div');
       vanishDiv.className = 'nametag';
@@ -230,7 +231,7 @@ export function initConnection(): Client {
       part.nameDiv.appendChild(vanishDiv);
     }
 
-    if (part.tag) {
+    if (part.tag && part.nameDiv) {
       hasOtherDiv = true;
       const tagDiv = document.createElement('div');
       tagDiv.className = 'nametag';
@@ -239,26 +240,27 @@ export function initConnection(): Client {
       tagDiv.id = 'nametag-' + part._id;
       part.nameDiv.appendChild(tagDiv);
     }
-    if (part.afk) {
+    if (part.afk && part.nameDiv) {
       const afkDiv = document.createElement('div');
       afkDiv.className = 'nametag';
       afkDiv.textContent = 'AFK';
       afkDiv.style.backgroundColor = '#00000040';
-      afkDiv.style['margin-left'] = '5px';
-      afkDiv.style['margin-right'] = '0px';
+      afkDiv.style.marginLeft = '5px';
+      afkDiv.style.marginRight = '0px';
       afkDiv.style.float = 'right';
       afkDiv.id = 'afktag-' + part._id;
       part.nameDiv.appendChild(afkDiv);
     }
 
-    const textDiv = document.createElement('div');
-    textDiv.className = 'nametext';
-    textDiv.textContent = part.name || '';
-    textDiv.id = 'nametext-' + part._id;
-    if (hasOtherDiv) textDiv.style.float = 'left';
-    part.nameDiv.appendChild(textDiv);
-    part.nameDiv.setAttribute('translated', '');
-
+    if (part.nameDiv) {
+      const textDiv = document.createElement('div');
+      textDiv.className = 'nametext';
+      textDiv.textContent = part.name || '';
+      textDiv.id = 'nametext-' + part._id;
+      if (hasOtherDiv) textDiv.style.float = 'left';
+      part.nameDiv.appendChild(textDiv);
+      part.nameDiv.setAttribute('translated', '');
+    }
     const namesContainer = document.getElementById('names')!;
     const arr = Array.from(namesContainer.querySelectorAll('.name')) as HTMLElement[];
     arr.sort((a, b) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0);
@@ -444,7 +446,7 @@ export function initConnection(): Client {
     if (gClient.findParticipantById(msg.p).tag) {
       if (
         settings.hideBotUsers === true &&
-        gClient.findParticipantById(msg.p).tag.text === 'BOT'
+        gClient.findParticipantById(msg.p).tag?.text === 'BOT'
       )
         return;
     }
@@ -509,9 +511,9 @@ export function initConnection(): Client {
       roomSettingsBtn.style.display = 'none';
     }
     if (
-      !gClient.channel.settings.lobby &&
+      !gClient.channel!.settings.lobby &&
       (gClient.permissions.chownAnywhere ||
-        gClient.channel.settings.owner_id === gClient.user._id)
+        gClient.channel!.settings.owner_id === gClient.user!._id)
     ) {
       getcrownBtn.style.display = 'block';
     } else {

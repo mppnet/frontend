@@ -73,27 +73,25 @@ export class AudioEngineWeb extends AudioEngine {
   }
 
   load(id: string, url: string, cb?: () => void): void {
-    const req = new XMLHttpRequest();
-    req.open('GET', url);
-    req.responseType = 'arraybuffer';
-    req.addEventListener('readystatechange', () => {
-      if (req.readyState !== 4) return;
-      try {
-        this.context.decodeAudioData(req.response, (buffer) => {
-          this.sounds[id] = buffer;
-          if (cb) cb();
-        });
-      } catch (e) {
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.arrayBuffer();
+      })
+      .then((buffer) => this.context.decodeAudioData(buffer))
+      .then((decoded) => {
+        this.sounds[id] = decoded;
+        cb?.();
+      })
+      .catch((e) => {
         new Notification({
           id: 'audio-download-error',
           title: 'Problem',
-          text: 'For some reason, an audio download failed with a status of ' + req.status + '. ',
+          text: `For some reason, an audio download failed. ${e.message}`,
           target: '#piano',
           duration: 10000,
         });
-      }
-    });
-    req.send();
+      });
   }
 
   actualPlay(id: string, vol: number, time: number, part_id: string): void {

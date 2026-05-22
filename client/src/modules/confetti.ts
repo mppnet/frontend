@@ -1,6 +1,7 @@
-import { state, getClient } from '../util/state';
+import { getClient } from '../util/state';
 import { openModal, closeModal } from '../util/modal';
 import type { ConfettiParticle } from '../types';
+import { i18next, i18nextify } from '../util/translations';
 
 export function initConfetti(): void {
   const gClient = getClient();
@@ -101,19 +102,19 @@ export function initConfetti(): void {
         const option = document.createElement('option');
         option.value = z.code;
         option.innerText = z.native;
-        if (z.code === window.i18nextify.i18next.language.split('-')[0]) option.selected = true;
+        if (z.code === i18next.language.split('-')[0]) option.selected = true;
         option.setAttribute('translated', '');
         languages.appendChild(option);
       });
     }
 
-    if (window.i18nextify.i18next.isInitialized) createTranslationOptions();
-    else window.i18nextify.i18next.on('initialized', () => { createTranslationOptions(); });
+    if (i18next.isInitialized) createTranslationOptions();
+    else i18next.on('initialized', () => { createTranslationOptions(); });
 
     document.getElementById('lang-btn')!.addEventListener('click', () => { openModal('#language'); });
     document.querySelector('#language > button')!.addEventListener('click', async () => {
-      await window.i18nextify.i18next.changeLanguage((document.querySelector('#languages') as HTMLSelectElement).selectedOptions[0].value);
-      window.i18nextify.forceRerender();
+      await i18next.changeLanguage((document.querySelector('#languages') as HTMLSelectElement).selectedOptions[0].value);
+      i18nextify.forceRerender();
       closeModal();
     });
   })();

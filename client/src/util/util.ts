@@ -6,7 +6,9 @@ function getNaturalDisplay(el: HTMLElement): string {
   return display === 'none' ? 'block' : display;
 }
 
-export function fadeIn(el: HTMLElement, ms: number, cb?: () => void): void {
+export function fadeIn(el: HTMLElement | undefined | null, ms: number, cb?: () => void): void {
+  if (!el) return;
+
   const isHidden =
     el.style.display === 'none' || getComputedStyle(el).display === 'none';
 
@@ -26,7 +28,7 @@ export function fadeIn(el: HTMLElement, ms: number, cb?: () => void): void {
   }, ms);
 }
 
-export function fadeOut(el: HTMLElement, ms: number, cb?: () => void): void {
+export function fadeOut(el: HTMLElement | undefined | null, ms: number, cb?: () => void): void {
   if (!el) return;
 
   el.style.transition = `opacity ${ms}ms`;
@@ -114,7 +116,7 @@ export class Knob extends EventEmitter {
     this.mouse_over = false;
 
     this.canvas = canvas;
-    this.ctx = canvas.getContext("2d");
+    this.ctx = canvas.getContext("2d") as CanvasRenderingContext2D; // if this is undefined we have bigger problems
 
     this.radius = this.canvas.width * 0.3333;
     this.baseImage = document.createElement("canvas");

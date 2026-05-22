@@ -1,9 +1,10 @@
 import { Notification } from '../../libs/Notification';
-import { state, getClient, getPiano } from '../../util/state';
+import { getClient } from '../../util/state';
 import { settings } from './settings';
 import { openModal, closeModal } from '../../util/modal';
 import { BASIC_PIANO_SCALES } from '../../util/constants';
-import { Participant } from 'src/types';
+import { Participant } from '../../types';
+import { i18next } from '../../util/translations';
 
 export function initSettingsUI(): void {
   if (window.location.hostname === 'multiplayerpiano.com') {
@@ -82,10 +83,10 @@ export function initSettingsUI(): void {
           localStorage.noBackgroundColor = setting.classList.contains('enabled');
           settings.noBackgroundColor = setting.classList.contains('enabled');
           const client = getClient();
-          if (client.channel.settings.color && !settings.noBackgroundColor) {
+          if (client.channel!.settings.color && !settings.noBackgroundColor) {
             window.setBackgroundColor(
-              client.channel.settings.color,
-              client.channel.settings.color2,
+              client.channel!.settings.color,
+              client.channel!.settings.color2,
             );
           } else {
             window.setBackgroundColorToDefault();
@@ -296,7 +297,7 @@ export function initSettingsUI(): void {
       setting.onclick = onclickFunc;
 
       const label = document.createElement('label');
-      label.innerText = window.i18nextify.i18next.t(labelText + ':') + ' ';
+      label.innerText = i18next.t(labelText + ':') + ' ';
 
       label.appendChild(setting);
       container.appendChild(label);
@@ -538,10 +539,10 @@ export function initSettingsUI(): void {
               localStorage.noBackgroundColor = settings.noBackgroundColor;
               const client = getClient();
 
-              if (client.channel.settings.color && !settings.noBackgroundColor) {
+              if (client.channel!.settings.color && !settings.noBackgroundColor) {
                 window.setBackgroundColor(
-                  client.channel.settings.color,
-                  client.channel.settings.color2,
+                  client.channel!.settings.color,
+                  client.channel!.settings.color2,
                 );
               } else {
                 window.setBackgroundColorToDefault();

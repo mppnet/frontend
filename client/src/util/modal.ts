@@ -25,7 +25,6 @@ export function openModal(selector: string, focus?: string): void {
   if (state.chat) state.chat.blur();
   const { releaseKeyboard } = require('../modules/keyboard');
   releaseKeyboard();
-  console.log("opening modal, selector: " + selector + " focus: " + focus)
   document.addEventListener('keydown', modalHandleEsc);
   const modals = document.querySelector('#modal #modals') as HTMLElement;
   if (modals) {
@@ -33,7 +32,6 @@ export function openModal(selector: string, focus?: string): void {
   }
   const modal = document.getElementById('modal')!;
   fadeIn(modal, 250);
-  console.log(modal, selector)
   const target = document.querySelector(selector) as HTMLElement;
   if (target) target.style.display = 'block';
   if (focus) {

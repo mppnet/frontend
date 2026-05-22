@@ -1,9 +1,10 @@
-import { fadeIn, fadeOut } from '../util/util';
-import { state, getClient, getPiano } from '../util/state';
+import { fadeOut } from '../util/util';
+import { getClient, getPiano } from '../util/state';
 import { settings } from './settings/settings';
 import { openModal, closeModal } from '../util/modal';
-import { getRoomNameFromURL, getParameterByName } from '../util/url-utils';
+import { getRoomNameFromURL } from '../util/url-utils';
 import { Notification } from '../libs/Notification';
+import { i18next } from '../util/translations';
 
 export function initRooms(): void {
   const gClient = getClient();
@@ -18,8 +19,8 @@ export function initRooms(): void {
     window.gKnowsYouCanUseKeyboardTimeout = setTimeout(() => {
       window.gKnowsYouCanUseKeyboardNotification = new Notification({
         id: 'play',
-        title: window.i18nextify.i18next.t('Did you know!?!'),
-        text: window.i18nextify.i18next.t('You can play the piano with your keyboard, too.  Try it!'),
+        title: i18next.t('Did you know!?!'),
+        text: i18next.t('You can play the piano with your keyboard, too.  Try it!'),
         target: '#piano',
         duration: 10000,
       });
@@ -102,7 +103,7 @@ export function initRooms(): void {
     const room_name = 'Room' + Math.floor(Math.random() * 1000000000000);
     changeRoom(room_name, 'right', { visible: false });
     setTimeout(() => {
-      new Notification({ id: 'share', title: window.i18nextify.i18next.t('Playing alone'), html: window.i18nextify.i18next.t('You are playing alone in a room by yourself, but you can always invite friends by sending them the link.') + '<br><a href="' + location.href + '">' + location.href + '</a>', duration: 25000 });
+      new Notification({ id: 'share', title: i18next.t('Playing alone'), html: i18next.t('You are playing alone in a room by yourself, but you can always invite friends by sending them the link.') + '<br><a href="' + location.href + '">' + location.href + '</a>', duration: 25000 });
     }, 1000);
   });
 
@@ -155,7 +156,7 @@ export function initRooms(): void {
       (document.querySelector('#new-room .text[name=name]') as HTMLInputElement).value = '';
       closeModal();
       changeRoom(name, 'right', roomSettings);
-      setTimeout(() => { new Notification({ id: 'share', title: window.i18nextify.i18next.t('Created a Room'), html: window.i18nextify.i18next.t('You can invite friends to your room by sending them the link.') + '<br><a href="' + location.href + '">' + location.href + '</a>', duration: 25000 }); }, 1000);
+      setTimeout(() => { new Notification({ id: 'share', title: i18next.t('Created a Room'), html: i18next.t('You can invite friends to your room by sending them the link.') + '<br><a href="' + location.href + '">' + location.href + '</a>', duration: 25000 }); }, 1000);
     }
     document.querySelector('#new-room .submit')!.addEventListener('click', () => { submit(); });
     document.querySelector('#new-room .text[name=name]')!.addEventListener('keypress', (evt: any) => {
@@ -234,7 +235,7 @@ export function initRooms(): void {
     document.querySelector('#siteban .text[name=id]')!.addEventListener('keypress', textKeypressEvent);
     document.querySelector('#siteban .text[name=reasonText]')!.addEventListener('keypress', textKeypressEvent);
     if (document.querySelector('#siteban .text[name=note]')) {
-      document.querySelector('#siteban .text[name=note]').addEventListener('keypress', textKeypressEvent);
+      document.querySelector('#siteban .text[name=note]')!.addEventListener('keypress', textKeypressEvent);
     }
   })();
 

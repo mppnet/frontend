@@ -4,6 +4,7 @@ import { state, getClient, getPiano } from '../util/state';
 import { settings } from '../modules/settings/settings';
 import { press, release, pressSustain, releaseSustain, getAutoSustain } from '../util/actions';
 import { MIDI_KEY_NAMES, MIDI_TRANSPOSE } from '../util/constants';
+import { MidiInputInfo } from '../types';
 
 export function initMidi(): void {
   const gClient = getClient();
@@ -20,8 +21,10 @@ export function initMidi(): void {
 
   if (navigator.requestMIDIAccess) {
     navigator.requestMIDIAccess().then((midi) => {
-      function midimessagehandler(evt: { target: any; data: Uint8Array }) {
-        if (!evt.target.enabled) return;
+      function midimessagehandler(evt: MIDIMessageEvent & { target: { enabled: boolean, volume: number } }) {
+        if (!evt.target!.enabled) return;
+        if (!evt.data) return;
+
         const channel = evt.data[0] & 0xf;
         const cmd = evt.data[0] >> 4;
         const note_number = evt.data[1];
@@ -49,12 +52,12 @@ export function initMidi(): void {
           pitchBends[channel] = pitchMod;
         }
       }
-      function deviceInfo(dev: { type: string; manufacturer: string; name: string; version: string; enabled?: boolean; volume?: number }) {
+      function deviceInfo(dev: MidiInputInfo) {
         return { type: dev.type, manufacturer: dev.manufacturer, name: dev.name, version: dev.version, enabled: dev.enabled, volume: dev.volume };
       }
 
       function updateDevices() {
-        const list: Array<{ type: string; manufacturer: string; name: string; version: string; enabled?: boolean; volume?: number }> = [];
+        const list: Array<MidiInputInfo> = [];
         if (midi.inputs.size > 0) {
           const inputs = midi.inputs.values();
           for (let it = inputs.next(); it && !it.done; it = inputs.next()) list.push(deviceInfo(it.value));
@@ -72,7 +75,7 @@ export function initMidi(): void {
           const inputs = midi.inputs.values();
           for (let it = inputs.next(); it && !it.done; it = inputs.next()) {
             const input = it.value;
-            input.onmidimessage = midimessagehandler;
+            input.onmidimessage = midimessagehandler as ((this: MIDIInput, ev: MIDIMessageEvent) => any);
             if (input.enabled !== false) input.enabled = true;
             if (typeof input.volume === 'undefined') input.volume = 1.0;
           }

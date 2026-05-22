@@ -13,7 +13,7 @@ export interface Participant {
   displayX?: number;
   displayY?: number;
 }
-
+export interface MidiInputInfo { type: string; manufacturer: string | null; name: string | null; version: string | null; enabled?: boolean; volume?: number }
 export interface ChannelSettings {
   visible?: boolean;
   chat?: boolean;
