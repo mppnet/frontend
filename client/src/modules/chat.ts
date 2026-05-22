@@ -15,6 +15,7 @@ import {
   setYoureReplied,
 } from "./connection";
 import type { ChatMessage } from '../types';
+import { i18next } from "../util/translations";
 
 export interface Chat {
   startDM(part: any): void;
@@ -59,7 +60,7 @@ export function initChat(): Chat {
 
     endDM(): void {
       setIsDming(false);
-      (document.getElementById('chat-input') as HTMLInputElement).placeholder = window.i18nextify.i18next.t(
+      (document.getElementById('chat-input') as HTMLInputElement).placeholder = i18next.t(
         "You can chat with this thing.",
       );
     },
@@ -97,7 +98,7 @@ export function initChat(): Chat {
         backgroundColor: "unset",
         border: "1px solid #00000000",
       });
-      (document.getElementById('chat-input') as HTMLInputElement).placeholder = window.i18nextify.i18next.t(
+      (document.getElementById('chat-input') as HTMLInputElement).placeholder = i18next.t(
         getIsDming()
           ? `Direct messaging ${part.name}`
           : `You can chat with this thing.`,
@@ -343,7 +344,7 @@ export function initChat(): Chat {
             if (user.id === gClient.getOwnParticipant()!.id) {
               if (!getTabIsActive()) {
                 setYoureMentioned(true);
-                document.title = window.i18nextify.i18next.t(
+                document.title = i18nextt.t(
                   "You were mentioned!",
                 );
               }

@@ -2,6 +2,7 @@ import { Knob } from '../util/util';
 import { Notification } from '../libs/Notification';
 import { state, getPiano } from '../util/state';
 import { MIDI_KEY_NAMES, MIDI_TRANSPOSE } from '../util/constants';
+import { i18next } from '../util/translations';
 
 export function initSynth(): void {
   const piano = getPiano();
@@ -53,7 +54,7 @@ export function initSynth(): void {
     const html = document.createElement('div');
 
     const onOffBtn = document.createElement('input');
-    Object.assign(onOffBtn, { type: 'button', value: window.i18nextify.i18next.t('ON/OFF'), className: state.enableSynth ? 'switched-on' : 'switched-off' });
+    Object.assign(onOffBtn, { type: 'button', value: i18next.t('ON/OFF'), className: state.enableSynth ? 'switched-on' : 'switched-off' });
     onOffBtn.addEventListener('click', () => {
       state.enableSynth = !state.enableSynth;
       onOffBtn.className = state.enableSynth ? 'switched-on' : 'switched-off';
@@ -77,7 +78,7 @@ export function initSynth(): void {
     knob.emit('change', knob);
 
     const typeBtn = document.createElement('input');
-    Object.assign(typeBtn, { type: 'button', value: window.i18nextify.i18next.t(osc_types[osc_type_index]) });
+    Object.assign(typeBtn, { type: 'button', value: i18next.t(osc_types[osc_type_index]) });
     typeBtn.addEventListener('click', () => { if (++osc_type_index >= osc_types.length) osc_type_index = 0; osc1_type = osc_types[osc_type_index]; typeBtn.value = window.i18nextify.i18next.t(osc1_type); });
     html.appendChild(typeBtn);
 

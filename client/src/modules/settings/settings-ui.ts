@@ -5,6 +5,7 @@ import { openModal, closeModal } from '../../util/modal';
 import { BASIC_PIANO_SCALES } from '../../util/constants';
 import { Participant } from '../../types';
 import { i18next } from '../../util/translations';
+import { setBackgroundColor, setBackgroundColorToDefault } from '../background';
 
 export function initSettingsUI(): void {
   if (window.location.hostname === 'multiplayerpiano.com') {
@@ -84,12 +85,12 @@ export function initSettingsUI(): void {
           settings.noBackgroundColor = setting.classList.contains('enabled');
           const client = getClient();
           if (client.channel!.settings.color && !settings.noBackgroundColor) {
-            window.setBackgroundColor(
+            setBackgroundColor(
               client.channel!.settings.color,
               client.channel!.settings.color2,
             );
           } else {
-            window.setBackgroundColorToDefault();
+            setBackgroundColorToDefault();
           }
         };
         html.appendChild(setting);
@@ -304,7 +305,7 @@ export function initSettingsUI(): void {
       if (addBr) container.appendChild(document.createElement('br'));
     };
 
-    window.changeClientSettingsTab = (evt: { currentTarget: Element }, tabName: string) => {
+    const changeClientSettingsTab = (evt: { currentTarget: Element }, tabName: string) => {
       content.innerHTML = '';
 
       for (let index = 0; index < tablinks.length; index++) {
@@ -540,12 +541,12 @@ export function initSettingsUI(): void {
               const client = getClient();
 
               if (client.channel!.settings.color && !settings.noBackgroundColor) {
-                window.setBackgroundColor(
+                setBackgroundColor(
                   client.channel!.settings.color,
                   client.channel!.settings.color2,
                 );
               } else {
-                window.setBackgroundColorToDefault();
+                setBackgroundColorToDefault();
               }
             },
           );
@@ -651,7 +652,13 @@ export function initSettingsUI(): void {
       }
     };
 
-    window.changeClientSettingsTab(
+    document.querySelectorAll('.client-settings-tablink[data-tab]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        changeClientSettingsTab({ currentTarget: e.currentTarget as Element }, (el as HTMLElement).dataset.tab!);
+      });
+    });
+
+    changeClientSettingsTab(
       {
         currentTarget: document.getElementsByClassName(
           'client-settings-tablink',

@@ -13,5 +13,3 @@ interface Window {
   gHasBeenHereBefore: boolean;
   changeClientSettingsTab: (evt: { currentTarget: Element }, tabName: string) => void;
 }
-
-declare let i18nextify: Window['i18nextify'];

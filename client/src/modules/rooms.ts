@@ -5,6 +5,7 @@ import { openModal, closeModal } from '../util/modal';
 import { getRoomNameFromURL } from '../util/url-utils';
 import { Notification } from '../libs/Notification';
 import { i18next } from '../util/translations';
+import { setKeyboardTimeout, setKeyboardNotification } from './keyboard-hint';
 
 export function initRooms(): void {
   const gClient = getClient();
@@ -16,24 +17,24 @@ export function initRooms(): void {
   let gKnowsYouCanUseKeyboard = false;
   if (localStorage && localStorage.knowsYouCanUseKeyboard) gKnowsYouCanUseKeyboard = true;
   if (!gKnowsYouCanUseKeyboard) {
-    window.gKnowsYouCanUseKeyboardTimeout = setTimeout(() => {
-      window.gKnowsYouCanUseKeyboardNotification = new Notification({
+    setKeyboardTimeout(setTimeout(() => {
+      setKeyboardNotification(new Notification({
         id: 'play',
         title: i18next.t('Did you know!?!'),
         text: i18next.t('You can play the piano with your keyboard, too.  Try it!'),
         target: '#piano',
         duration: 10000,
-      });
-    }, 30000);
+      }));
+    }, 30000));
   }
 
   if (window.localStorage) {
     if (localStorage.volume) {
       volume_slider.value = localStorage.volume;
       gPiano.audio.setVolume(localStorage.volume);
-      document.getElementById('volume-label')!.innerHTML = window.i18nextify.i18next.t('Volume') + '<span translated>: ' + Math.floor(gPiano.audio.volume * 100) + '%</span>';
+      document.getElementById('volume-label')!.innerHTML = i18next.t('Volume') + '<span translated>: ' + Math.floor(gPiano.audio.volume * 100) + '%</span>';
     } else localStorage.volume = gPiano.audio.volume;
-    window.gHasBeenHereBefore = localStorage.gHasBeenHereBefore || false;
+    const hasBeenHereBefore = !!localStorage.gHasBeenHereBefore;
     localStorage.gHasBeenHereBefore = true;
   }
 

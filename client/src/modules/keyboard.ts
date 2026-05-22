@@ -2,12 +2,13 @@ import { getClient, getPiano, state } from '../util/state';
 import { settings } from './settings/settings';
 import { press, release, pressSustain, releaseSustain, setAutoSustain, getAutoSustain } from '../util/actions';
 import { NoteQuota } from '../libs/NoteQuota';
-import { Color } from '../libs/Color';
 import { Notification } from '../libs/Notification';
 import { openModal } from '../util/modal';
 import { fadeIn, fadeOut } from '../util/util';
 import type { Participant } from '../types';
 import { i18next } from '../util/translations';
+import { clearKeyboardHint } from './keyboard-hint';
+import { initBackground } from './background';
 
 let gKeyboardSeq = 0;
 
@@ -176,11 +177,8 @@ export function initKeyboard(): void {
       }
 
       if (++gKeyboardSeq == 3) {
-        if (window.gKnowsYouCanUseKeyboardTimeout)
-          clearTimeout(window.gKnowsYouCanUseKeyboardTimeout);
+        clearKeyboardHint();
         if (localStorage) localStorage.knowsYouCanUseKeyboard = 'true';
-        if (window.gKnowsYouCanUseKeyboardNotification)
-          window.gKnowsYouCanUseKeyboardNotification.close();
       }
 
       if (!settings.noPreventDefault) evt.preventDefault();
@@ -567,41 +565,7 @@ export function initKeyboard(): void {
 
   shouldShowSnowflakes();
 
-  // Background color
-  (() => {
-    const setColor = (hex: string, hex2?: string) => {
-      const color1 = new Color(hex);
-      const color2 = new Color(hex2 || hex);
-      if (!hex2) color2.add(-0x40, -0x40, -0x40);
-      const bottom = document.getElementById('bottom')!;
-      document.body.style.setProperty('--color', color1.toHexa());
-      document.body.style.setProperty('--color2', color2.toHexa());
-      bottom.style.setProperty('--color', color1.toHexa());
-      bottom.style.setProperty('--color2', color2.toHexa());
-    };
-
-    const setColorToDefault = () => {
-      setColor('#220022', '#000022');
-    };
-
-    (window as any).setBackgroundColor = setColor;
-    (window as any).setBackgroundColorToDefault = setColorToDefault;
-    setColorToDefault();
-
-    gClient.on('ch', (ch: any) => {
-      if (settings.noBackgroundColor) {
-        setColorToDefault();
-        return;
-      }
-      if (ch.ch.settings) {
-        if (ch.ch.settings.color) {
-          setColor(ch.ch.settings.color, ch.ch.settings.color2);
-        } else {
-          setColorToDefault();
-        }
-      }
-    });
-  })();
+  initBackground();
 
   // Hide piano attribute
   if (settings.hidePianoLocal) {
