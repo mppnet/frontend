@@ -389,7 +389,8 @@ export function initChat(): Chat {
 								setYoureMentioned(true);
 								document.title = i18next.t('You were mentioned!');
 							}
-							return `<span class="mention" style="background-color: ${user.color};">${nick}</span>`;
+							const mentionColor = /^#[0-9a-fA-F]{3,8}$/.test(user.color || '') ? user.color : '#777';
+							return `<span class="mention" style="background-color: ${mentionColor};">${nick}</span>`;
 						} else return `@${nick}`;
 					} else return match;
 				},

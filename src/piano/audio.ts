@@ -113,8 +113,8 @@ export class AudioEngineWeb extends AudioEngine {
 		source.connect(gain);
 		gain.connect(this.pianoGain);
 		source.start(time);
-		if (this.playings[id]) {
-			const playing = this.playings[id];
+		if (this.playings[id + ':' + part_id]) {
+			const playing = this.playings[id + ':' + part_id];
 			playing.gain.gain.setValueAtTime(playing.gain.gain.value, time);
 			playing.gain.gain.linearRampToValueAtTime(0.0, time + 0.2);
 			playing.source.stop(time + 0.21);
@@ -122,9 +122,9 @@ export class AudioEngineWeb extends AudioEngine {
 				playing.voice.stop(time);
 			}
 		}
-		this.playings[id] = { source, gain, part_id };
+		this.playings[id + ':' + part_id] = { source, gain, part_id };
 		if (state.enableSynth && state.synthVoice) {
-			this.playings[id].voice = new state.synthVoice(id, time);
+			this.playings[id + ':' + part_id].voice = new state.synthVoice(id, time);
 		}
 	}
 	play(id: string, vol: number, delay_ms: number, part_id: string): void {
@@ -142,19 +142,19 @@ export class AudioEngineWeb extends AudioEngine {
 
 	actualStop(id: string, time: number, part_id: string): void {
 		if (
-			this.playings.hasOwnProperty(id) &&
-			this.playings[id] &&
-			this.playings[id].part_id === part_id
+			this.playings.hasOwnProperty(id + ':' + part_id) &&
+			this.playings[id + ':' + part_id] &&
+			this.playings[id + ':' + part_id].part_id === part_id
 		) {
-			const gain = this.playings[id].gain.gain;
+			const gain = this.playings[id + ':' + part_id].gain.gain;
 			gain.setValueAtTime(gain.value, time);
 			gain.linearRampToValueAtTime(gain.value * 0.1, time + 0.16);
 			gain.linearRampToValueAtTime(0.0, time + 0.4);
-			this.playings[id].source.stop(time + 0.41);
-			if (this.playings[id].voice) {
-				this.playings[id].voice.stop(time);
+			this.playings[id + ':' + part_id].source.stop(time + 0.41);
+			if (this.playings[id + ':' + part_id].voice) {
+				this.playings[id + ':' + part_id].voice.stop(time);
 			}
-			this.playings[id] = null;
+			this.playings[id + ':' + part_id] = null;
 		}
 	}
 
