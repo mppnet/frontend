@@ -193,14 +193,18 @@ export function initChat(): Chat {
 		},
 
 		receive(msg: any): void {
-			if (msg.m === 'dm') {
-				if (settings.chatMutes.indexOf(msg.sender._id) !== -1) return;
-			} else {
-				if (settings.chatMutes.indexOf(msg.p._id) !== -1) return;
-			}
-
 			const li = document.createElement('li');
 			li.id = 'msg-' + msg.id;
+			
+			if (msg.m === 'dm') {
+                if (settings.chatMutes.indexOf(msg.sender._id) !== -1) li.style.display = 'none';
+            } else {
+                if (settings.chatMutes.indexOf(msg.p._id) !== -1) li.style.display = 'none';
+            }
+
+            if(msg.p) li.setAttribute('user-id', msg.p.id);
+            if(msg.m === 'dm')  li.setAttribute('user-id', msg.sender.id);
+
 			let isSpecialDm = false;
 
 			if (msg.m === 'dm') {

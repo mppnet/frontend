@@ -520,12 +520,30 @@ export function initKeyboard(): void {
 		// Mute Chat
 		if (settings.chatMutes.indexOf(part._id) == -1) {
 			createMenuItem(i18next.t('Mute Chat'), () => {
+				// hide messages
+				try {
+                    (Array.from(document.querySelectorAll("#chat li")) as HTMLLIElement[])
+                        .filter(msg => msg.getAttribute("user-id") === part._id)
+                        .forEach(msg => msg.style.display = "none");
+                } catch (error) {
+                    console.error("couldn't hide muted user's messages: " + error);
+                }
+
 				settings.chatMutes.push(part._id);
 				if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
 				part.nameDiv?.classList.add('muted-chat');
 			});
 		} else {
 			createMenuItem(i18next.t('Unmute Chat'), () => {
+				//show messages
+				try {
+                    (Array.from(document.querySelectorAll("#chat li")) as HTMLLIElement[])
+                        .filter(msg => msg.getAttribute("user-id") === part._id)
+                        .forEach(msg => msg.style.display = "block");
+                } catch (error) {
+                    console.log("couldn't show muted user's messages: " + error);
+                }
+
 				let i: number;
 				while ((i = settings.chatMutes.indexOf(part._id)) != -1)
 					settings.chatMutes.splice(i, 1);
@@ -542,6 +560,16 @@ export function initKeyboard(): void {
 				settings.pianoMutes.push(part._id);
 				if (localStorage)
 					localStorage.pianoMutes = settings.pianoMutes.join(',');
+
+				// hide messages
+				try {
+                    (Array.from(document.querySelectorAll("#chat li")) as HTMLLIElement[])
+                        .filter(msg => msg.getAttribute("user-id") === part._id)
+                        .forEach(msg => msg.style.display = "none");
+                } catch (error) {
+                    console.error("couldn't remove muted user's messages:" + error);
+                }
+
 				settings.chatMutes.push(part._id);
 				if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
 				part.nameDiv?.classList.add('muted-notes');
@@ -561,6 +589,16 @@ export function initKeyboard(): void {
 				if (localStorage)
 					localStorage.pianoMutes = settings.pianoMutes.join(',');
 				if (localStorage) localStorage.chatMutes = settings.chatMutes.join(',');
+
+				// show messages
+				try {
+                    (Array.from(document.querySelectorAll("#chat li")) as HTMLLIElement[])
+                        .filter(msg => msg.getAttribute("user-id") === part._id)
+                        .forEach(msg => msg.style.display = "block");
+                } catch (error) {
+                    console.error("couldn't remove muted user's messages: " + error);
+                }
+
 				part.nameDiv?.classList.remove('muted-notes');
 				part.nameDiv?.classList.remove('muted-chat');
 			});
