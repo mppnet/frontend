@@ -586,11 +586,13 @@ input[type="range"]:hover {
   bottom: 100%;
   left: -1px;
   width: 100%;
+  height: fit-content;
+  max-height: calc(100vh - 60px - 5px);
+    /* screen height - height lifted from botton - clearance */
   overflow: hidden;
   overflow-y: scroll;
   background: #444;
   border: 1px solid #ccc;
-  max-height: 600px;
 }
 
 #room .more>div {
@@ -606,6 +608,8 @@ input[type="range"]:hover {
 
 #room .more .new {
   background: #111;
+  position: sticky;
+  top: 0;
 }
 
 #room .more .new:hover {
