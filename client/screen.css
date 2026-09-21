@@ -588,7 +588,7 @@ input[type="range"]:hover {
   width: 100%;
   height: fit-content;
   max-height: calc(100vh - 60px - 5px);
-    /* screen height - height lifted from botton - clearance */
+    /* screen height - height lifted from bottom - clearance */
   overflow: hidden;
   overflow-y: scroll;
   background: #444;
