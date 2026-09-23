@@ -113,7 +113,7 @@ export function initRooms(): void {
 		info.textContent = channel._id;
 		if (channel.settings.lobby) info.classList.add('lobby');
 		else info.classList.remove('lobby');
-		if (!channel.settings.chat) info.classList.add('no-chat');
+		if (!channel.settings.chat) info.classList.add('no-chat') ;
 		else info.classList.remove('no-chat');
 		if (channel.settings.crownsolo) info.classList.add('crownsolo');
 		else info.classList.remove('crownsolo');
@@ -121,6 +121,16 @@ export function initRooms(): void {
 		else info.classList.remove('no-cussing');
 		if (!channel.settings.visible) info.classList.add('not-visible');
 		else info.classList.remove('not-visible');
+
+		if (info.classList.contains("no-chat")) {
+			console.log("adding no-chat.png");
+			info.innerHTML += `<img src="/no-chat.png" style="padding: 0 4px;" />`;
+		}
+
+		if (info.classList.contains("crownsolo")) {
+			console.log("adding crownsolo.png");
+			info.innerHTML += `<img src="/crownsolo.png" style="padding: 0 4px;" />`;
+		}
 	});
 	gClient.on('ls', (ls: any) => {
 		for (const i in ls.u) {
@@ -157,6 +167,16 @@ export function initRooms(): void {
 			else info.classList.remove('not-visible');
 			if (room.banned) info.classList.add('banned');
 			else info.classList.remove('banned');
+
+			if (info.classList.contains("no-chat")) {
+				console.log("adding no-chat.png");
+				info.innerHTML += `<img src="/no-chat.png" style="padding: 0 4px;" />`;
+			}
+
+			if (info.classList.contains("crownsolo")) {
+				console.log("adding crownsolo.png");
+				info.innerHTML += `<img src="/crownsolo.png" style="padding: 0 4px;" />`;
+			}
 		}
 	});
 
