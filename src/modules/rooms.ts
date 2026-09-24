@@ -113,7 +113,7 @@ export function initRooms(): void {
 		info.textContent = channel._id;
 		if (channel.settings.lobby) info.classList.add('lobby');
 		else info.classList.remove('lobby');
-		if (!channel.settings.chat) info.classList.add('no-chat') ;
+		if (!channel.settings.chat) info.classList.add('no-chat');
 		else info.classList.remove('no-chat');
 		if (channel.settings.crownsolo) info.classList.add('crownsolo');
 		else info.classList.remove('crownsolo');
