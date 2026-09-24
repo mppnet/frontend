@@ -1,9 +1,9 @@
-import { Notification } from "libs/Notification";
+import { Notification } from "../libs/Notification";
 import { closeModal, openModal } from "../util/modal";
 import { getClient } from "../util/state";
 import { changeRoom } from "./rooms";
 import { settings } from "./settings/settings";
-import { i18next } from "util/translations";
+import { i18next } from "../util/translations";
 
 export function initModals() {
   const gClient = getClient();
