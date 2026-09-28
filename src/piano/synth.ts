@@ -9,7 +9,7 @@ export function initSynth(): void {
 	const audio = piano.audio;
 	const context = piano.audio.context;
 	const synth_gain = context.createGain();
-	synth_gain.gain.value = 0.05;
+	synth_gain.gain.value = 0;
 	synth_gain.connect(audio.synthGain);
 
 	const osc_types = ['sine', 'square', 'sawtooth', 'triangle'];
@@ -89,7 +89,7 @@ export function initSynth(): void {
 			className: 'knob',
 		});
 		html.appendChild(knobCanvas);
-		let knob = new Knob(knobCanvas, 0, 100, 0.1, 50, 'mix', '%');
+		let knob = new Knob(knobCanvas, 0, 100, 0.1, Math.floor(audio.synthGain.gain.value * 1000) / 10, 'mix', '%');
 		knob.canvas.style.width = '32px';
 		knob.canvas.style.height = '32px';
 		knob.on('change', (k: { value: number }) => {
