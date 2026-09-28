@@ -4,7 +4,7 @@ import { state, getPiano } from '../util/state';
 import { settings } from './settings/settings';
 import { DEFAULT_VELOCITY, TIMING_TARGET } from '../util/constants';
 import { openModal, closeModal, modalHandleEsc } from '../util/modal';
-import { fadeIn, fadeOut,  getParameterByName, getRoomNameFromURL  } from '../util/util';
+import { fadeIn, fadeOut, getParameterByName, getRoomNameFromURL } from '../util/util';
 import type { Participant } from '../types';
 import { i18next } from '../util/translations';
 import { removeConfetti, startConfetti } from './confetti';
@@ -55,8 +55,8 @@ export function initConnection(): Client {
 				code,
 			};
 		}
-		history.pushState({ name: 'lobby' }, 'Piano > lobby', '/');
-		channel_id = 'lobby';
+		channel_id = localStorage.channelBeforeLogin || 'lobby';
+		history.pushState({ name: channel_id }, `Piano > ${channel_id}`, `/?c=${encodeURIComponent(channel_id)}`);
 	}
 
 	let gClient: Client;
@@ -123,11 +123,11 @@ export function initConnection(): Client {
 		if (!msg.motd)
 			msg.motd =
 				'This site makes a lot of sound! You may want to adjust the volume before continuing.';
-    document.getElementById('motd-text')!.innerHTML = msg.motd;
-    requestAnimationFrame(() => {
-        document.getElementById('motd').style.height = document.getElementById('motd-text').scrollHeight+50 + "px";
-    });
-    openModal('#motd');
+		document.getElementById('motd-text')!.innerHTML = msg.motd;
+		requestAnimationFrame(() => {
+			document.getElementById('motd').style.height = document.getElementById('motd-text').scrollHeight + 50 + "px";
+		});
+		openModal('#motd');
 		document.addEventListener('keydown', modalHandleEsc);
 		const user_interact = (evt: any) => {
 			if (
@@ -689,13 +689,13 @@ export function initConnection(): Client {
 		const chidlo = msg.ch._id.toLowerCase();
 		const pianoEl = document.getElementById('piano') as HTMLElement;
 
-    if (chidlo === "confetti" || chidlo.substr(-9) === "/confetti") {
-      startConfetti()
-    } else {
-      removeConfetti()
-    }
+		if (chidlo === "confetti" || chidlo.substr(-9) === "/confetti") {
+			startConfetti()
+		} else {
+			removeConfetti()
+		}
 
-    if (chidlo === 'spin' || chidlo.substr(-5) === '/spin') {
+		if (chidlo === 'spin' || chidlo.substr(-5) === '/spin') {
 			pianoEl.classList.add('spin');
 		} else {
 			pianoEl.classList.remove('spin');
