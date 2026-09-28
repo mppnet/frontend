@@ -333,7 +333,7 @@ export function initModals() {
 			}
 		});
 
-  // Modal background click
+	// Modal background click
 	const modal_bg = document.querySelector('#modal .bg') as HTMLElement;
 	modal_bg.addEventListener('click', (evt: any) => {
 		if (evt.target !== modal_bg) return;
