@@ -186,6 +186,7 @@ export function initModals() {
 		document
 			.querySelector('#account .login-discord')!
 			.addEventListener('click', () => {
+				localStorage.channelBeforeLogin = gClient.channel._id;
 				location.replace(
 					encodeURI(
 						`https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=${location.origin}/?callback=discord&response_type=code&scope=identify email`,

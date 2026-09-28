@@ -55,8 +55,8 @@ export function initConnection(): Client {
 				code,
 			};
 		}
-		history.pushState({ name: 'lobby' }, 'Piano > lobby', '/');
-		channel_id = 'lobby';
+		channel_id = localStorage.channelBeforeLogin || 'lobby';
+		history.pushState({ name: channel_id }, `Piano > ${channel_id}`, `/?c=${encodeURIComponent(channel_id)}`);
 	}
 
 	let gClient: Client;
