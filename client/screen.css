@@ -596,6 +596,7 @@ input[type="range"]:hover {
   background: #111;
   position: sticky;
   top: 0;
+  transform: translateZ(1px);
 }
 
 #room .more .new:hover {
