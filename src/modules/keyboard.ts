@@ -264,7 +264,7 @@ export function initKeyboard(): void {
 		const code = parseInt(String(evt.keyCode)); // Consider switching out for non-deprecated 'evt.key' or 'evt.code'
 		if (evt.shiftKey && evt.altKey) {
 			const keyNavs = {
-				78() { // N
+				85() { // U
 					openModal('#rename', 'input[name=name]');
 				},
 				84() { // T
