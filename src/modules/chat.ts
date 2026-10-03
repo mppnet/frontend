@@ -197,9 +197,9 @@ export function initChat(): Chat {
 			li.id = 'msg-' + msg.id;
 			
 			if (msg.m === 'dm') {
-                if (settings.chatMutes.indexOf(msg.sender._id) !== -1) li.style.display = 'none';
+                if (settings.chatMutes.indexOf(msg.sender._id) !== -1) li.style.display = 'none !important';
             } else {
-                if (settings.chatMutes.indexOf(msg.p._id) !== -1) li.style.display = 'none';
+                if (settings.chatMutes.indexOf(msg.p._id) !== -1) li.style.display = 'none  !important';
             }
 
             if(msg.p) li.setAttribute('user-id', msg.p.id);
