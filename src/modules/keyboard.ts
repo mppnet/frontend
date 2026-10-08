@@ -540,7 +540,7 @@ export function initKeyboard(): void {
 				try {
                     (Array.from(document.querySelectorAll("#chat li")) as HTMLLIElement[])
                         .filter(msg => msg.getAttribute("user-id") === part._id)
-                        .forEach(msg => msg.style.display = "none");
+                        .forEach(msg => msg.style.display = "none !important");
                 } catch (error) {
                     console.error("couldn't hide muted user's messages: " + error);
                 }
@@ -581,7 +581,7 @@ export function initKeyboard(): void {
 				try {
                     (Array.from(document.querySelectorAll("#chat li")) as HTMLLIElement[])
                         .filter(msg => msg.getAttribute("user-id") === part._id)
-                        .forEach(msg => msg.style.display = "none");
+                        .forEach(msg => msg.style.display = "none !important");
                 } catch (error) {
                     console.error("couldn't remove muted user's messages:" + error);
                 }
