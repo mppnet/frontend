@@ -261,15 +261,31 @@ export function initKeyboard(): void {
 
 	handleKeyDown = (evt: KeyboardEvent) => {
 		if ((evt.target as HTMLElement & { type?: string }).type) return;
-		const code = parseInt(String(evt.keyCode));
-		if (key_binding[code] !== undefined) {
+		const code = parseInt(String(evt.keyCode)); // Consider switching out for non-deprecated 'evt.key' or 'evt.code'
+		if (evt.shiftKey && evt.altKey) {
+			const keyNavs = {
+				85() { // U
+					openModal('#rename', 'input[name=name]');
+				},
+				84() { // T
+					openModal('#new-room', 'input[name=name]');
+				},
+				89() { // Y
+					document.getElementById('play-alone-btn')!.click();
+				},
+				// Maybe add page navigation keybinds,
+				// like Alt + Shift + B to focus and move around the bottom buttoms
+			};
+			if (keyNavs[code] != null) keyNavs[code]();
+		} else if (key_binding[code] !== undefined) {
 			const binding = key_binding[code];
 			if (!binding.held) {
 				binding.held = true;
 				const note = binding.note;
 				let octave = 1 + note.octave;
 				if (!settings.virtualPianoLayout) {
-					if (evt.shiftKey) ++octave;
+					if (evt.shiftKey && evt.altKey) return; // Keyboard navigation
+					else if (evt.shiftKey) ++octave;
 					else if (capsLockKey || evt.ctrlKey) --octave;
 					else if (evt.altKey) octave += 2;
 				}
