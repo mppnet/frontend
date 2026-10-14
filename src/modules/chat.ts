@@ -195,7 +195,7 @@ export function initChat(): Chat {
 		receive(msg: any): void {
 			const li = document.createElement('li');
 			li.id = 'msg-' + msg.id;
-			
+
 			if (msg.m === 'dm') {
                 if (settings.chatMutes.indexOf(msg.sender._id) !== -1) li.style.display = 'none';
             } else {
@@ -290,10 +290,11 @@ export function initChat(): Chat {
 			const replyEl = li.querySelector('.reply') as HTMLElement | null;
 			if (replyEl) replyEl.textContent = '➦';
 
+			const fromReconnect = msg.fromReconnect;
 			if (msg.r) {
 				const repliedMsg = messageCache.find((e: any) => e.id === msg.r);
 				if (!getTabIsActive()) {
-					if (repliedMsg?.p?._id === gClient.user!._id) {
+					if (repliedMsg?.p?._id === gClient.user!._id && !fromReconnect) {
 						document.title = `You have received a reply!`;
 						setYoureReplied(true);
 					}
@@ -389,7 +390,7 @@ export function initChat(): Chat {
 					if (user) {
 						const nick = parseContent(user.name);
 						if (user.id === gClient.getOwnParticipant()!.id) {
-							if (!getTabIsActive()) {
+							if (!getTabIsActive() && !fromReconnect) {
 								setYoureMentioned(true);
 								document.title = i18next.t('You were mentioned!');
 							}
@@ -596,8 +597,9 @@ export function initChat(): Chat {
 	gClient.on('c', (msg: any) => {
 		chat.clear();
 		if (msg.c) {
-			for (let i = 0; i < msg.c.length; i++) {
-				chat.receive(msg.c[i]);
+			for (const c of msg.c) {
+				c.fromReconnect = true;
+				chat.receive(c);
 			}
 		}
 	});
