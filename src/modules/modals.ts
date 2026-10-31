@@ -1,9 +1,9 @@
-import { Notification } from "libs/Notification";
+import { Notification } from "../libs/Notification";
 import { closeModal, openModal } from "../util/modal";
 import { getClient } from "../util/state";
 import { changeRoom } from "./rooms";
 import { settings } from "./settings/settings";
-import { i18next } from "util/translations";
+import { i18next } from "../util/translations";
 
 export function initModals() {
   const gClient = getClient();
@@ -186,6 +186,7 @@ export function initModals() {
 		document
 			.querySelector('#account .login-discord')!
 			.addEventListener('click', () => {
+				localStorage.channelBeforeLogin = gClient.channel._id;
 				location.replace(
 					encodeURI(
 						`https://discord.com/api/oauth2/authorize?client_id=926633278100877393&redirect_uri=${location.origin}/?callback=discord&response_type=code&scope=identify email`,
@@ -333,7 +334,7 @@ export function initModals() {
 			}
 		});
 
-  // Modal background click
+	// Modal background click
 	const modal_bg = document.querySelector('#modal .bg') as HTMLElement;
 	modal_bg.addEventListener('click', (evt: any) => {
 		if (evt.target !== modal_bg) return;

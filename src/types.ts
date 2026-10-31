@@ -44,6 +44,8 @@ export interface Crown {
 
 export interface Channel {
 	_id: string;
+	id: string;
+	count: number;
 	settings: ChannelSettings;
 	crown?: Crown;
 }
