@@ -1,0 +1,419 @@
+:root {
+	--hw-orange: #ff7a1a;
+	--hw-orange-hi: #ffa040;
+	--hw-amber: #ffb000;
+	--hw-ink: #0d0612;
+	--hw-panel: #1d0f29;
+	--hw-panel-hi: #2a1038;
+	--hw-line: #6b3a14;
+	--hw-purple: #7a3bb8;
+}
+
+::selection {
+	background: var(--hw-orange);
+	color: #000;
+	text-shadow: none;
+}
+
+body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background:
+		radial-gradient(ellipse at 50% 125%, rgba(255, 110, 20, 0.26), transparent 55%),
+		linear-gradient(to top, rgba(120, 60, 160, 0.2), transparent 32%),
+		radial-gradient(ellipse at center, transparent 42%, rgba(20, 0, 30, 0.6) 100%);
+}
+
+body::after {
+	content: '';
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	image-rendering: pixelated;
+	background-image:
+		url(halloween/web-tl.svg), url(halloween/web-tr.svg), url(halloween/moon.svg),
+		url(halloween/stars.svg);
+	background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+	background-position:
+		left top,
+		right top,
+		right 8vw top 14vh,
+		0 0;
+	background-size:
+		84px 84px,
+		84px 84px,
+		128px 128px,
+		256px 256px;
+	-webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 92%);
+	mask-image: linear-gradient(to bottom, #000 60%, transparent 92%);
+}
+
+html::before,
+html::after {
+	content: '';
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 250;
+	pointer-events: none;
+	image-rendering: pixelated;
+	background-image: url(halloween/bat.svg);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+}
+
+html::before {
+	width: 32px;
+	height: 14px;
+	background-size: 64px 14px;
+	animation:
+		hw-flap-2x 0.35s steps(2) infinite,
+		hw-fly-a 38s infinite;
+}
+
+html::after {
+	width: 48px;
+	height: 21px;
+	background-size: 96px 21px;
+	animation:
+		hw-flap-3x 0.45s steps(2) infinite,
+		hw-fly-b 52s -20s infinite;
+}
+
+@keyframes hw-flap-2x {
+	to {
+		background-position: -64px 0;
+	}
+}
+
+@keyframes hw-flap-3x {
+	to {
+		background-position: -96px 0;
+	}
+}
+
+@keyframes hw-fly-a {
+	0% {
+		transform: translate(-80px, 22vh);
+		animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+	}
+	12% {
+		transform: translate(18vw, 14vh);
+		animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+	}
+	24% {
+		transform: translate(38vw, 26vh);
+		animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+	}
+	36% {
+		transform: translate(60vw, 12vh);
+		animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+	}
+	48% {
+		transform: translate(82vw, 24vh);
+		animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+	}
+	58%,
+	100% {
+		transform: translate(calc(100vw + 80px), 16vh);
+	}
+}
+
+@keyframes hw-fly-b {
+	0% {
+		transform: translate(calc(100vw + 80px), 34vh) scaleX(-1);
+		animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+	}
+	15% {
+		transform: translate(78vw, 40vh) scaleX(-1);
+		animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+	}
+	30% {
+		transform: translate(52vw, 30vh) scaleX(-1);
+		animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+	}
+	45% {
+		transform: translate(26vw, 42vh) scaleX(-1);
+		animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+	}
+	60%,
+	100% {
+		transform: translate(-120px, 28vh) scaleX(-1);
+	}
+}
+
+#bottom::before {
+	content: '';
+	position: absolute;
+	right: 140px;
+	bottom: 100%;
+	width: 88px;
+	height: 42px;
+	pointer-events: none;
+	image-rendering: pixelated;
+	background-image: url(halloween/pumpkin.svg), url(halloween/pumpkin.svg);
+	background-repeat: no-repeat;
+	background-position:
+		0 100%,
+		52px 100%;
+	background-size:
+		48px 42px,
+		32px 28px;
+	filter: drop-shadow(0 0 6px rgba(255, 140, 20, 0.65));
+	animation: hw-flicker 3.2s steps(1) infinite;
+}
+
+@keyframes hw-flicker {
+	0% {
+		filter: drop-shadow(0 0 6px rgba(255, 140, 20, 0.65)) brightness(1);
+	}
+	20% {
+		filter: drop-shadow(0 0 4px rgba(255, 140, 20, 0.45)) brightness(0.84);
+	}
+	24% {
+		filter: drop-shadow(0 0 8px rgba(255, 150, 30, 0.8)) brightness(1.06);
+	}
+	55% {
+		filter: drop-shadow(0 0 5px rgba(255, 140, 20, 0.55)) brightness(0.9);
+	}
+	60% {
+		filter: drop-shadow(0 0 6px rgba(255, 140, 20, 0.65)) brightness(1);
+	}
+	80% {
+		filter: drop-shadow(0 0 4px rgba(255, 140, 20, 0.4)) brightness(0.8);
+	}
+	84% {
+		filter: drop-shadow(0 0 6px rgba(255, 140, 20, 0.65)) brightness(1);
+	}
+}
+
+#names .name.owner:before,
+.cursor.owner .name:after {
+	content: url(halloween/hat.svg);
+}
+
+#crown {
+	background-image: url(halloween/hat.svg);
+}
+
+#piano canvas {
+	filter: drop-shadow(0 -2px 14px rgba(255, 110, 10, 0.28));
+}
+
+a,
+.spoiler:hover a {
+	color: var(--hw-orange);
+}
+
+a:hover,
+.spoiler:hover a:hover {
+	color: var(--hw-orange-hi);
+}
+
+.link {
+	color: var(--hw-amber);
+}
+
+#status .number {
+	text-shadow:
+		#444 1px 1px,
+		0 0 8px rgba(255, 130, 20, 0.7);
+}
+
+code {
+	background: var(--hw-panel);
+	color: #ffd9a0;
+}
+
+.ugly-button,
+.top-button,
+.client-settings-button {
+	background: #14081c;
+	border-color: #5a3416;
+	transition:
+		background 0.2s,
+		box-shadow 0.2s;
+}
+
+.ugly-button:hover,
+.top-button:hover,
+.client-settings-button:hover {
+	background: #2a1038;
+	box-shadow: 0 0 6px rgba(255, 122, 26, 0.45);
+}
+
+.ugly-button.stuck,
+.top-button.stuck,
+.client-settings-button.stuck {
+	background: rgba(255, 122, 26, 0.35);
+}
+
+.client-settings-tablink.active {
+	background-color: #5a2d0f;
+}
+
+#room {
+	background: var(--hw-panel);
+	border-color: var(--hw-line);
+}
+
+#room .expand {
+	background-color: var(--hw-line);
+}
+
+#room .more {
+	background: var(--hw-panel);
+	border-color: var(--hw-line);
+	scrollbar-color: var(--hw-orange) var(--hw-panel);
+}
+
+#room .more .info:hover {
+	background: #3a1a4a;
+}
+
+#room .more .new {
+	background: var(--hw-ink);
+}
+
+#room .more .new:hover {
+	background: var(--hw-panel-hi);
+}
+
+#room .info.lobby {
+	color: #ffe9a8;
+}
+
+#modal .bg {
+	background: #3a0f5c;
+}
+
+.dialog {
+	background: var(--hw-panel);
+	border-color: var(--hw-line);
+	box-shadow:
+		0 0 8px #000,
+		0 0 26px rgba(255, 100, 0, 0.25);
+}
+
+.dialog .submit {
+	background: var(--hw-orange);
+}
+
+.dialog .submit:hover {
+	background: var(--hw-orange-hi);
+}
+
+.notification-body,
+.notification.classic .notification-body {
+	background: var(--hw-panel);
+	border-color: var(--hw-line);
+}
+
+.title {
+	border-bottom-color: var(--hw-orange);
+}
+
+.participant-menu {
+	background: var(--hw-ink);
+	box-shadow: 0 0 10px rgba(255, 100, 0, 0.2);
+}
+
+.participant-menu .menu-item {
+	border-top-color: rgba(255, 160, 64, 0.3);
+}
+
+.participant-menu .menu-item:hover {
+	background: rgba(255, 122, 26, 0.4);
+}
+
+.participant-menu .menu-item.clicked {
+	background: rgba(255, 122, 26, 0.55);
+}
+
+#chat.chatting {
+	background: rgba(30, 12, 42, 0.82);
+	box-shadow: 1px 1px 6px rgba(255, 122, 26, 0.5);
+}
+
+#chat.chatting ul {
+	scrollbar-width: thin;
+	scrollbar-color: var(--hw-orange) transparent;
+}
+
+#chat input:focus {
+	border-color: var(--hw-orange-hi);
+}
+
+#chat li .quote {
+	color: #8fbf2a;
+}
+
+#chat li .reply {
+	background-color: #14081c;
+	border-color: #5a3416;
+}
+
+#quota {
+	background: #7a2fb0;
+}
+
+#quota .value {
+	background: #ff9a1f;
+}
+
+input[type='range'] {
+	background-image: linear-gradient(
+		to right,
+		hsla(280, 100%, 28%, 0.85) 0%,
+		hsla(280, 100%, 14%, 0.85) 8%,
+		hsl(270, 60%, 3%) 50%,
+		hsl(20, 90%, 18%) 92%,
+		hsl(28, 100%, 50%) 100%
+	);
+}
+
+input[type='range']:hover {
+	background-image: linear-gradient(
+		to right,
+		hsla(300, 100%, 30%, 0.85) 0%,
+		hsla(300, 100%, 15%, 0.85) 8%,
+		hsl(270, 60%, 3%) 50%,
+		hsl(20, 90%, 18%) 92%,
+		hsl(28, 100%, 50%) 100%
+	);
+}
+
+input[type='range']::-webkit-slider-thumb {
+	background-image: linear-gradient(
+		to right,
+		hsl(25, 20%, 15%) 0%,
+		hsl(25, 20%, 22%) 16%,
+		hsl(28, 60%, 38%) 18%,
+		hsl(25, 20%, 26%) 20%,
+		hsl(25, 20%, 26%) 80%,
+		hsl(28, 60%, 38%) 82%,
+		hsl(25, 20%, 22%) 84%,
+		hsl(25, 20%, 15%) 100%
+	);
+	-webkit-box-shadow:
+		inset hsla(30, 100%, 80%, 0.18) 0 1px 0px,
+		hsl(270, 20%, 17%) 0 2px 0px,
+		hsl(270, 20%, 15%) 0 4px 0px,
+		hsl(270, 20%, 13%) 0 6px 0px,
+		rgba(0, 0, 0, 0.5) 0 8px 5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html::before,
+	html::after {
+		display: none;
+	}
+
+	#bottom::before {
+		animation: none;
+	}
+}
