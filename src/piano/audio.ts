@@ -71,10 +71,10 @@ export class AudioEngineWeb extends AudioEngine {
 		this.limiterNode.connect(this.masterGain);
 
 		this.pianoGain = this.context.createGain();
-		this.pianoGain.gain.value = 0.5;
+		this.pianoGain.gain.value = 1;
 		this.pianoGain.connect(this.limiterNode);
 		this.synthGain = this.context.createGain();
-		this.synthGain.gain.value = 0.5;
+		this.synthGain.gain.value = 0;
 		this.synthGain.connect(this.limiterNode);
 
 		this.playings = {};
