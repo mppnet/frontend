@@ -756,7 +756,6 @@ input[type="range"]:hover {
 
 .notification-body {
   background: #222;
-  border-color: #555;
   padding: 10px;
   position: relative;
   left: 0;
@@ -781,8 +780,7 @@ input[type="range"]:hover {
   top: 100%;
   left: 50%;
   margin-left: -3px;
-  border-top: 10px solid transparent;
-  border-top-color: inherit;
+  border-top: 10px solid #222;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
 }
